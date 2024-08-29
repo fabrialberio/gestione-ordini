@@ -1,28 +1,14 @@
 package main
 
 import (
-	"database/sql"
-	"fmt"
+	"gestione-ordini/database"
 	"log"
-	"time"
-
-	_ "github.com/go-sql-driver/mysql"
 )
 
 func main() {
-	time.Sleep(time.Second * 10)
-
-	db, err := sql.Open("mysql", "user:password@tcp(mysql-container:3306)/testdb")
+	db, err := database.NewDatabase()
 	if err != nil {
-		log.Fatal(err)
+		log.Fatalf("Failed to connect to the database: %v", err)
 	}
 	defer db.Close()
-
-	var version string
-	err = db.QueryRow("SELECT VERSION()").Scan(&version)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	fmt.Println("Connected to:", version)
 }
