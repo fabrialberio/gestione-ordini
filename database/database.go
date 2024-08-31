@@ -9,11 +9,11 @@ import (
 )
 
 type Database struct {
-	Conn *sql.DB
+	conn *sql.DB
 }
 
-func NewDatabase() (*Database, error) {
-	db, err := sql.Open("mysql", "user:password@tcp(mysql-container:3306)/testdb")
+func NewDatabase(dsn string) (*Database, error) {
+	db, err := sql.Open("mysql", dsn)
 	if err != nil {
 		return nil, fmt.Errorf("error opening database: %v", err)
 	}
@@ -28,5 +28,5 @@ func NewDatabase() (*Database, error) {
 }
 
 func (db *Database) Close() error {
-	return db.Conn.Close()
+	return db.conn.Close()
 }

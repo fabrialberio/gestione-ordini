@@ -1,14 +1,23 @@
 package main
 
 import (
+	"fmt"
 	"gestione-ordini/database"
 	"log"
+	"os"
 )
 
 func main() {
-	db, err := database.NewDatabase()
+	dsn := fmt.Sprintf(
+		"%s:%s@tcp(localhost:3306)/%s",
+		os.Getenv("MYSQL_USER"),
+		os.Getenv("MYSQL_PASSWORD"),
+		os.Getenv("MYSQL_DATABASE"),
+	)
+
+	db, err := database.NewDatabase(dsn)
 	if err != nil {
-		log.Fatalf("Failed to connect to the database: %v", err)
+		log.Fatalf("Failed to create Database: %v", err)
 	}
 	defer db.Close()
 }
