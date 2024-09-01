@@ -2,10 +2,8 @@ services:
   mysql:
     image: mysql:8.0
     container_name: mysql-container
-    environment:
-      MYSQL_USER: ${MYSQL_USER}
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
-      MYSQL_DATABASE: ${MYSQL_DATABASE}
+    env_file:
+      - .env
     volumes:
       - mysql_data:/var/lib/mysql
     networks:
@@ -14,10 +12,9 @@ services:
   app:
     build: .
     container_name: go-app-container
-    environment:
-      MYSQL_USER: ${MYSQL_USER}
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
-      MYSQL_DATABASE: ${MYSQL_DATABASE}
+    restart: on-failure
+    env_file:
+      - .env
     ports:
       - "8080:8080"
     networks:
