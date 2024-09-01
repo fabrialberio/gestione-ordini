@@ -9,7 +9,7 @@ import (
 
 func main() {
 	dsn := fmt.Sprintf(
-		"%s:%s@tcp(localhost:3306)/%s",
+		"%s:%s@tcp(mysql-container:3306)/%s",
 		os.Getenv("MYSQL_USER"),
 		os.Getenv("MYSQL_PASSWORD"),
 		os.Getenv("MYSQL_DATABASE"),
