@@ -3,7 +3,6 @@ package database
 import (
 	"database/sql"
 	"fmt"
-	"log"
 
 	_ "github.com/go-sql-driver/mysql"
 )
@@ -23,7 +22,6 @@ func NewDatabase(dsn string) (*Database, error) {
 		return nil, fmt.Errorf("error connecting to the database: %v", err)
 	}
 
-	log.Println("Successfully connected to the database.")
 	return &Database{db}, nil
 }
 
