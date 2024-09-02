@@ -24,6 +24,20 @@ services:
     depends_on:
       - mysql
 
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: phpmyadmin
+    restart: always
+    tty: true
+    env_file:
+      - .env
+    environment:
+      - PMA_HOST=${MYSQL_CONTAINER_NAME}
+    ports:
+      - 8081:80
+    networks:
+      - gestione-ordini-network
+
 volumes:
   mysql-data:
 
