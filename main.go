@@ -5,6 +5,7 @@ import (
 	"gestione-ordini/database"
 	"log"
 	"os"
+	"time"
 )
 
 func main() {
@@ -17,8 +18,16 @@ func main() {
 	)
 
 	db, err := database.NewDatabase(dsn)
-	if err != nil {
-		log.Fatalf("Failed to create Database: %v", err)
+	for n_retries := 0; err != nil; n_retries++ {
+		if n_retries == 5 {
+			log.Fatalf("Error creating database after %v: %v", n_retries, err)
+		}
+
+		time.Sleep(5 * time.Second)
+		log.Printf("Error creating database, retrying: %v", err)
+		db, err = database.NewDatabase(dsn)
 	}
 	defer db.Close()
+
+	log.Println("Database created successfully.")
 }
