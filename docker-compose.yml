@@ -6,7 +6,8 @@ services:
     env_file:
       - .env
     volumes:
-      - gestione-ordini-db:/var/lib/mysql
+      - mysql-data:/var/lib/mysql
+      - ./docker/init_db/:/docker-entrypoint-initdb.d
     networks:
       - gestione-ordini-network
 
@@ -24,7 +25,7 @@ services:
       - mysql
 
 volumes:
-  gestione-ordini-db:
+  mysql-data:
 
 networks:
   gestione-ordini-network:
