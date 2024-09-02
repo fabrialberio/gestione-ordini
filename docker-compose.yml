@@ -1,29 +1,30 @@
 services:
   mysql:
     image: mysql:8.0
-    container_name: mysql-container
+    container_name: ${MYSQL_CONTAINER_NAME}
+    restart: always
     env_file:
       - .env
     volumes:
-      - mysql_data:/var/lib/mysql
+      - gestione-ordini-db:/var/lib/mysql
     networks:
-      - app-network
+      - gestione-ordini-network
 
-  app:
+  golang:
     build: .
-    container_name: go-app-container
-    restart: on-failure
+    container_name: gestione-ordini-app
+    restart: always
     env_file:
       - .env
     ports:
       - "8080:8080"
     networks:
-      - app-network
+      - gestione-ordini-network
     depends_on:
       - mysql
 
 volumes:
-  mysql_data:
+  gestione-ordini-db:
 
 networks:
-  app-network:
+  gestione-ordini-network:
