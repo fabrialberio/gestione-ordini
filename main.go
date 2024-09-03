@@ -14,7 +14,7 @@ func main() {
 	defer db.Close()
 
 	mux := http.NewServeMux()
-	mux.HandleFunc("/", index)
+	mux.HandleFunc("/", logHandler(index))
 
 	log.Println("Server started on port 8080.")
 	log.Fatal(http.ListenAndServe(":8080", mux))
