@@ -4,4 +4,5 @@ WORKDIR /app
 COPY go.mod go.sum ./
 RUN go mod download
 COPY . .
+ENV GOFLAGS=-buildvcs=false
 CMD ["air"]
