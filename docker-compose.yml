@@ -11,11 +11,18 @@ services:
     networks:
       - gestione-ordini-network
 
+  tailwind:
+    build: ./tailwind
+    container_name: gestione-ordini-tailwind
+    volumes:
+      - .:/app
+
   golang:
     build: .
     container_name: gestione-ordini-app
     depends_on:
       - mysql
+      - tailwind
     restart: always
     env_file:
       - .env

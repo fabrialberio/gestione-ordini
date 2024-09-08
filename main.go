@@ -1,6 +1,7 @@
 package main
 
 import (
+	"embed"
 	"fmt"
 	"gestione-ordini/database"
 	"log"
@@ -9,11 +10,15 @@ import (
 	"time"
 )
 
+//go:embed public
+var public embed.FS
+
 func main() {
 	db := CreateDatabase()
 	defer db.Close()
 
 	mux := http.NewServeMux()
+	mux.Handle("/public/", http.FileServerFS(public))
 	mux.HandleFunc("/", logHandler(index))
 
 	log.Println("Server started on port 8080.")
