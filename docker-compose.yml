@@ -7,7 +7,7 @@ services:
       - .env
     volumes:
       - mysql-data:/var/lib/mysql
-      - ./docker/init_db/:/docker-entrypoint-initdb.d
+      - ./database/init_db/:/docker-entrypoint-initdb.d
     networks:
       - gestione-ordini-network
 
@@ -18,14 +18,17 @@ services:
       - .:/app
 
   golang:
-    build: .
+    image: cosmtrek/air
     container_name: gestione-ordini-app
     depends_on:
       - mysql
       - tailwind
     restart: always
+    working_dir: /app
     env_file:
       - .env
+    environment:
+      - GOFLAGS=-buildvcs=false
     volumes:
       - .:/app
     networks:
