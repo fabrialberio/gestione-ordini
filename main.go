@@ -10,11 +10,15 @@ import (
 	"time"
 )
 
-//go:embed public
-var public embed.FS
+var (
+	db *database.Database
+
+	//go:embed public
+	public embed.FS
+)
 
 func main() {
-	db := CreateDatabase()
+	db = CreateDatabase()
 	defer db.Close()
 
 	mux := http.NewServeMux()
