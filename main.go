@@ -19,7 +19,7 @@ func main() {
 
 	mux := http.NewServeMux()
 	mux.Handle("/public/", http.FileServerFS(public))
-	mux.HandleFunc("/", logHandler(index))
+	mux.HandleFunc("/", logHandlerFunc(index))
 
 	log.Println("Server started on port 8080.")
 	log.Fatal(http.ListenAndServe(":8080", mux))
