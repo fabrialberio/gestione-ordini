@@ -7,14 +7,17 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"text/template"
 	"time"
 )
 
 var (
 	db *database.Database
 
+	templates = template.Must(template.ParseGlob("templates/*.html"))
+
 	//go:embed public
-	public embed.FS
+	publicFS embed.FS
 )
 
 func main() {
@@ -22,7 +25,7 @@ func main() {
 	defer db.Close()
 
 	mux := http.NewServeMux()
-	mux.Handle("/public/", http.FileServerFS(public))
+	mux.Handle("/public/", http.FileServerFS(publicFS))
 	mux.HandleFunc("/", logHandlerFunc(index))
 
 	log.Println("Server started on port 8080.")

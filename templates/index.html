@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>My App</title>
+    <title>Gestione ordini</title>
     <link href="./public/tailwind.css" rel="stylesheet">
   </head>
-  <body class="text-4xl font-bold underline">
-    <h1>Hello, {{.Name}}!</h1>
+  <body>
+    <div class="fh">
+      {{ if .username }}<p>Login eseguito!</p>{{ else }} {{ template "login.html" .}} {{end }}
+    </div>
   </body>
 </html>
