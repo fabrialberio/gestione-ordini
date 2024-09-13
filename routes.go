@@ -5,6 +5,11 @@ import (
 	"net/http"
 )
 
+type IndexData struct {
+	Username string
+	ErrorMsg string
+}
+
 func logRequest(h http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		log.Printf("%s %s %s", r.RemoteAddr, r.Method, r.URL)
@@ -33,7 +38,10 @@ func indexGet(w http.ResponseWriter, r *http.Request) {
 		claims = &UserClaims{}
 	}
 
-	templates.ExecuteTemplate(w, "index.html", claims)
+	templates.ExecuteTemplate(w, "index.html", IndexData{
+		Username: claims.Username,
+		ErrorMsg: r.URL.Query().Get("msg"),
+	})
 }
 
 func indexPost(w http.ResponseWriter, r *http.Request) {
