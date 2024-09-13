@@ -5,11 +5,12 @@ import (
 )
 
 type Utente struct {
-	ID       int
-	IDRuolo  int
-	Username string
-	Nome     string
-	Cognome  string
+	ID           int
+	IDRuolo      int
+	Username     string
+	PasswordHash string
+	Nome         string
+	Cognome      string
 }
 
 const (
@@ -28,13 +29,14 @@ const (
 )
 
 func (db *Database) GetUtente(id int) (*Utente, error) {
-	query := "SELECT id, id_ruolo, username, nome, cognome FROM Utenti WHERE id = ?"
+	query := "SELECT id, id_ruolo, username, password_hash, nome, cognome FROM Utenti WHERE id = ?"
 	var utente Utente
 
 	err := db.conn.QueryRow(query, id).Scan(
 		&utente.ID,
 		&utente.IDRuolo,
 		&utente.Username,
+		&utente.PasswordHash,
 		&utente.Nome,
 		&utente.Cognome,
 	)
@@ -47,9 +49,22 @@ func (db *Database) GetUtente(id int) (*Utente, error) {
 	return &utente, nil
 }
 
-func (db *Database) UtenteHasPermesso(id_utente int, id_permesso int) (bool, error) {
+func (db *Database) AddUtente(
+	idRuolo int,
+	username string,
+	passwordHash string,
+	nome string,
+	cognome string,
+) error {
+	query := "INSERT INTO Utenti (id_ruolo, username, password_hash, nome, cognome) VALUES (?, ?, ?, ?, ?)"
+	_, err := db.conn.Exec(query, idRuolo, username, passwordHash, nome, cognome)
+
+	return err
+}
+
+func (db *Database) UtenteHasPermesso(idUtente int, idPermesso int) (bool, error) {
 	query := "SELECT u.username FROM Utenti u JOIN Ruoli r ON u.id_ruolo = r.id JOIN RuoloPermesso rp ON r.id = rp.id_ruolo JOIN Permessi p ON rp.id_permesso = p.id WHERE u.id = ? AND p.id = ?"
-	row := db.conn.QueryRow(query, id_utente, id_permesso)
+	row := db.conn.QueryRow(query, idUtente, idPermesso)
 	var username string
 
 	err := row.Scan(&username)
