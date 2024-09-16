@@ -6,7 +6,7 @@
   </head>
   <body>
     <div class="fh">
-      {{ if .Username }}<p>Login eseguito!</p>{{ else }} {{ template "login.html" .}} {{end }}
+      {{ if .Username }}<p>Ciao, {{ .Username }}!</p>{{ else }} {{ template "login.html" .}} {{end }}
     </div>
   </body>
 </html>
