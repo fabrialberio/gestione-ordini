@@ -71,7 +71,6 @@ func validateJWT(tokenString string) (*UserClaims, error) {
 		}
 		return publicKey, nil
 	})
-
 	if err != nil {
 		return nil, err
 	}
@@ -108,23 +107,30 @@ func verifyPassword(username string, password string) (bool, error) {
 	return true, nil
 }
 
-func login(username string, password string, w http.ResponseWriter) error {
-	ok, err := verifyPassword(username, password)
+const SessionCookieName = "jwt"
+
+func getSessionCookie(r *http.Request) (*UserClaims, error) {
+	cookie, err := r.Cookie(SessionCookieName)
 	if err != nil {
-		return fmt.Errorf("errore verifica password: %v", err)
+		return nil, err
 	}
 
-	if !ok {
-		return fmt.Errorf("password errata")
+	claims, err := validateJWT(cookie.Value)
+	if err != nil {
+		return nil, err
 	}
 
+	return claims, nil
+}
+
+func setSessionCookie(w http.ResponseWriter, username string) error {
 	token, err := generateJWT(username)
 	if err != nil {
-		return fmt.Errorf("errore generazione JWT: %v", err)
+		return err
 	}
 
 	http.SetCookie(w, &http.Cookie{
-		Name:     "jwt",
+		Name:     SessionCookieName,
 		Value:    token,
 		HttpOnly: true,
 	})
@@ -132,9 +138,9 @@ func login(username string, password string, w http.ResponseWriter) error {
 	return nil
 }
 
-func logout(w http.ResponseWriter) {
+func unsetSessionCookie(w http.ResponseWriter) {
 	http.SetCookie(w, &http.Cookie{
-		Name:     "jwt",
+		Name:     SessionCookieName,
 		Value:    "",
 		HttpOnly: true,
 		MaxAge:   -1,
