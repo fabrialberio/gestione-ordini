@@ -22,7 +22,6 @@ services:
     container_name: gestione-ordini-app
     depends_on:
       - mysql
-      - tailwind
     restart: always
     working_dir: /app
     env_file:
