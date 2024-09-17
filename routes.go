@@ -29,7 +29,9 @@ func index(w http.ResponseWriter, r *http.Request) {
 	}
 
 	claims, err := getSessionCookie(r)
-	if err != nil {
+	if err == ErrNoCookie {
+		data.ErrorMsg = "Password errata"
+	} else if err == ErrInvalidJWT {
 		data.ErrorMsg = "Sessione scaduta"
 	} else {
 		data.Username = claims.Username
