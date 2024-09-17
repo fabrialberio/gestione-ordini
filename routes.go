@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"net/http"
 )
@@ -13,40 +12,42 @@ func logRequest(h http.HandlerFunc) http.HandlerFunc {
 	}
 }
 
-func index(w http.ResponseWriter, r *http.Request) {
-	if r.Method == http.MethodPost {
-		var errorMsg string
-
-		username := r.FormValue("username")
-		password := r.FormValue("password")
-		unsetSessionCookie(w)
-
-		ok, err := verifyPassword(username, password)
-		if err != nil || !ok {
-			errorMsg = "Password errata"
+func onlyPost(h http.HandlerFunc) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodPost {
+			http.Error(w, "Metodo non consentito", http.StatusMethodNotAllowed)
 		} else {
-			err = setSessionCookie(w, username)
-			if err != nil {
-				log.Printf("Error setting cookie: %v", err)
-			}
+			h(w, r)
 		}
-
-		http.Redirect(w, r, fmt.Sprintf("/?msg=%s", errorMsg), http.StatusSeeOther)
-	} else if r.Method == http.MethodGet {
-		var data struct {
-			Username string
-			ErrorMsg string
-		}
-
-		claims, err := getSessionCookie(r)
-		if err == http.ErrNoCookie {
-			data.ErrorMsg = r.URL.Query().Get("msg")
-		} else if err != nil {
-			log.Printf("Error getting cookie: %v", err)
-		} else {
-			data.Username = claims.Username
-		}
-
-		templates.ExecuteTemplate(w, "index.html", data)
 	}
+}
+
+func index(w http.ResponseWriter, r *http.Request) {
+	var data struct {
+		Username string
+		ErrorMsg string
+	}
+
+	claims, err := getSessionCookie(r)
+	if err != nil {
+		data.ErrorMsg = "Sessione scaduta"
+	} else {
+		data.Username = claims.Username
+	}
+
+	templates.ExecuteTemplate(w, "index.html", data)
+}
+
+func login(w http.ResponseWriter, r *http.Request) {
+	username := r.FormValue("username")
+	password := r.FormValue("password")
+
+	ok, _ := verifyPassword(username, password)
+	if ok {
+		setSessionCookie(w, username)
+	} else {
+		unsetSessionCookie(w)
+	}
+
+	http.Redirect(w, r, "/", http.StatusSeeOther)
 }
