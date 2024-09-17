@@ -92,14 +92,14 @@ func hashPassword(password string) (string, error) {
 }
 
 func verifyPassword(username string, password string) (bool, error) {
-	passwordHash, err := db.GetPasswordHashByUsername(username)
+	utente, err := db.GetUtenteByUsername(username)
 	if err == sql.ErrNoRows { // User not found
 		return false, nil
 	} else if err != nil {
 		return false, err
 	}
 
-	err = bcrypt.CompareHashAndPassword([]byte(passwordHash), []byte(password))
+	err = bcrypt.CompareHashAndPassword([]byte(utente.PasswordHash), []byte(password))
 	if err != nil { // Passwords don't match
 		return false, nil
 	}

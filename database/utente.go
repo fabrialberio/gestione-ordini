@@ -47,6 +47,18 @@ func (db *Database) GetUtente(id int) (*Utente, error) {
 	return &utente, nil
 }
 
+func (db *Database) GetUtenteByUsername(username string) (*Utente, error) {
+	query := "SELECT id FROM Utenti WHERE username = ?"
+	var id int
+
+	err := db.conn.QueryRow(query, username).Scan(&id)
+	if err != nil {
+		return nil, err
+	}
+
+	return db.GetUtente(id)
+}
+
 func (db *Database) AddUtente(
 	idRuolo int,
 	username string,
@@ -58,18 +70,6 @@ func (db *Database) AddUtente(
 	_, err := db.conn.Exec(query, idRuolo, username, passwordHash, nome, cognome)
 
 	return err
-}
-
-func (db *Database) GetPasswordHashByUsername(username string) (string, error) {
-	query := "SELECT password_hash FROM Utenti WHERE username = ?"
-	var passwordHash string
-
-	err := db.conn.QueryRow(query, username).Scan(&passwordHash)
-	if err != nil {
-		return "", err
-	}
-
-	return passwordHash, nil
 }
 
 func (db *Database) UtenteHasPermesso(idUtente int, idPermesso int) (bool, error) {
