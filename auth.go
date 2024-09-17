@@ -2,8 +2,6 @@ package main
 
 import (
 	"crypto/rsa"
-	"database/sql"
-	"errors"
 	"fmt"
 	"log"
 	"net/http"
@@ -12,13 +10,6 @@ import (
 
 	"github.com/golang-jwt/jwt/v5"
 	"golang.org/x/crypto/bcrypt"
-)
-
-var (
-	ErrWrongPassword = errors.New("wrong password")
-	ErrNoSuchUser    = errors.New("no such user")
-	ErrInvalidJWT    = errors.New("jwt: invalid token")
-	ErrNoCookie      = errors.New("no cookie")
 )
 
 var (
@@ -58,7 +49,7 @@ func generateJWT(username string) (string, error) {
 		Username: username,
 		RegisteredClaims: jwt.RegisteredClaims{
 			IssuedAt:  jwt.NewNumericDate(time.Now()),
-			ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Hour * 3)),
+			ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Second * 3)),
 			Issuer:    "gestione-ordini",
 		},
 	}
@@ -101,15 +92,13 @@ func hashPassword(password string) (string, error) {
 
 func verifyPassword(username string, password string) (bool, error) {
 	utente, err := db.GetUtenteByUsername(username)
-	if err == sql.ErrNoRows { // User not found
-		return false, ErrNoSuchUser
-	} else if err != nil {
+	if err != nil { // User not found
 		return false, err
 	}
 
 	err = bcrypt.CompareHashAndPassword([]byte(utente.PasswordHash), []byte(password))
 	if err != nil { // Passwords don't match
-		return false, ErrWrongPassword
+		return false, err
 	}
 
 	return true, nil
@@ -120,12 +109,12 @@ const SessionCookieName = "jwt"
 func getSessionCookie(r *http.Request) (*UserClaims, error) {
 	cookie, err := r.Cookie(SessionCookieName)
 	if err != nil {
-		return nil, ErrNoCookie
+		return nil, err
 	}
 
 	claims, err := validateJWT(cookie.Value)
 	if err != nil {
-		return nil, ErrInvalidJWT
+		return nil, err
 	}
 
 	return claims, nil

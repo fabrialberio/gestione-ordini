@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 )
@@ -29,10 +30,11 @@ func index(w http.ResponseWriter, r *http.Request) {
 	}
 
 	claims, err := getSessionCookie(r)
-	if err == ErrNoCookie {
-		data.ErrorMsg = "Password errata"
-	} else if err == ErrInvalidJWT {
+	if err == http.ErrNoCookie {
+		data.ErrorMsg = r.URL.Query().Get("errormsg")
+	} else if err != nil {
 		data.ErrorMsg = "Sessione scaduta"
+		unsetSessionCookie(w)
 	} else {
 		data.Username = claims.Username
 	}
@@ -43,13 +45,15 @@ func index(w http.ResponseWriter, r *http.Request) {
 func login(w http.ResponseWriter, r *http.Request) {
 	username := r.FormValue("username")
 	password := r.FormValue("password")
+	var errorMsg string
 
 	ok, _ := verifyPassword(username, password)
 	if ok {
 		setSessionCookie(w, username)
 	} else {
 		unsetSessionCookie(w)
+		errorMsg = "?errormsg=Password errata"
 	}
 
-	http.Redirect(w, r, "/", http.StatusSeeOther)
+	http.Redirect(w, r, fmt.Sprintf("/%s", errorMsg), http.StatusSeeOther)
 }
