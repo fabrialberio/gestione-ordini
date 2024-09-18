@@ -6,7 +6,18 @@
   </head>
   <body>
     <div class="fh">
-      {{ if .Username }} {{ template "cuoco.html" . }} {{ else }} {{ template "login.html" . }} {{ end }}
+      {{ if .IDUtente }}
+        {{ if eq .IDRuolo 0 }}
+          {{ template "cuoco.html" . }}   
+        {{ else if eq .IDRuolo 1 }}
+          {{ template "magazziniere.html" . }}
+        {{ else if eq .IDRuolo 2 }}
+          {{ template "amministratore.html" . }}
+        {{ else }}
+        {{ end }}
+      {{ else }}
+        {{ template "login.html" . }}
+      {{ end }}
     </div>
   </body>
 </html>
