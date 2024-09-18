@@ -3,6 +3,7 @@ package main
 import (
 	"crypto/rsa"
 	"fmt"
+	"gestione-ordini/database"
 	"log"
 	"net/http"
 	"os"
@@ -40,13 +41,15 @@ func init() {
 }
 
 type UserClaims struct {
-	Username string `json:"username"`
+	IDUtente int `json:"idUtente"`
+	IDRuolo  int `json:"idRuolo"`
 	jwt.RegisteredClaims
 }
 
-func generateJWT(username string) (string, error) {
+func generateJWT(idUtente int, idRuolo int) (string, error) {
 	claims := UserClaims{
-		Username: username,
+		IDUtente: idUtente,
+		IDRuolo:  idRuolo,
 		RegisteredClaims: jwt.RegisteredClaims{
 			IssuedAt:  jwt.NewNumericDate(time.Now()),
 			ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Hour * 3)),
@@ -90,18 +93,13 @@ func hashPassword(password string) (string, error) {
 	return string(hash), nil
 }
 
-func verifyPassword(username string, password string) (bool, error) {
-	utente, err := db.GetUtenteByUsername(username)
-	if err != nil { // User not found
-		return false, err
+func verifyPassword(utente *database.Utente, password string) bool {
+	if utente == nil {
+		return false
 	}
 
-	err = bcrypt.CompareHashAndPassword([]byte(utente.PasswordHash), []byte(password))
-	if err != nil { // Passwords don't match
-		return false, err
-	}
-
-	return true, nil
+	err := bcrypt.CompareHashAndPassword([]byte(utente.PasswordHash), []byte(password))
+	return err == nil
 }
 
 const SessionCookieName = "jwt"
@@ -120,8 +118,8 @@ func getSessionCookie(r *http.Request) (*UserClaims, error) {
 	return claims, nil
 }
 
-func setSessionCookie(w http.ResponseWriter, username string) error {
-	token, err := generateJWT(username)
+func setSessionCookie(w http.ResponseWriter, idUtente int, idRuolo int) error {
+	token, err := generateJWT(idUtente, idRuolo)
 	if err != nil {
 		return err
 	}
