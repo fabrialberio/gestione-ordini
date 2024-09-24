@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"html"
 	"log"
 	"net/http"
 )
@@ -32,7 +33,7 @@ func index(w http.ResponseWriter, r *http.Request) {
 
 	claims, err := getSessionCookie(r)
 	if err == http.ErrNoCookie {
-		data.ErrorMsg = r.URL.Query().Get("errormsg")
+		data.ErrorMsg = html.EscapeString(r.URL.Query().Get("errormsg"))
 	} else if err != nil {
 		data.ErrorMsg = "Sessione scaduta"
 		unsetSessionCookie(w)
