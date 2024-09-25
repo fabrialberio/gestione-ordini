@@ -1,6 +1,7 @@
 package main
 
 import (
+	"database/sql"
 	"embed"
 	"fmt"
 	"gestione-ordini/database"
@@ -23,6 +24,8 @@ var (
 func main() {
 	db = CreateDatabase()
 	defer db.Close()
+
+	AddAdminUserIfNotExists()
 
 	mux := http.NewServeMux()
 	mux.Handle("/public/", http.FileServerFS(publicFS))
@@ -55,4 +58,28 @@ func CreateDatabase() *database.Database {
 	log.Println("Database created successfully.")
 
 	return db
+}
+
+func AddAdminUserIfNotExists() {
+	_, err := db.GetUserByUsername("admin")
+	if err == sql.ErrNoRows {
+		hash, err := hashPassword(os.Getenv("ADMIN_PASSWORD"))
+		if err != nil {
+			log.Fatalf("Error hashing admin password: %v", err)
+		}
+
+		err = db.AddUser(
+			database.RoleIDAdministrator,
+			"admin",
+			hash,
+			"Amministratore",
+			"",
+		)
+		if err != nil {
+			log.Fatalf("Error creating admin user: %v", err)
+		}
+		log.Println("Admin user created successfully.")
+	} else if err != nil {
+		log.Fatalf("Error getting admin user: %v", err)
+	}
 }
