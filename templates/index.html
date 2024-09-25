@@ -8,11 +8,11 @@
     <div class="fh">
       {{ if .UserID }}
         {{ if eq .RoleID 0 }}
-          {{ template "cuoco.html" . }}   
+          {{ template "cook.html" . }}   
         {{ else if eq .RoleID 1 }}
-          {{ template "magazziniere.html" . }}
+          {{ template "manager.html" . }}
         {{ else if eq .RoleID 2 }}
-          {{ template "amministratore.html" . }}
+          {{ template "administrator.html" . }}
         {{ else }}
         {{ end }}
       {{ else }}
