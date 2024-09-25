@@ -1,34 +1,34 @@
 USE gestioneordini;
 
-DROP TABLE IF EXISTS Ordini;
-DROP TABLE IF EXISTS Prodotti;
-DROP TABLE IF EXISTS UnitaDiMisura;
-DROP TABLE IF EXISTS Fornitori;
-DROP TABLE IF EXISTS TipologieProdotto;
-DROP TABLE IF EXISTS Utenti;
-DROP TABLE IF EXISTS RuoloPermesso;
-DROP TABLE IF EXISTS Permessi;
-DROP TABLE IF EXISTS Ruoli;
+DROP TABLE IF EXISTS ordini;
+DROP TABLE IF EXISTS prodotti;
+DROP TABLE IF EXISTS unita_di_misura;
+DROP TABLE IF EXISTS fornitori;
+DROP TABLE IF EXISTS tipologie_prodotto;
+DROP TABLE IF EXISTS utenti;
+DROP TABLE IF EXISTS ruolo_permesso;
+DROP TABLE IF EXISTS permessi;
+DROP TABLE IF EXISTS ruoli;
 
-CREATE TABLE Ruoli (
+CREATE TABLE ruoli (
     id INT PRIMARY KEY,
     nome VARCHAR(255) UNIQUE
 );
 
-CREATE TABLE Permessi (
+CREATE TABLE permessi (
     id INT PRIMARY KEY,
     nome VARCHAR(255) UNIQUE
 );
 
-CREATE TABLE RuoloPermesso (
+CREATE TABLE ruolo_permesso (
     id_ruolo INT,
     id_permesso INT,
     PRIMARY KEY (id_ruolo, id_permesso)
 );
-ALTER TABLE RuoloPermesso ADD CONSTRAINT ruolopermesso_id_ruolo_foreign FOREIGN KEY(id_ruolo) REFERENCES Ruoli(id);
-ALTER TABLE RuoloPermesso ADD CONSTRAINT ruolopermesso_id_permesso_foreign FOREIGN KEY(id_permesso) REFERENCES Permessi(id);
+ALTER TABLE ruolo_permesso ADD CONSTRAINT ruolo_permesso_id_ruolo_foreign FOREIGN KEY(id_ruolo) REFERENCES ruoli(id);
+ALTER TABLE ruolo_permesso ADD CONSTRAINT ruolo_permesso_id_permesso_foreign FOREIGN KEY(id_permesso) REFERENCES permessi(id);
 
-CREATE TABLE Utenti (
+CREATE TABLE utenti (
     id INT PRIMARY KEY AUTO_INCREMENT,
     id_ruolo INT,
     username VARCHAR(255) UNIQUE NOT NULL,
@@ -37,39 +37,39 @@ CREATE TABLE Utenti (
     cognome VARCHAR(255),
     creato_il DATETIME
 );
-ALTER TABLE Utenti ADD CONSTRAINT utente_id_ruolo_foreign FOREIGN KEY(id_ruolo) REFERENCES Ruoli(id);
+ALTER TABLE utenti ADD CONSTRAINT utente_id_ruolo_foreign FOREIGN KEY(id_ruolo) REFERENCES ruoli(id);
 
-CREATE TABLE TipologieProdotto (
+CREATE TABLE tipologie_prodotto (
     id INT PRIMARY KEY AUTO_INCREMENT,
     nome VARCHAR(255) UNIQUE
 );
 
-CREATE TABLE Fornitori (
+CREATE TABLE fornitori (
     id INT PRIMARY KEY AUTO_INCREMENT
 );
 
-CREATE TABLE UnitaDiMisura (
+CREATE TABLE unita_di_misura (
     id INT PRIMARY KEY AUTO_INCREMENT,
     simbolo VARCHAR(255) UNIQUE
 );
 
-CREATE TABLE Prodotti (
+CREATE TABLE prodotti (
     id INT PRIMARY KEY AUTO_INCREMENT,
     id_tipologia INT,
     id_fornitore INT,
     id_unita_di_misura INT,
     nome VARCHAR(255)
 );
-ALTER TABLE Prodotti ADD CONSTRAINT prodotti_id_fornitore_foreign FOREIGN KEY(id_fornitore) REFERENCES Fornitori(id);
-ALTER TABLE Prodotti ADD CONSTRAINT prodotti_id_tipologia_foreign FOREIGN KEY(id_tipologia) REFERENCES TipologieProdotto(id);
-ALTER TABLE Prodotti ADD CONSTRAINT prodotti_id_unita_di_misura_foreign FOREIGN KEY(id_unita_di_misura) REFERENCES UnitaDiMisura(id);
+ALTER TABLE prodotti ADD CONSTRAINT prodotti_id_fornitore_foreign FOREIGN KEY(id_fornitore) REFERENCES fornitori(id);
+ALTER TABLE prodotti ADD CONSTRAINT prodotti_id_tipologia_foreign FOREIGN KEY(id_tipologia) REFERENCES tipologie_prodotto(id);
+ALTER TABLE prodotti ADD CONSTRAINT prodotti_id_unita_di_misura_foreign FOREIGN KEY(id_unita_di_misura) REFERENCES unita_di_misura(id);
 
-CREATE TABLE Ordini (
+CREATE TABLE ordini (
     id INT PRIMARY KEY AUTO_INCREMENT,
     id_prodotto INT,
     id_utente INT,
     quantita BIGINT,
     richiesto_il DATETIME
 );
-ALTER TABLE Ordini ADD CONSTRAINT ordini_id_prodotto_foreign FOREIGN KEY(id_prodotto) REFERENCES Prodotti(id);
-ALTER TABLE Ordini ADD CONSTRAINT ordini_id_utente_foreign FOREIGN KEY(id_utente) REFERENCES Utenti(id);
+ALTER TABLE ordini ADD CONSTRAINT ordini_id_prodotto_foreign FOREIGN KEY(id_prodotto) REFERENCES prodotti(id);
+ALTER TABLE ordini ADD CONSTRAINT ordini_id_utente_foreign FOREIGN KEY(id_utente) REFERENCES utenti(id);

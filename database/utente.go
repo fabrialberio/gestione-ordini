@@ -2,6 +2,7 @@ package database
 
 import (
 	"database/sql"
+	"time"
 )
 
 type Utente struct {
@@ -11,6 +12,7 @@ type Utente struct {
 	PasswordHash string
 	Nome         string
 	Cognome      string
+	CreatoIl     time.Time
 }
 
 const (
@@ -29,7 +31,7 @@ const (
 )
 
 func (db *Database) GetUtente(id int) (*Utente, error) {
-	query := "SELECT id, id_ruolo, username, password_hash, nome, cognome FROM Utenti WHERE id = ?"
+	query := "SELECT id, id_ruolo, username, password_hash, nome, cognome FROM utenti WHERE id = ?"
 	var utente Utente
 
 	err := db.conn.QueryRow(query, id).Scan(
@@ -48,7 +50,7 @@ func (db *Database) GetUtente(id int) (*Utente, error) {
 }
 
 func (db *Database) GetUtenteByUsername(username string) (*Utente, error) {
-	query := "SELECT id FROM Utenti WHERE username = ?"
+	query := "SELECT id FROM utenti WHERE username = ?"
 	var id int
 
 	err := db.conn.QueryRow(query, username).Scan(&id)
@@ -66,14 +68,14 @@ func (db *Database) AddUtente(
 	nome string,
 	cognome string,
 ) error {
-	query := "INSERT INTO Utenti (id_ruolo, username, password_hash, nome, cognome) VALUES (?, ?, ?, ?, ?)"
+	query := "INSERT INTO utenti (id_ruolo, username, password_hash, nome, cognome) VALUES (?, ?, ?, ?, ?)"
 	_, err := db.conn.Exec(query, idRuolo, username, passwordHash, nome, cognome)
 
 	return err
 }
 
 func (db *Database) UtenteHasPermesso(idUtente int, idPermesso int) (bool, error) {
-	query := "SELECT u.username FROM Utenti u JOIN Ruoli r ON u.id_ruolo = r.id JOIN RuoloPermesso rp ON r.id = rp.id_ruolo JOIN Permessi p ON rp.id_permesso = p.id WHERE u.id = ? AND p.id = ?"
+	query := "SELECT u.username FROM utenti u JOIN ruoli r ON u.id_ruolo = r.id JOIN ruolo_permesso rp ON r.id = rp.id_ruolo JOIN permessi p ON rp.id_permesso = p.id WHERE u.id = ? AND p.id = ?"
 	row := db.conn.QueryRow(query, idUtente, idPermesso)
 	var username string
 
