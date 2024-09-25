@@ -3,7 +3,6 @@ package main
 import (
 	"crypto/rsa"
 	"fmt"
-	"gestione-ordini/database"
 	"log"
 	"net/http"
 	"os"
@@ -93,12 +92,8 @@ func hashPassword(password string) (string, error) {
 	return string(hash), nil
 }
 
-func verifyPassword(user *database.User, password string) bool {
-	if user == nil {
-		return false
-	}
-
-	err := bcrypt.CompareHashAndPassword([]byte(user.PasswordHash), []byte(password))
+func verifyPassword(passwordHash string, password string) bool {
+	err := bcrypt.CompareHashAndPassword([]byte(passwordHash), []byte(password))
 	return err == nil
 }
 

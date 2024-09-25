@@ -50,8 +50,14 @@ func login(w http.ResponseWriter, r *http.Request) {
 	password := r.FormValue("password")
 	errorMsg := ""
 
+	var ok bool
 	user, _ := db.GetUserByUsername(username)
-	ok := verifyPassword(user, password)
+	if user != nil {
+		ok = verifyPassword(user.PasswordHash, password)
+	} else {
+		ok = false
+	}
+
 	if ok {
 		setSessionCookie(w, user.ID, user.RoleID)
 	} else {
