@@ -22,6 +22,8 @@ var (
 )
 
 func main() {
+	CheckEnvVars()
+
 	db = CreateDatabase()
 	defer db.Close()
 
@@ -34,6 +36,22 @@ func main() {
 
 	log.Println("Server started on port 8080.")
 	log.Fatal(http.ListenAndServe(":8080", mux))
+}
+
+func CheckEnvVars() {
+	envVars := []string{
+		"MYSQL_USER",
+		"MYSQL_PASSWORD",
+		"MYSQL_CONTAINER_NAME",
+		"MYSQL_DATABASE",
+		"ADMIN_PASSWORD",
+	}
+
+	for _, envVar := range envVars {
+		if _, ok := os.LookupEnv(envVar); !ok {
+			log.Fatalf("Environment variable %s is not set.", envVar)
+		}
+	}
 }
 
 func CreateDatabase() *database.Database {
