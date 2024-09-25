@@ -21,12 +21,12 @@ INSERT INTO RuoloPermesso (id_ruolo, id_permesso) VALUES
     (2, 4),
     (2, 5);
 
-INSERT INTO TipologiaProdotto (nome) VALUES
+INSERT INTO TipologieProdotto (nome) VALUES
     ("Carne"),
     ("Pesce"),
     ("Frutta"),
     ("Verdura"),
-    ("Cereali")
+    ("Cereali"),
     ("Latticini");
 
 INSERT INTO UnitaDiMisura (simbolo) VALUES

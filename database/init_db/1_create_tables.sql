@@ -4,7 +4,7 @@ DROP TABLE IF EXISTS Ordini;
 DROP TABLE IF EXISTS Prodotti;
 DROP TABLE IF EXISTS UnitaDiMisura;
 DROP TABLE IF EXISTS Fornitori;
-DROP TABLE IF EXISTS TipologiaProdotto;
+DROP TABLE IF EXISTS TipologieProdotto;
 DROP TABLE IF EXISTS Utenti;
 DROP TABLE IF EXISTS RuoloPermesso;
 DROP TABLE IF EXISTS Permessi;
@@ -34,11 +34,12 @@ CREATE TABLE Utenti (
     username VARCHAR(255) UNIQUE NOT NULL,
     password_hash VARCHAR(255),
     nome VARCHAR(255),
-    cognome VARCHAR(255)
+    cognome VARCHAR(255),
+    creato_il DATETIME
 );
 ALTER TABLE Utenti ADD CONSTRAINT utente_id_ruolo_foreign FOREIGN KEY(id_ruolo) REFERENCES Ruoli(id);
 
-CREATE TABLE TipologiaProdotto (
+CREATE TABLE TipologieProdotto (
     id INT PRIMARY KEY AUTO_INCREMENT,
     nome VARCHAR(255) UNIQUE
 );
@@ -60,7 +61,7 @@ CREATE TABLE Prodotti (
     nome VARCHAR(255)
 );
 ALTER TABLE Prodotti ADD CONSTRAINT prodotti_id_fornitore_foreign FOREIGN KEY(id_fornitore) REFERENCES Fornitori(id);
-ALTER TABLE Prodotti ADD CONSTRAINT prodotti_id_tipologia_foreign FOREIGN KEY(id_tipologia) REFERENCES TipologiaProdotto(id);
+ALTER TABLE Prodotti ADD CONSTRAINT prodotti_id_tipologia_foreign FOREIGN KEY(id_tipologia) REFERENCES TipologieProdotto(id);
 ALTER TABLE Prodotti ADD CONSTRAINT prodotti_id_unita_di_misura_foreign FOREIGN KEY(id_unita_di_misura) REFERENCES UnitaDiMisura(id);
 
 CREATE TABLE Ordini (
@@ -68,7 +69,7 @@ CREATE TABLE Ordini (
     id_prodotto INT,
     id_utente INT,
     quantita BIGINT,
-    data_richiesta DATE
+    richiesto_il DATETIME
 );
 ALTER TABLE Ordini ADD CONSTRAINT ordini_id_prodotto_foreign FOREIGN KEY(id_prodotto) REFERENCES Prodotti(id);
 ALTER TABLE Ordini ADD CONSTRAINT ordini_id_utente_foreign FOREIGN KEY(id_utente) REFERENCES Utenti(id);
