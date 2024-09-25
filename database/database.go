@@ -11,6 +11,8 @@ type Database struct {
 	conn *sql.DB
 }
 
+const DateTimeFormat = "2006-01-02 15:04:05"
+
 func NewDatabase(dsn string) (*Database, error) {
 	db, err := sql.Open("mysql", dsn)
 	if err != nil {

@@ -41,15 +41,15 @@ func init() {
 }
 
 type UserClaims struct {
-	IDUtente int `json:"idUtente"`
-	IDRuolo  int `json:"idRuolo"`
+	UserID int `json:"userId"`
+	RoleID int `json:"roleId"`
 	jwt.RegisteredClaims
 }
 
-func generateJWT(idUtente int, idRuolo int) (string, error) {
+func generateJWT(userId int, roleId int) (string, error) {
 	claims := UserClaims{
-		IDUtente: idUtente,
-		IDRuolo:  idRuolo,
+		UserID: userId,
+		RoleID: roleId,
 		RegisteredClaims: jwt.RegisteredClaims{
 			IssuedAt:  jwt.NewNumericDate(time.Now()),
 			ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Hour * 3)),
@@ -93,12 +93,12 @@ func hashPassword(password string) (string, error) {
 	return string(hash), nil
 }
 
-func verifyPassword(utente *database.Utente, password string) bool {
-	if utente == nil {
+func verifyPassword(user *database.User, password string) bool {
+	if user == nil {
 		return false
 	}
 
-	err := bcrypt.CompareHashAndPassword([]byte(utente.PasswordHash), []byte(password))
+	err := bcrypt.CompareHashAndPassword([]byte(user.PasswordHash), []byte(password))
 	return err == nil
 }
 
@@ -118,8 +118,8 @@ func getSessionCookie(r *http.Request) (*UserClaims, error) {
 	return claims, nil
 }
 
-func setSessionCookie(w http.ResponseWriter, idUtente int, idRuolo int) error {
-	token, err := generateJWT(idUtente, idRuolo)
+func setSessionCookie(w http.ResponseWriter, userId int, roleId int) error {
+	token, err := generateJWT(userId, roleId)
 	if err != nil {
 		return err
 	}

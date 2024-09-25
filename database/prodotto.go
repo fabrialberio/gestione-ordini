@@ -1,23 +1,23 @@
 package database
 
-type TipologiaProdotto struct {
+type ProductType struct {
 	ID   int
-	Nome string
+	Name string
 }
 
-type Fornitore struct {
+type Supplier struct {
 	ID int
 }
 
-type UnitaDiMisura struct {
-	ID      int
-	Simbolo string
+type UnitOfMeasure struct {
+	ID     int
+	Symbol string
 }
 
-type Prodotto struct {
+type Product struct {
 	ID              int
-	IDTipologia     int
-	IDFornitore     int
-	IDUnitaDiMisura int
-	Nome            string
+	ProductTypeID   int
+	SupplierID      int
+	UnitOfMeasureID int
+	Name            string
 }

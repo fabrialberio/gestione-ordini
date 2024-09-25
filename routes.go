@@ -26,8 +26,8 @@ func onlyPost(h http.HandlerFunc) http.HandlerFunc {
 
 func index(w http.ResponseWriter, r *http.Request) {
 	var data struct {
-		IDUtente int
-		IDRuolo  int
+		UserID   int
+		RoleID   int
 		ErrorMsg string
 	}
 
@@ -38,8 +38,8 @@ func index(w http.ResponseWriter, r *http.Request) {
 		data.ErrorMsg = "Sessione scaduta"
 		unsetSessionCookie(w)
 	} else {
-		data.IDUtente = claims.IDUtente
-		data.IDRuolo = claims.IDRuolo
+		data.UserID = claims.UserID
+		data.RoleID = claims.RoleID
 	}
 
 	templates.ExecuteTemplate(w, "index.html", data)
@@ -50,10 +50,10 @@ func login(w http.ResponseWriter, r *http.Request) {
 	password := r.FormValue("password")
 	errorMsg := ""
 
-	utente, _ := db.GetUtenteByUsername(username)
-	ok := verifyPassword(utente, password)
+	user, _ := db.GetUserByUsername(username)
+	ok := verifyPassword(user, password)
 	if ok {
-		setSessionCookie(w, utente.ID, utente.IDRuolo)
+		setSessionCookie(w, user.ID, user.RoleID)
 	} else {
 		unsetSessionCookie(w)
 		errorMsg = "?errormsg=Password errata"

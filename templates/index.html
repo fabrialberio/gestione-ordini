@@ -6,12 +6,12 @@
   </head>
   <body>
     <div class="fh">
-      {{ if .IDUtente }}
-        {{ if eq .IDRuolo 0 }}
+      {{ if .UserID }}
+        {{ if eq .RoleID 0 }}
           {{ template "cuoco.html" . }}   
-        {{ else if eq .IDRuolo 1 }}
+        {{ else if eq .RoleID 1 }}
           {{ template "magazziniere.html" . }}
-        {{ else if eq .IDRuolo 2 }}
+        {{ else if eq .RoleID 2 }}
           {{ template "amministratore.html" . }}
         {{ else }}
         {{ end }}

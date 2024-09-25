@@ -2,10 +2,10 @@ package database
 
 import "time"
 
-type Ordine struct {
+type Order struct {
 	ID          int
-	IDProdotto  int
-	IDUtente    int
-	Quantita    int
-	RichiestoIl time.Time
+	ProductID   int
+	UserID      int
+	Amount      int
+	RequestedAt time.Time
 }
