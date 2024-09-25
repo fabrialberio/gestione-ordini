@@ -39,7 +39,7 @@ CREATE TABLE Utenti (
 ALTER TABLE Utenti ADD CONSTRAINT utente_id_ruolo_foreign FOREIGN KEY(id_ruolo) REFERENCES Ruoli(id);
 
 CREATE TABLE TipologiaProdotto (
-    id INT PRIMARY KEY,
+    id INT PRIMARY KEY AUTO_INCREMENT,
     nome VARCHAR(255) UNIQUE
 );
 
@@ -48,7 +48,7 @@ CREATE TABLE Fornitori (
 );
 
 CREATE TABLE UnitaDiMisura (
-    id INT PRIMARY KEY,
+    id INT PRIMARY KEY AUTO_INCREMENT,
     simbolo VARCHAR(255) UNIQUE
 );
 
