@@ -56,6 +56,45 @@ func (db *Database) GetUser(id int) (*User, error) {
 	return &user, nil
 }
 
+func (db *Database) GetUsers() ([]User, error) {
+	query := "SELECT id, id_ruolo, username, password_hash, nome, cognome, creato_il FROM utenti"
+	rows, err := db.conn.Query(query)
+	if err == sql.ErrNoRows {
+		return []User{}, nil
+	} else if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var users []User
+	for rows.Next() {
+		var user User
+		var createdAtString string
+
+		err = rows.Scan(
+			&user.ID,
+			&user.RoleID,
+			&user.Username,
+			&user.PasswordHash,
+			&user.Name,
+			&user.Surname,
+			&createdAtString,
+		)
+		if err != nil {
+			return nil, err
+		}
+
+		user.CreatedAt, err = time.Parse(DateTimeFormat, createdAtString)
+		if err != nil {
+			return nil, err
+		}
+
+		users = append(users, user)
+	}
+
+	return users, nil
+}
+
 func (db *Database) GetUserByUsername(username string) (*User, error) {
 	query := "SELECT id FROM utenti WHERE username = ?"
 	var id int
