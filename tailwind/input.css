@@ -2,24 +2,20 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
-    @apply bg-gray-50;
-}
-
 .text-h2 {
-    @apply text-3xl font-extrabold text-gray-900;
+    @apply text-3xl font-extrabold text-on-surface;
 }
 
-.text-error {
-    @apply text-red-600;
+.text-errormsg {
+    @apply text-error;
 }
 
 .focus-ring:focus {
-    @apply outline-none ring-2 ring-indigo-500 z-10;
+    @apply outline-none ring-2 ring-primary z-10;
 }
 
 .input {
-    @apply focus-ring focus:ring-1 focus:border-indigo-500 rounded-lg border border-gray-300 placeholder-gray-500 text-gray-900 sm:text-sm px-3 py-2;
+    @apply focus-ring focus:ring-1 focus:border-primary rounded-lg border border-outline placeholder-on-surface-dim text-on-surface sm:text-sm px-3 py-2;
 }
 
 .btn {
@@ -27,13 +23,9 @@ body {
 }
 
 .btn:hover {
-    @apply bg-black bg-opacity-5;
+    @apply shadow-[inset_0_0_0_1000px_rgba(0,0,0,0.1)] transition duration-200;
 }
 
 .btn-accent {
-    @apply btn text-white bg-indigo-600;
-}
-
-.btn-accent:hover {
-    @apply bg-indigo-700;
+    @apply btn bg-primary text-on-primary;
 }

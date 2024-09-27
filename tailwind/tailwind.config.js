@@ -2,7 +2,19 @@
 module.exports = {
   content: ["./templates/*.html"],
   theme: {
-    extend: {},
+    colors: {
+      "primary": "#2ec27e",
+      "primary-hover": "#26a269",
+      "on-primary": "#ffffff",
+      "error": "#e74c3c",
+      "on-error": "#ffffff",
+      "surface": "#f9fafb",
+      "surface-hover": "#deddda",
+      "on-surface": "#241f31",
+      "on-surface-dim": "#9a9996",
+      "outline": "#c0bfbc",
+      "scrim": "#000000",
+    },
   },
   plugins: [],
 }
