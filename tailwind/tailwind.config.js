@@ -6,7 +6,7 @@ module.exports = {
       "primary": "#2ec27e",
       "primary-hover": "#26a269",
       "on-primary": "#ffffff",
-      "error": "#e74c3c",
+      "error": "#c01c28",
       "on-error": "#ffffff",
       "surface": "#f9fafb",
       "surface-hover": "#deddda",

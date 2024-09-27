@@ -6,7 +6,7 @@
     @apply text-3xl font-extrabold text-on-surface;
 }
 
-.text-errormsg {
+.text-destructive {
     @apply text-error;
 }
 
@@ -26,6 +26,6 @@
     @apply shadow-[inset_0_0_0_1000px_rgba(0,0,0,0.1)] transition duration-200;
 }
 
-.btn-accent {
+.btn-suggested {
     @apply btn bg-primary text-on-primary;
 }

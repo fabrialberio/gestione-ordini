@@ -5,7 +5,7 @@
         Gestione ordini
       </h2>
       {{ if .ErrorMsg }}
-      <p class="text-errormsg" role="alert">
+      <p class="text-destructive" role="alert">
         {{ .ErrorMsg }}
       </p>
       {{ else }}
@@ -24,7 +24,7 @@
         <input id="password" name="password" type="password" autocomplete="current-password" class="w-full input" placeholder="Password" />
       </div>
     </div>
-    <button type="submit" class="w-full btn-accent">
+    <button type="submit" class="w-full btn-suggested">
       Accedi
     </button>
   </form>
