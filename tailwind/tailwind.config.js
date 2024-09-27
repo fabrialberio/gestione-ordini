@@ -4,15 +4,13 @@ module.exports = {
   theme: {
     colors: {
       "primary": "#2ec27e",
-      "primary-hover": "#26a269",
       "on-primary": "#ffffff",
       "error": "#c01c28",
       "on-error": "#ffffff",
       "surface": "#f9fafb",
-      "surface-hover": "#deddda",
-      "on-surface": "#241f31",
-      "on-surface-dim": "#9a9996",
-      "outline": "#c0bfbc",
+      "on-surface": "#1f2937",
+      "on-surface-dim": "#6b7280",
+      "outline": "#d1d5db",
       "scrim": "#000000",
     },
   },
