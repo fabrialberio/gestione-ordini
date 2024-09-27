@@ -19,13 +19,17 @@
 }
 
 .btn {
-    @apply focus-ring rounded-full h-12 focus:ring-offset-2 font-bold py-2 px-4 inline-flex items-center justify-center;
+    @apply focus-ring gap-2 rounded-full focus:ring-offset-2 font-bold px-4 py-2 inline-flex items-center justify-center;
 }
 
 .btn:hover {
     @apply shadow-[inset_0_0_0_1000px_rgba(0,0,0,0.1)] transition duration-200;
 }
 
-.btn-suggested {
-    @apply btn bg-primary text-on-primary;
+.btn-lg {
+    @apply btn h-12 py-2 min-w-12 btn;
+}
+
+.suggested {
+    @apply bg-primary text-on-primary;
 }
