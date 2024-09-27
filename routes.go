@@ -14,16 +14,6 @@ func logRequest(h http.HandlerFunc) http.HandlerFunc {
 	}
 }
 
-func onlyPost(h http.HandlerFunc) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		if r.Method != http.MethodPost {
-			http.Error(w, "Metodo non consentito", http.StatusMethodNotAllowed)
-		} else {
-			h(w, r)
-		}
-	}
-}
-
 func index(w http.ResponseWriter, r *http.Request) {
 	var data struct {
 		UserID   int
@@ -46,6 +36,11 @@ func index(w http.ResponseWriter, r *http.Request) {
 }
 
 func login(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodPost {
+		http.Error(w, "Metodo non consentito", http.StatusMethodNotAllowed)
+		return
+	}
+
 	username := r.FormValue("username")
 	password := r.FormValue("password")
 	errorMsg := ""
@@ -66,4 +61,9 @@ func login(w http.ResponseWriter, r *http.Request) {
 	}
 
 	http.Redirect(w, r, fmt.Sprintf("/%s", errorMsg), http.StatusSeeOther)
+}
+
+func logout(w http.ResponseWriter, r *http.Request) {
+	unsetSessionCookie(w)
+	http.Redirect(w, r, "/", http.StatusSeeOther)
 }
