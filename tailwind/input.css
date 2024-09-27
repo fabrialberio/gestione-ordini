@@ -14,10 +14,26 @@ body {
     @apply text-red-600;
 }
 
+.focus-ring:focus {
+    @apply outline-none ring-2 ring-indigo-500 z-10;
+}
+
 .input {
-    @apply border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm px-3 py-2;
+    @apply focus-ring focus:ring-1 focus:border-indigo-500 rounded-lg border border-gray-300 placeholder-gray-500 text-gray-900 sm:text-sm px-3 py-2;
 }
 
 .btn {
-    @apply border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 py-2 px-4;
+    @apply focus-ring rounded-full h-12 focus:ring-offset-2 font-bold py-2 px-4 inline-flex items-center justify-center;
+}
+
+.btn:hover {
+    @apply bg-black bg-opacity-5;
+}
+
+.btn-accent {
+    @apply btn text-white bg-indigo-600;
+}
+
+.btn-accent:hover {
+    @apply bg-indigo-700;
 }
