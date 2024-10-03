@@ -15,7 +15,7 @@ import (
 var (
 	db *database.Database
 
-	templates = template.Must(template.ParseGlob("templates/*.html"))
+	templates *template.Template
 
 	//go:embed public
 	publicFS embed.FS
@@ -24,7 +24,8 @@ var (
 func main() {
 	checkEnvVars()
 
-	template.Must(templates.ParseGlob("templates/admin/*.html"))
+	templates = template.Must(template.ParseGlob("templates/*.html"))
+	template.Must(templates.ParseGlob("templates/*/*.html"))
 
 	db = createDatabase()
 	defer db.Close()
