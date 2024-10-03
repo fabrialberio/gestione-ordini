@@ -25,7 +25,7 @@ func main() {
 	checkEnvVars()
 
 	templ = template.Must(template.ParseGlob("templates/*.html"))
-	template.Must(templ.ParseGlob("templates/*/*.html"))
+	template.Must(templ.ParseGlob("templates/**/*.html"))
 
 	db = createDatabase()
 	defer db.Close()
