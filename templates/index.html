@@ -1,25 +1,18 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>Gestione ordini</title>
-    <link href="./public/tailwind.css" rel="stylesheet" >
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
-    <script src="https://unpkg.com/htmx.org@1.9.2"></script>
-  </head>
+  {{ template "head.html" }}
   <body>
-    <div class="bg-surface fh">
-      {{ if .UserID }}
-        {{ if eq .RoleID 0 }}
-          {{ template "cook.html" . }}   
-        {{ else if eq .RoleID 1 }}
-          {{ template "manager.html" . }}
-        {{ else if eq .RoleID 2 }}
-          {{ template "admin.html" . }}
-        {{ else }}
-        {{ end }}
-      {{ else }}
-        {{ template "login.html" . }}
-      {{ end }}
-    </div>
+  {{ if .UserID }}
+    {{ if eq .RoleID 0 }}
+      {{ template "cook.html" . }}   
+    {{ else if eq .RoleID 1 }}
+      {{ template "manager.html" . }}
+    {{ else if eq .RoleID 2 }}
+      {{ template "admin.html" . }}
+    {{ else }}
+    {{ end }}
+  {{ else }}
+    {{ template "login.html" . }}
+  {{ end }}
   </body>
 </html>
