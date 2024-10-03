@@ -18,5 +18,5 @@ func adminUsers(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	templates.ExecuteTemplate(w, "users.html", users)
+	templ.ExecuteTemplate(w, "users.html", users)
 }

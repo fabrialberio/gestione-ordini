@@ -24,7 +24,7 @@ func index(w http.ResponseWriter, r *http.Request) {
 		data.RoleID = claims.RoleID
 	}
 
-	templates.ExecuteTemplate(w, "index.html", data)
+	templ.ExecuteTemplate(w, "index.html", data)
 }
 
 func login(w http.ResponseWriter, r *http.Request) {
