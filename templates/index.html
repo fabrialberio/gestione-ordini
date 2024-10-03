@@ -14,7 +14,7 @@
         {{ else if eq .RoleID 1 }}
           {{ template "manager.html" . }}
         {{ else if eq .RoleID 2 }}
-          {{ template "administrator.html" . }}
+          {{ template "admin.html" . }}
         {{ else }}
         {{ end }}
       {{ else }}
