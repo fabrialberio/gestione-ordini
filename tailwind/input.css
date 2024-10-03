@@ -19,7 +19,7 @@
 }
 
 .btn {
-    @apply focus-ring gap-2 rounded-full focus:ring-offset-2 font-bold px-4 py-2 inline-flex items-center justify-center;
+    @apply focus-ring gap-2 focus:ring-offset-2 font-bold inline-flex items-center justify-center;
 }
 
 .btn:hover {
@@ -27,7 +27,11 @@
 }
 
 .btn-lg {
-    @apply btn h-12 py-2 min-w-12 btn;
+    @apply btn h-12 px-4 py-2 min-w-12 rounded-full;
+}
+
+.btn-sm {
+    @apply btn h-8 px-3 py-2 min-w-8 text-sm rounded-lg;
 }
 
 .suggested {
