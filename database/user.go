@@ -30,6 +30,14 @@ const (
 	PermIDEditUsers
 )
 
+func (db *Database) GetRoleName(id int) (string, error) {
+	query := "SELECT nome FROM ruoli WHERE id = ?"
+	var name string
+
+	err := db.conn.QueryRow(query, id).Scan(&name)
+	return name, err
+}
+
 func (db *Database) GetUser(id int) (*User, error) {
 	query := "SELECT id, id_ruolo, username, password_hash, nome, cognome, creato_il FROM utenti WHERE id = ?"
 	var user User
