@@ -22,12 +22,12 @@ var (
 )
 
 func main() {
-	CheckEnvVars()
+	checkEnvVars()
 
-	db = CreateDatabase()
+	db = createDatabase()
 	defer db.Close()
 
-	AddAdminUserIfNotExists()
+	addAdminUserIfNotExists()
 
 	mux := http.NewServeMux()
 	mux.Handle("/public/", http.FileServerFS(publicFS))
@@ -40,7 +40,14 @@ func main() {
 	log.Fatal(http.ListenAndServe(":8080", mux))
 }
 
-func CheckEnvVars() {
+func logRequest(h http.HandlerFunc) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		log.Printf("%s %s %s", r.RemoteAddr, r.Method, r.URL)
+		h(w, r)
+	}
+}
+
+func checkEnvVars() {
 	envVars := []string{
 		"MYSQL_USER",
 		"MYSQL_PASSWORD",
@@ -56,7 +63,7 @@ func CheckEnvVars() {
 	}
 }
 
-func CreateDatabase() *database.Database {
+func createDatabase() *database.Database {
 	dsn := fmt.Sprintf(
 		"%s:%s@tcp(%s:3306)/%s",
 		os.Getenv("MYSQL_USER"),
@@ -80,7 +87,7 @@ func CreateDatabase() *database.Database {
 	return db
 }
 
-func AddAdminUserIfNotExists() {
+func addAdminUserIfNotExists() {
 	_, err := db.GetUserByUsername("admin")
 	if err == sql.ErrNoRows {
 		hash, err := hashPassword(os.Getenv("ADMIN_PASSWORD"))

@@ -4,16 +4,8 @@ import (
 	"fmt"
 	"gestione-ordini/database"
 	"html"
-	"log"
 	"net/http"
 )
-
-func logRequest(h http.HandlerFunc) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		log.Printf("%s %s %s", r.RemoteAddr, r.Method, r.URL)
-		h(w, r)
-	}
-}
 
 func index(w http.ResponseWriter, r *http.Request) {
 	var data struct {
