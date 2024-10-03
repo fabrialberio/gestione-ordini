@@ -24,6 +24,8 @@ var (
 func main() {
 	checkEnvVars()
 
+	template.Must(templates.ParseGlob("templates/admin/*.html"))
+
 	db = createDatabase()
 	defer db.Close()
 
@@ -34,7 +36,7 @@ func main() {
 	mux.HandleFunc("/", logRequest(index))
 	mux.HandleFunc("/login", logRequest(login))
 	mux.HandleFunc("/logout", logRequest(logout))
-	mux.HandleFunc("/admin/users", logRequest(adminUsersTable))
+	mux.HandleFunc("/admin/users", logRequest(adminUsers))
 
 	log.Println("Server started on port 8080.")
 	log.Fatal(http.ListenAndServe(":8080", mux))

@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"gestione-ordini/database"
 	"html"
 	"net/http"
 )
@@ -59,20 +58,4 @@ func login(w http.ResponseWriter, r *http.Request) {
 func logout(w http.ResponseWriter, r *http.Request) {
 	unsetSessionCookie(w)
 	http.Redirect(w, r, "/", http.StatusSeeOther)
-}
-
-func adminUsersTable(w http.ResponseWriter, r *http.Request) {
-	claims, err := getSessionCookie(r)
-	if err != nil || claims.RoleID != database.RoleIDAdministrator {
-		http.Error(w, "Non autorizzato", http.StatusForbidden)
-		return
-	}
-
-	users, err := db.GetUsers()
-	if err != nil {
-		http.Error(w, "Errore interno", http.StatusInternalServerError)
-		return
-	}
-
-	templates.ExecuteTemplate(w, "users_table.html", users)
 }
