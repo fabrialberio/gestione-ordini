@@ -16,10 +16,10 @@ var (
 )
 
 func NewDatabase(dsn string) (*Database, error) {
-	db, err := gorm.Open(mysql.Open(dsn+"?parseTime=true"), &gorm.Config{
-		DisableForeignKeyConstraintWhenMigrating: true,
-		IgnoreRelationshipsWhenMigrating:         true,
-	})
+	db, err := gorm.Open(mysql.New(mysql.Config{
+		DSN:               dsn + "?parseTime=true",
+		DefaultStringSize: 255,
+	}), &gorm.Config{})
 	if err != nil {
 		return nil, fmt.Errorf("error opening database: %v", err)
 	}
