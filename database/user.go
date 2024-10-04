@@ -2,6 +2,7 @@ package database
 
 import (
 	"database/sql"
+	"fmt"
 	"time"
 )
 
@@ -28,6 +29,15 @@ const (
 	PermIDEditOwnOrder
 	PermIDEditAllOrders
 	PermIDEditUsers
+)
+
+const (
+	UserOrderByID int = iota
+	UserOrderByRole
+	UserOrderByUsername
+	UserOrderByName
+	UserOrderBySurname
+	UserOrderByCreatedAt
 )
 
 func (db *Database) GetRoleName(id int) (string, error) {
@@ -64,8 +74,26 @@ func (db *Database) GetUser(id int) (*User, error) {
 	return &user, nil
 }
 
-func (db *Database) GetUsers() ([]User, error) {
-	query := "SELECT id, id_ruolo, username, password_hash, nome, cognome, creato_il FROM utenti"
+func (db *Database) GetUsers(orderBy int) ([]User, error) {
+	var orderByString string
+	switch orderBy {
+	case UserOrderByID:
+		orderByString = "id"
+	case UserOrderByRole:
+		orderByString = "id_ruolo"
+	case UserOrderByUsername:
+		orderByString = "username"
+	case UserOrderByName:
+		orderByString = "nome"
+	case UserOrderBySurname:
+		orderByString = "cognome"
+	case UserOrderByCreatedAt:
+		orderByString = "creato_il"
+	default:
+		return nil, fmt.Errorf("invalid orderBy value: %d", orderBy)
+	}
+
+	query := "SELECT id, id_ruolo, username, password_hash, nome, cognome, creato_il FROM utenti ORDER BY " + orderByString
 	rows, err := db.conn.Query(query)
 	if err == sql.ErrNoRows {
 		return []User{}, nil

@@ -49,13 +49,24 @@ func users(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	users, err := db.GetUsers()
+	var err error
+	var data struct {
+		OrderBy int
+		Users   []database.User
+	}
+
+	data.OrderBy, err = strconv.Atoi(r.URL.Query().Get("orderBy"))
+	if err != nil {
+		data.OrderBy = database.UserOrderByID
+	}
+
+	data.Users, err = db.GetUsers(data.OrderBy)
 	if err != nil {
 		http.Error(w, "Errore interno", http.StatusInternalServerError)
 		return
 	}
 
-	templ.ExecuteTemplate(w, "users.html", users)
+	templ.ExecuteTemplate(w, "users.html", data)
 }
 
 func user(w http.ResponseWriter, r *http.Request) {
@@ -71,6 +82,7 @@ func user(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.Atoi(r.URL.Query().Get("id"))
 	if err != nil {
 		data.IsNew = true
+		data.User = &database.User{}
 	} else {
 		user, err := db.GetUser(id)
 		if err != nil {
