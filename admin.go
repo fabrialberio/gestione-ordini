@@ -13,7 +13,7 @@ func checkPerm(w http.ResponseWriter, r *http.Request, permId int) bool {
 		return false
 	}
 
-	if ok, err := db.UserHasPermission(claims.UserID, permId); err != nil || !ok {
+	if ok, err := db.UserHasPerm(claims.UserID, permId); err != nil || !ok {
 		http.Error(w, "Non autorizzato", http.StatusForbidden)
 		return false
 	}

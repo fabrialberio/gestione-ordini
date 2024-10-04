@@ -135,21 +135,18 @@ func (db *Database) AddUser(
 	return nil
 }
 
-func (db *Database) UserHasPermission(userId int, permissionId int) (bool, error) {
-	//query := "SELECT u.username FROM utenti u JOIN ruoli r ON u.id_ruolo = r.id JOIN ruolo_permesso rp ON r.id = rp.id_ruolo JOIN permessi p ON rp.id_permesso = p.id WHERE u.id = ? AND p.id = ?"
-	var username string
-
-	err := db.conn.Model(&User{}).
+func (db *Database) UserHasPerm(userId int, permissionId int) (bool, error) {
+	rows, err := db.conn.Model(&User{}).
+		Select("utenti.id").
 		Joins("JOIN ruoli ON utenti.id_ruolo = ruoli.id").
 		Joins("JOIN ruolo_permesso ON ruoli.id = ruolo_permesso.id_ruolo").
 		Joins("JOIN permessi ON ruolo_permesso.id_permesso = permessi.id").
 		Where("utenti.id = ? AND permessi.id = ?", userId, permissionId).
-		Select("utenti.username").
-		Find(&username).Error
+		Rows()
 
 	if err != nil {
 		return false, err
-	} else if username != "" {
+	} else if rows.Next() {
 		return true, nil
 	}
 
