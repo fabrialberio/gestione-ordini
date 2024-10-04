@@ -1,19 +1,25 @@
 package database
 
 import (
-	"database/sql"
 	"fmt"
 	"time"
+
+	"gorm.io/gorm/clause"
 )
 
 type User struct {
-	ID           int
-	RoleID       int
-	Username     string
-	PasswordHash string
-	Name         string
-	Surname      string
-	CreatedAt    time.Time
+	ID           int       `gorm:"column:id;primaryKey"`
+	RoleID       int       `gorm:"column:id_ruolo"`
+	Username     string    `gorm:"column:username"`
+	PasswordHash string    `gorm:"column:password_hash"`
+	Name         string    `gorm:"column:nome"`
+	Surname      string    `gorm:"column:cognome"`
+	CreatedAt    time.Time `gorm:"column:creato_il"`
+}
+
+type Role struct {
+	ID   int64  `gorm:"column:id;primaryKey"`
+	Name string `gorm:"column:nome;size:255"`
 }
 
 const (
@@ -41,34 +47,20 @@ const (
 )
 
 func (db *Database) GetRoleName(id int) (string, error) {
-	query := "SELECT nome FROM ruoli WHERE id = ?"
-	var name string
+	var role Role
 
-	err := db.conn.QueryRow(query, id).Scan(&name)
-	return name, err
+	if db.conn.Take(&role, id).Error != nil {
+		return "", fmt.Errorf("role with ID %d not found", id)
+	}
+
+	return role.Name, nil
 }
 
 func (db *Database) GetUser(id int) (*User, error) {
-	query := "SELECT id, id_ruolo, username, password_hash, nome, cognome, creato_il FROM utenti WHERE id = ?"
 	var user User
-	var createdAtString string
 
-	err := db.conn.QueryRow(query, id).Scan(
-		&user.ID,
-		&user.RoleID,
-		&user.Username,
-		&user.PasswordHash,
-		&user.Name,
-		&user.Surname,
-		&createdAtString,
-	)
-	if err != nil {
-		return nil, err
-	}
-
-	user.CreatedAt, err = time.Parse(DateTimeFormat, createdAtString)
-	if err != nil {
-		return nil, err
+	if db.conn.Take(&user, id).Error != nil {
+		return nil, fmt.Errorf("user with ID %d not found", id)
 	}
 
 	return &user, nil
@@ -76,6 +68,8 @@ func (db *Database) GetUser(id int) (*User, error) {
 
 func (db *Database) GetUsers(orderBy int) ([]User, error) {
 	var orderByString string
+	var users []User
+
 	switch orderBy {
 	case UserOrderByID:
 		orderByString = "id"
@@ -93,54 +87,26 @@ func (db *Database) GetUsers(orderBy int) ([]User, error) {
 		return nil, fmt.Errorf("invalid orderBy value: %d", orderBy)
 	}
 
-	query := "SELECT id, id_ruolo, username, password_hash, nome, cognome, creato_il FROM utenti ORDER BY " + orderByString
-	rows, err := db.conn.Query(query)
-	if err == sql.ErrNoRows {
-		return []User{}, nil
-	} else if err != nil {
+	err := db.conn.Find(&users).Order(clause.OrderByColumn{
+		Column: clause.Column{Name: orderByString},
+		Desc:   true,
+	}).Error
+	if err != nil {
 		return nil, err
-	}
-	defer rows.Close()
-
-	var users []User
-	for rows.Next() {
-		var user User
-		var createdAtString string
-
-		err = rows.Scan(
-			&user.ID,
-			&user.RoleID,
-			&user.Username,
-			&user.PasswordHash,
-			&user.Name,
-			&user.Surname,
-			&createdAtString,
-		)
-		if err != nil {
-			return nil, err
-		}
-
-		user.CreatedAt, err = time.Parse(DateTimeFormat, createdAtString)
-		if err != nil {
-			return nil, err
-		}
-
-		users = append(users, user)
 	}
 
 	return users, nil
 }
 
 func (db *Database) GetUserByUsername(username string) (*User, error) {
-	query := "SELECT id FROM utenti WHERE username = ?"
-	var id int
+	var user *User
 
-	err := db.conn.QueryRow(query, username).Scan(&id)
+	err := db.conn.Table("utenti").Take(&user, "username = ?", username).Error
 	if err != nil {
 		return nil, err
 	}
 
-	return db.GetUser(id)
+	return user, nil
 }
 
 func (db *Database) AddUser(
@@ -150,25 +116,31 @@ func (db *Database) AddUser(
 	name string,
 	surname string,
 ) error {
-	createdAt := time.Now().Format(DateTimeFormat)
+	err := db.conn.Table("utenti").Create(&User{
+		RoleID:       roleId,
+		Username:     username,
+		PasswordHash: passwordHash,
+		Name:         name,
+		Surname:      surname,
+		CreatedAt:    time.Now(),
+	}).Error
+	if err != nil {
+		return err
+	}
 
-	query := "INSERT INTO utenti (id_ruolo, username, password_hash, nome, cognome, creato_il) VALUES (?, ?, ?, ?, ?, ?)"
-	_, err := db.conn.Exec(query, roleId, username, passwordHash, name, surname, createdAt)
-
-	return err
+	return nil
 }
 
 func (db *Database) UserHasPermission(userId int, permissionId int) (bool, error) {
-	query := "SELECT u.username FROM utenti u JOIN ruoli r ON u.id_ruolo = r.id JOIN ruolo_permesso rp ON r.id = rp.id_ruolo JOIN permessi p ON rp.id_permesso = p.id WHERE u.id = ? AND p.id = ?"
-	row := db.conn.QueryRow(query, userId, permissionId)
-	var username string
+	//query := "SELECT u.username FROM utenti u JOIN ruoli r ON u.id_ruolo = r.id JOIN ruolo_permesso rp ON r.id = rp.id_ruolo JOIN permessi p ON rp.id_permesso = p.id WHERE u.id = ? AND p.id = ?"
 
-	err := row.Scan(&username)
-	if err == sql.ErrNoRows {
-		return false, nil
-	} else if err != nil {
+	rows, err := db.conn.Table("utenti").Select("username").Joins("JOIN ruoli r ON utenti.id_ruolo = r.id").Joins("JOIN ruolo_permesso rp ON r.id = rp.id_ruolo").Joins("JOIN permessi p ON rp.id_permesso = p.id").Where("utenti.id = ? AND p.id = ?", userId, permissionId).Rows()
+
+	if err != nil {
 		return false, err
+	} else if rows.Next() {
+		return true, nil
 	}
 
-	return true, nil
+	return false, nil
 }

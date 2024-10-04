@@ -1,7 +1,6 @@
 package main
 
 import (
-	"database/sql"
 	"embed"
 	"fmt"
 	"gestione-ordini/database"
@@ -96,7 +95,7 @@ func createDatabase() *database.Database {
 
 func addAdminUserIfNotExists() {
 	_, err := db.GetUserByUsername("admin")
-	if err == sql.ErrNoRows {
+	if err == database.ErrRecordNotFound {
 		hash, err := hashPassword(os.Getenv("ADMIN_PASSWORD"))
 		if err != nil {
 			log.Fatalf("Error hashing admin password: %v", err)
