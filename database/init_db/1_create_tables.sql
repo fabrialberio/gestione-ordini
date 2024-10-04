@@ -11,12 +11,12 @@ DROP TABLE IF EXISTS permessi;
 DROP TABLE IF EXISTS ruoli;
 
 CREATE TABLE ruoli (
-    id INT PRIMARY KEY,
+    id BIGINT PRIMARY KEY,
     nome VARCHAR(255) UNIQUE
 );
 
 CREATE TABLE permessi (
-    id INT PRIMARY KEY,
+    id BIGINT PRIMARY KEY,
     nome VARCHAR(255) UNIQUE
 );
 
@@ -29,7 +29,7 @@ ALTER TABLE ruolo_permesso ADD CONSTRAINT ruolo_permesso_id_ruolo_foreign FOREIG
 ALTER TABLE ruolo_permesso ADD CONSTRAINT ruolo_permesso_id_permesso_foreign FOREIGN KEY(id_permesso) REFERENCES permessi(id);
 
 CREATE TABLE utenti (
-    id INT PRIMARY KEY AUTO_INCREMENT,
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
     id_ruolo INT,
     username VARCHAR(255) UNIQUE NOT NULL,
     password_hash VARCHAR(255),
@@ -40,21 +40,21 @@ CREATE TABLE utenti (
 ALTER TABLE utenti ADD CONSTRAINT utente_id_ruolo_foreign FOREIGN KEY(id_ruolo) REFERENCES ruoli(id);
 
 CREATE TABLE tipologie_prodotto (
-    id INT PRIMARY KEY AUTO_INCREMENT,
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
     nome VARCHAR(255) UNIQUE
 );
 
 CREATE TABLE fornitori (
-    id INT PRIMARY KEY AUTO_INCREMENT
+    id BIGINT PRIMARY KEY AUTO_INCREMENT
 );
 
 CREATE TABLE unita_di_misura (
-    id INT PRIMARY KEY AUTO_INCREMENT,
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
     simbolo VARCHAR(255) UNIQUE
 );
 
 CREATE TABLE prodotti (
-    id INT PRIMARY KEY AUTO_INCREMENT,
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
     id_tipologia INT,
     id_fornitore INT,
     id_unita_di_misura INT,
@@ -65,7 +65,7 @@ ALTER TABLE prodotti ADD CONSTRAINT prodotti_id_tipologia_foreign FOREIGN KEY(id
 ALTER TABLE prodotti ADD CONSTRAINT prodotti_id_unita_di_misura_foreign FOREIGN KEY(id_unita_di_misura) REFERENCES unita_di_misura(id);
 
 CREATE TABLE ordini (
-    id INT PRIMARY KEY AUTO_INCREMENT,
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
     id_prodotto INT,
     id_utente INT,
     quantita BIGINT,
