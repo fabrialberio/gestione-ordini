@@ -4,7 +4,7 @@
       Utenti
     </h2>
     <div class="flex gap-1">
-      <a class="ml-auto btn-sm suggested" href="user">
+      <a class="ml-auto btn-sm suggested" href="admin/user">
         <i class="fa-add fas"></i>
         Aggiungi
       </a>
@@ -31,7 +31,7 @@
             <td>{{ .Username }}</td>
             <td>{{ .RoleID }}</td>
             <td class="w-8">
-              <a class="w-8 btn-sm" href="user?id={{ .ID }}">
+              <a class="w-8 btn-sm" href="admin/user?id={{ .ID }}">
                 <i class="fa-pen fas"></i>
               </a>
             </td>

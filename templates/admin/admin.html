@@ -1,15 +1,21 @@
-<div class="bg-surface min-h-screen">
-  <div class="mx-auto w-full max-w-screen-xl">
-    <div class="flex p-4">
-      <div class="btn-lg">
-        <i class="fa-bars fas"></i>
+<!DOCTYPE html>
+<html>
+  {{ template "head.html" }} 
+  <body>
+    <div class="bg-surface min-h-screen">
+      <div class="mx-auto w-full max-w-screen-xl">
+        <div class="flex p-4">
+          <div class="btn-lg">
+            <i class="fa-bars fas"></i>
+          </div>
+          <a class="ml-auto btn-lg" href="logout">
+            Esci
+            <i class="fa-right-to-bracket fas"></i>
+          </a>
+        </div>
       </div>
-      <a class="ml-auto btn-lg" href="logout">
-        Esci
-        <i class="fa-right-to-bracket fas"></i>
-      </a>
+      <div hx-get="/admin/users" hx-trigger="load" hx-target="this">
+      </div>
     </div>
-  </div>
-  <div hx-get="/users" hx-trigger="load" hx-target="this">
-  </div>
-</div>
+  </body>
+</html>

@@ -5,7 +5,7 @@
     <div class="bg-surface min-h-screen">
       <div class="mx-auto w-full max-w-screen-xl">
         <div class="flex p-4">
-          <a class="btn-lg" href="/">
+          <a class="btn-lg" href="/admin">
             <i class="fa-arrow-left fas"></i>
             Indietro
           </a>
@@ -15,7 +15,11 @@
       <div class="flex justify-center items-center">
         <div class="space-y-4 px-6 w-full max-w-xl">
           <h2 class="text-h2">
-            {{ .Name }} {{ .Surname }}
+          {{ if .IsNew }}
+            Nuovo studente
+          {{ else }}
+            Modifica studente
+          {{ end }}
           </h2>
         </div>
       </div>

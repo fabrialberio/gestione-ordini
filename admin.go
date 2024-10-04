@@ -21,6 +21,29 @@ func checkPerm(w http.ResponseWriter, r *http.Request, permId int) bool {
 	return true
 }
 
+func checkRole(w http.ResponseWriter, r *http.Request, roleId int) bool {
+	claims, err := getSessionCookie(r)
+	if err != nil {
+		http.Error(w, "Non autorizzato", http.StatusForbidden)
+		return false
+	}
+
+	if claims.RoleID != roleId {
+		http.Error(w, "Non autorizzato", http.StatusForbidden)
+		return false
+	}
+
+	return true
+}
+
+func admin(w http.ResponseWriter, r *http.Request) {
+	if !checkRole(w, r, database.RoleIDAdministrator) {
+		return
+	}
+
+	templ.ExecuteTemplate(w, "admin.html", nil)
+}
+
 func users(w http.ResponseWriter, r *http.Request) {
 	if !checkPerm(w, r, database.PermIDEditUsers) {
 		return
@@ -40,16 +63,23 @@ func user(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	var data struct {
+		User  *database.User
+		IsNew bool
+	}
+
 	id, err := strconv.Atoi(r.URL.Query().Get("id"))
 	if err != nil {
-		id = 0
+		data.IsNew = true
+	} else {
+		user, err := db.GetUser(id)
+		if err != nil {
+			http.Error(w, "Errore interno", http.StatusInternalServerError)
+			return
+		}
+
+		data.User = user
 	}
 
-	user, err := db.GetUser(id)
-	if err != nil {
-		http.Error(w, "Errore interno", http.StatusInternalServerError)
-		return
-	}
-
-	templ.ExecuteTemplate(w, "user.html", user)
+	templ.ExecuteTemplate(w, "user.html", data)
 }

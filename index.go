@@ -1,7 +1,7 @@
 package main
 
 import (
-	"fmt"
+	"gestione-ordini/database"
 	"html"
 	"net/http"
 )
@@ -35,7 +35,7 @@ func login(w http.ResponseWriter, r *http.Request) {
 
 	username := r.FormValue("username")
 	password := r.FormValue("password")
-	errorMsg := ""
+	dest := ""
 
 	var ok bool
 	user, _ := db.GetUserByUsername(username)
@@ -47,12 +47,20 @@ func login(w http.ResponseWriter, r *http.Request) {
 
 	if ok {
 		setSessionCookie(w, user.ID, user.RoleID)
+		switch user.RoleID {
+		case database.RoleIDCook:
+			dest = "/cook"
+		case database.RoleIDManager:
+			dest = "/manager"
+		case database.RoleIDAdministrator:
+			dest = "/admin"
+		}
 	} else {
 		unsetSessionCookie(w)
-		errorMsg = "?errormsg=Password errata"
+		dest = "/?errormsg=Password errata"
 	}
 
-	http.Redirect(w, r, fmt.Sprintf("/%s", errorMsg), http.StatusSeeOther)
+	http.Redirect(w, r, dest, http.StatusSeeOther)
 }
 
 func logout(w http.ResponseWriter, r *http.Request) {
