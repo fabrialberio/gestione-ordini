@@ -21,8 +21,8 @@ CREATE TABLE permessi (
 );
 
 CREATE TABLE ruolo_permesso (
-    id_ruolo INT,
-    id_permesso INT,
+    id_ruolo BIGINT,
+    id_permesso BIGINT,
     PRIMARY KEY (id_ruolo, id_permesso)
 );
 ALTER TABLE ruolo_permesso ADD CONSTRAINT ruolo_permesso_id_ruolo_foreign FOREIGN KEY(id_ruolo) REFERENCES ruoli(id);
@@ -30,7 +30,7 @@ ALTER TABLE ruolo_permesso ADD CONSTRAINT ruolo_permesso_id_permesso_foreign FOR
 
 CREATE TABLE utenti (
     id BIGINT PRIMARY KEY AUTO_INCREMENT,
-    id_ruolo INT,
+    id_ruolo BIGINT,
     username VARCHAR(255) UNIQUE NOT NULL,
     password_hash VARCHAR(255),
     nome VARCHAR(255),
@@ -55,9 +55,9 @@ CREATE TABLE unita_di_misura (
 
 CREATE TABLE prodotti (
     id BIGINT PRIMARY KEY AUTO_INCREMENT,
-    id_tipologia INT,
-    id_fornitore INT,
-    id_unita_di_misura INT,
+    id_tipologia BIGINT,
+    id_fornitore BIGINT,
+    id_unita_di_misura BIGINT,
     nome VARCHAR(255)
 );
 ALTER TABLE prodotti ADD CONSTRAINT prodotti_id_fornitore_foreign FOREIGN KEY(id_fornitore) REFERENCES fornitori(id);
@@ -66,8 +66,8 @@ ALTER TABLE prodotti ADD CONSTRAINT prodotti_id_unita_di_misura_foreign FOREIGN 
 
 CREATE TABLE ordini (
     id BIGINT PRIMARY KEY AUTO_INCREMENT,
-    id_prodotto INT,
-    id_utente INT,
+    id_prodotto BIGINT,
+    id_utente BIGINT,
     quantita BIGINT,
     richiesto_il DATETIME
 );
