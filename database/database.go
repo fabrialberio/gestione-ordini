@@ -24,13 +24,13 @@ func NewDatabase(dsn string) (*Database, error) {
 		return nil, fmt.Errorf("error opening database: %v", err)
 	}
 
-	db.Table("tipologie_prodotto").AutoMigrate(&ProductType{})
-	db.Table("fornitori").AutoMigrate(&Supplier{})
-	db.Table("unita_di_misura").AutoMigrate(&UnitOfMeasure{})
-	db.Table("prodotti").AutoMigrate(&Product{})
-	db.Table("ordini").AutoMigrate(&Order{})
-	db.Table("utenti").AutoMigrate(&User{})
-	db.Table("ruoli").AutoMigrate(&Role{})
+	db.AutoMigrate(&ProductType{})
+	db.AutoMigrate(&Supplier{})
+	db.AutoMigrate(&UnitOfMeasure{})
+	db.AutoMigrate(&Product{})
+	db.AutoMigrate(&Order{})
+	db.AutoMigrate(&User{})
+	db.AutoMigrate(&Role{})
 
 	return &Database{db}, nil
 }

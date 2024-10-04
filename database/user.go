@@ -17,10 +17,14 @@ type User struct {
 	CreatedAt    time.Time `gorm:"column:creato_il"`
 }
 
+func (User) TableName() string { return "utenti" }
+
 type Role struct {
 	ID   int64  `gorm:"column:id;primaryKey"`
 	Name string `gorm:"column:nome;size:255"`
 }
+
+func (Role) TableName() string { return "ruoli" }
 
 const (
 	RoleIDCook int = iota
@@ -101,7 +105,7 @@ func (db *Database) GetUsers(orderBy int) ([]User, error) {
 func (db *Database) GetUserByUsername(username string) (*User, error) {
 	var user *User
 
-	err := db.conn.Table("utenti").Take(&user, "username = ?", username).Error
+	err := db.conn.Model(&User{}).Take(&user, "username = ?", username).Error
 	if err != nil {
 		return nil, err
 	}
@@ -116,7 +120,7 @@ func (db *Database) AddUser(
 	name string,
 	surname string,
 ) error {
-	err := db.conn.Table("utenti").Create(&User{
+	err := db.conn.Model(&User{}).Create(&User{
 		RoleID:       roleId,
 		Username:     username,
 		PasswordHash: passwordHash,
@@ -133,12 +137,19 @@ func (db *Database) AddUser(
 
 func (db *Database) UserHasPermission(userId int, permissionId int) (bool, error) {
 	//query := "SELECT u.username FROM utenti u JOIN ruoli r ON u.id_ruolo = r.id JOIN ruolo_permesso rp ON r.id = rp.id_ruolo JOIN permessi p ON rp.id_permesso = p.id WHERE u.id = ? AND p.id = ?"
+	var username string
 
-	rows, err := db.conn.Table("utenti").Select("username").Joins("JOIN ruoli r ON utenti.id_ruolo = r.id").Joins("JOIN ruolo_permesso rp ON r.id = rp.id_ruolo").Joins("JOIN permessi p ON rp.id_permesso = p.id").Where("utenti.id = ? AND p.id = ?", userId, permissionId).Rows()
+	err := db.conn.Model(&User{}).
+		Joins("JOIN ruoli ON utenti.id_ruolo = ruoli.id").
+		Joins("JOIN ruolo_permesso ON ruoli.id = ruolo_permesso.id_ruolo").
+		Joins("JOIN permessi ON ruolo_permesso.id_permesso = permessi.id").
+		Where("utenti.id = ? AND permessi.id = ?", userId, permissionId).
+		Select("utenti.username").
+		Find(&username).Error
 
 	if err != nil {
 		return false, err
-	} else if rows.Next() {
+	} else if username != "" {
 		return true, nil
 	}
 

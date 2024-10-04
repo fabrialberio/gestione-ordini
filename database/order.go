@@ -9,3 +9,5 @@ type Order struct {
 	Amount      int       `gorm:"column:quantita"`
 	RequestedAt time.Time `gorm:"column:richiesto_il"`
 }
+
+func (Order) TableName() string { return "ordini" }
