@@ -18,12 +18,16 @@
     @apply focus-ring focus:ring-1 focus:border-primary rounded-lg border border-outline placeholder-on-surface-dim text-on-surface sm:text-sm px-3 py-2;
 }
 
-.btn {
-    @apply focus-ring gap-2 focus:ring-offset-2 font-bold inline-flex items-center justify-center;
+.selectable {
+    @apply cursor-pointer;
 }
 
-.btn:hover {
+.selectable:hover {
     @apply shadow-[inset_0_0_0_1000px_rgba(0,0,0,0.1)] transition duration-200;
+}
+
+.btn {
+    @apply selectable focus-ring gap-2 focus:ring-offset-2 font-bold inline-flex items-center justify-center;
 }
 
 .btn-lg {

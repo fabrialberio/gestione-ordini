@@ -4,17 +4,6 @@
       Utenti
     </h2>
     <div class="flex gap-1">
-      <div class="btn-sm">
-        <i class="fa-sort fas"></i>
-        <select name="orderBy" hx-get="/admin/users" hx-target="#usersPage" hx-swap="outerHTML">
-          <option value="0" {{ if eq .OrderBy 0 }}selected{{ end }}>Id</option>
-          <option value="1" {{ if eq .OrderBy 1 }}selected{{ end }}>Ruolo</option>
-          <option value="2" {{ if eq .OrderBy 2 }}selected{{ end }}>Username</option>
-          <option value="3" {{ if eq .OrderBy 3 }}selected{{ end }}>Nome</option>
-          <option value="4" {{ if eq .OrderBy 4 }}selected{{ end }}>Cognome</option>
-          <option value="5" {{ if eq .OrderBy 5 }}selected{{ end }}>Data di creazione</option>
-        </select>
-      </div>
       <a class="ml-auto btn-sm suggested" href="admin/user">
         <i class="fa-add fas"></i>
         Aggiungi
@@ -25,22 +14,37 @@
       <table class="w-full table-auto">
         <thead>
           <tr>
-            <th>ID</th>
-            <th>Nome</th>
-            <th>Cognome</th>
-            <th>Username</th>
-            <th>Ruolo</th>
+            <th class="cursor-pointer selectable" hx-get="/admin/users?orderBy=0" hx-target="#usersPage" hx-swap="outerHTML">
+              ID
+              <i class="fa-sort fas{{ if ne .OrderBy 0 }} opacity-0{{ end }}"></i>
+            </th>
+            <th class="cursor-pointer selectable" hx-get="/admin/users?orderBy=1" hx-target="#usersPage" hx-swap="outerHTML">
+              Ruolo
+              <i class="fa-sort fas{{ if ne .OrderBy 1 }} opacity-0{{ end }}"></i>
+            </th>
+            <th class="cursor-pointer selectable" hx-get="/admin/users?orderBy=2" hx-target="#usersPage" hx-swap="outerHTML">
+              Username
+              <i class="fa-sort fas{{ if ne .OrderBy 2 }} opacity-0{{ end }}"></i>
+            </th>
+            <th class="cursor-pointer selectable" hx-get="/admin/users?orderBy=3" hx-target="#usersPage" hx-swap="outerHTML">
+              Nome
+              <i class="fa-sort fas{{ if ne .OrderBy 3 }} opacity-0{{ end }}"></i>
+            </th>
+            <th class="cursor-pointer selectable" hx-get="/admin/users?orderBy=4" hx-target="#usersPage" hx-swap="outerHTML">
+              Cognome
+              <i class="fa-sort fas{{ if ne .OrderBy 4 }} opacity-0{{ end }}"></i>
+            </th>
             <th class="sr-only">Azioni</th>
           </tr>
         </thead>
-        <tbody class="border-outline bg-white border-t">
+        <tbody>
           {{ range .Users }}
-          <tr class="border-outline border-t">
+          <tr>
             <td>{{ .ID }}</td>
+            <td>{{ .RoleID }}</td>
+            <td>{{ .Username }}</td>
             <td>{{ .Name }}</td>
             <td>{{ .Surname }}</td>
-            <td>{{ .Username }}</td>
-            <td>{{ .RoleID }}</td>
             <td class="w-8">
               <a class="w-8 btn-sm" href="admin/user?id={{ .ID }}">
                 <i class="fa-pen fas"></i>
