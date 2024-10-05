@@ -34,6 +34,10 @@
     @apply btn h-12 px-4 py-2 min-w-12 rounded-full;
 }
 
+.btn-md {
+    @apply btn h-10 px-3 py-2 min-w-8 rounded-lg;
+}
+
 .btn-sm {
     @apply btn h-8 px-3 py-2 min-w-8 text-sm rounded-lg;
 }
