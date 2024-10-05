@@ -51,14 +51,31 @@ func users(w http.ResponseWriter, r *http.Request) {
 
 	var err error
 	var data struct {
-		OrderBy int
-		Users   []database.User
+		OrderBy   int
+		OrderDesc bool
+		Columns   []struct {
+			Index int
+			Name  string
+		}
+		Users []database.User
+	}
+
+	data.Columns = []struct {
+		Index int
+		Name  string
+	}{
+		{database.UserOrderByID, "ID"},
+		{database.UserOrderByRole, "Ruolo"},
+		{database.UserOrderByUsername, "Username"},
+		{database.UserOrderByName, "Nome"},
+		{database.UserOrderBySurname, "Cognome"},
 	}
 
 	data.OrderBy, err = strconv.Atoi(r.URL.Query().Get("orderBy"))
 	if err != nil {
 		data.OrderBy = database.UserOrderByID
 	}
+	data.OrderDesc = r.URL.Query().Get("orderDesc") == "true"
 
 	data.Users, err = db.GetUsers(data.OrderBy)
 	if err != nil {
