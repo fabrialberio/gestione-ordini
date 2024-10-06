@@ -15,9 +15,9 @@
         <thead>
          <tr>
             {{ range .Columns }}
-            <th class="cursor-pointer selectable" hx-get="/admin/users?orderBy={{ .Index }}&orderDesc={{ if eq .Index $.OrderBy }}{{ not $.OrderDesc }}{{ else }}true{{ end }}" hx-target="#usersPage" hx-swap="outerHTML">
+            <th class="cursor-pointer selectable" hx-get="/admin/users?orderBy={{ .Index }}&orderDesc={{ if eq .Index $.OrderBy }}{{ not $.OrderDesc }}{{ else }}false{{ end }}" hx-target="#usersPage" hx-swap="outerHTML">
               {{ .Name }}
-              <i class="{{ if $.OrderDesc }}fa-sort{{ else }}fa-sort-up{{ end }} fas{{ if ne $.OrderBy .Index }} opacity-0{{ end }}"></i>
+              <i class="{{ if $.OrderDesc }}fa-sort-up{{ else }}fa-sort{{ end }} fas{{ if ne $.OrderBy .Index }} opacity-0{{ end }}"></i>
             </th>
             {{ end }}
             <th class="sr-only">Azioni</th>
