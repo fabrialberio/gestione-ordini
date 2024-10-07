@@ -41,6 +41,7 @@ func main() {
 	mux.HandleFunc("/admin", logRequest(admin))
 	mux.HandleFunc("/admin/users", logRequest(users))
 	mux.HandleFunc("/admin/user", logRequest(user))
+	mux.HandleFunc("/admin/user/edit", logRequest(userEdit))
 
 	log.Println("Server started on port 8080.")
 	log.Fatal(http.ListenAndServe(":8080", mux))
@@ -101,13 +102,13 @@ func addAdminUserIfNotExists() {
 			log.Fatalf("Error hashing admin password: %v", err)
 		}
 
-		err = db.AddUser(
-			database.RoleIDAdministrator,
-			"admin",
-			hash,
-			"Amministratore",
-			"",
-		)
+		err = db.AddUser(database.User{
+			RoleID:       database.RoleIDAdministrator,
+			Username:     "admin",
+			PasswordHash: hash,
+			Name:         "Amministratore",
+			Surname:      "",
+		})
 		if err != nil {
 			log.Fatalf("Error creating admin user: %v", err)
 		}

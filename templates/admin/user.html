@@ -21,6 +21,52 @@
             Modifica studente
           {{ end }}
           </h2>
+          <form class="space-y-4" method="post" action="/admin/user/edit">
+            <input type="hidden" name="id" value="{{ .User.ID }}">
+            <input type="hidden" name="isNew" value="{{ .IsNew }}">
+            <div>
+              <label>Nome</label>
+              <input class="w-full input" type="text" name="name" value="{{ .User.Name }}">
+            </div>
+            <div>
+              <label>Cognome</label>
+              <input class="w-full input" type="text" name="surname" value="{{ .User.Surname }}">
+            </div>
+            <div>
+              <label class="">Ruolo</label>
+              <select class="w-full input" name="roleId">
+                {{ range .Roles }}
+                <option value="{{ .ID }}"{{ if eq .ID $.User.RoleID }} selected{{ end }}>{{ .Name }}</option>
+                {{ end }}
+              </select>
+            </div>
+            <div>
+              <label>Username</label>
+              <input class="w-full input" type="text" name="username" value="{{ .User.Username }}">
+            </div>
+            <div>
+              <label>Password</label>
+              {{ if .IsNew }}
+              <input class="w-full input" type="text" name="password">
+              {{ else }}
+              <input class="w-full input" type="password" name="password" value="passwordfinta" disabled>
+              {{ end }}
+            </div>
+            <div class="flex pt-4 gap-4">
+              {{ if not .IsNew }}
+              <button class="btn-lg w-24" type="submit" name="delete">
+                Elimina
+              </button>
+              {{ end }}
+              <button class="ml-auto btn-lg suggested w-24" type="submit">
+                {{ if .IsNew }}
+                Crea
+                {{ else }}
+                Salva
+                {{ end }}
+              </button>
+            </div>
+          </form>
         </div>
       </div>
     </div>

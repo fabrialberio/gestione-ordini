@@ -98,6 +98,7 @@ func user(w http.ResponseWriter, r *http.Request) {
 
 	var data struct {
 		User  *database.User
+		Roles []database.Role
 		IsNew bool
 	}
 
@@ -115,5 +116,69 @@ func user(w http.ResponseWriter, r *http.Request) {
 		data.User = user
 	}
 
+	data.Roles, err = db.GetRoles()
+	if err != nil {
+		displayInternalError(w)
+		return
+	}
+
 	templ.ExecuteTemplate(w, "user.html", data)
+}
+
+func userEdit(w http.ResponseWriter, r *http.Request) {
+	if !checkPerm(w, r, database.PermIDEditUsers) {
+		return
+	}
+
+	isNew := r.FormValue("isNew") == "true"
+
+	roleId, err := strconv.Atoi(r.FormValue("roleId"))
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	username := r.FormValue("username")
+	name := r.FormValue("name")
+	surname := r.FormValue("surname")
+
+	if isNew {
+		password := r.FormValue("password")
+		passwordHash, err := hashPassword(password)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+
+		err = db.AddUser(database.User{
+			RoleID:       roleId,
+			Username:     username,
+			PasswordHash: passwordHash,
+			Name:         name,
+			Surname:      surname,
+		})
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+	} else {
+		id, err := strconv.Atoi(r.FormValue("id"))
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+
+		err = db.UpdateUser(database.User{
+			ID:       id,
+			RoleID:   roleId,
+			Username: username,
+			Name:     name,
+			Surname:  surname,
+		})
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+	}
+
+	http.Redirect(w, r, "/admin", http.StatusSeeOther)
 }
