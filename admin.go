@@ -139,6 +139,7 @@ func usersApplyEdit(w http.ResponseWriter, r *http.Request) {
 	}
 
 	isNew := r.FormValue("isNew") == "true"
+	delete := r.Form.Has("delete")
 
 	roleId, err := strconv.Atoi(r.FormValue("roleId"))
 	if err != nil {
@@ -175,16 +176,24 @@ func usersApplyEdit(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		err = db.UpdateUser(database.User{
-			ID:       id,
-			RoleID:   roleId,
-			Username: username,
-			Name:     name,
-			Surname:  surname,
-		})
-		if err != nil {
-			displayInternalError(w)
-			return
+		if delete {
+			err = db.DeleteUser(id)
+			if err != nil {
+				displayInternalError(w)
+				return
+			}
+		} else {
+			err = db.UpdateUser(database.User{
+				ID:       id,
+				RoleID:   roleId,
+				Username: username,
+				Name:     name,
+				Surname:  surname,
+			})
+			if err != nil {
+				displayInternalError(w)
+				return
+			}
 		}
 	}
 

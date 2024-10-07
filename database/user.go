@@ -135,6 +135,10 @@ func (db *Database) UpdateUser(user User) error {
 	return db.conn.Model(&user).Updates(user).Error
 }
 
+func (db *Database) DeleteUser(id int) error {
+	return db.conn.Delete(&User{}, id).Error
+}
+
 func (db *Database) UserHasPerm(userId int, permissionId int) (bool, error) {
 	rows, err := db.conn.Model(&User{}).
 		Select("utenti.id").

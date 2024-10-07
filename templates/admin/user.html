@@ -21,7 +21,7 @@
             Modifica studente
           {{ end }}
           </h2>
-          <form class="space-y-4" method="post" action="/admin/user/edit">
+          <form class="space-y-4" method="post" action="/admin/users/applyEdit">
             <input type="hidden" name="id" value="{{ .User.ID }}">
             <input type="hidden" name="isNew" value="{{ .IsNew }}">
             <div>
