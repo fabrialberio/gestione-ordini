@@ -1,0 +1,16 @@
+<div id="usersPage" class="flex justify-center items-center">
+  <div class="space-y-4 px-6 w-full max-w-xl">
+    <div class="flex items-center">
+      <h2 class="text-h2">
+        Utenti
+      </h2>
+      <a class="ml-auto btn-md suggested" href="admin/users/edit">
+        <i class="fa-add fas"></i>
+        Aggiungi
+      </a>
+    </div>
+
+    <div hx-get="/admin/usersTable" hx-trigger="load" hx-target="this">
+    </div>
+  </div>
+</div>

@@ -36,12 +36,15 @@ func main() {
 	mux.HandleFunc("/", logRequest(index))
 	mux.HandleFunc("/login", logRequest(login))
 	mux.HandleFunc("/logout", logRequest(logout))
+
 	mux.HandleFunc("/cook", logRequest(index))
 	mux.HandleFunc("/manager", logRequest(index))
+
 	mux.HandleFunc("/admin", logRequest(admin))
-	mux.HandleFunc("/admin/users", logRequest(users))
-	mux.HandleFunc("/admin/user", logRequest(user))
-	mux.HandleFunc("/admin/user/edit", logRequest(userEdit))
+	mux.HandleFunc("/admin/users/edit", logRequest(usersEdit))
+	mux.HandleFunc("/admin/usersPage", logRequest(usersPage))
+	mux.HandleFunc("/admin/usersTable", logRequest(usersTable))
+	mux.HandleFunc("/admin/users/applyEdit", logRequest(usersApplyEdit))
 
 	log.Println("Server started on port 8080.")
 	log.Fatal(http.ListenAndServe(":8080", mux))

@@ -52,7 +52,15 @@ func admin(w http.ResponseWriter, r *http.Request) {
 	templ.ExecuteTemplate(w, "admin.html", nil)
 }
 
-func users(w http.ResponseWriter, r *http.Request) {
+func usersPage(w http.ResponseWriter, r *http.Request) {
+	if !checkPerm(w, r, database.PermIDEditUsers) {
+		return
+	}
+
+	templ.ExecuteTemplate(w, "usersPage.html", nil)
+}
+
+func usersTable(w http.ResponseWriter, r *http.Request) {
 	if !checkPerm(w, r, database.PermIDEditUsers) {
 		return
 	}
@@ -88,10 +96,10 @@ func users(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	templ.ExecuteTemplate(w, "users.html", data)
+	templ.ExecuteTemplate(w, "usersTable.html", data)
 }
 
-func user(w http.ResponseWriter, r *http.Request) {
+func usersEdit(w http.ResponseWriter, r *http.Request) {
 	if !checkPerm(w, r, database.PermIDEditUsers) {
 		return
 	}
@@ -125,7 +133,7 @@ func user(w http.ResponseWriter, r *http.Request) {
 	templ.ExecuteTemplate(w, "user.html", data)
 }
 
-func userEdit(w http.ResponseWriter, r *http.Request) {
+func usersApplyEdit(w http.ResponseWriter, r *http.Request) {
 	if !checkPerm(w, r, database.PermIDEditUsers) {
 		return
 	}
@@ -134,7 +142,7 @@ func userEdit(w http.ResponseWriter, r *http.Request) {
 
 	roleId, err := strconv.Atoi(r.FormValue("roleId"))
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		displayInternalError(w)
 		return
 	}
 	username := r.FormValue("username")
@@ -145,7 +153,7 @@ func userEdit(w http.ResponseWriter, r *http.Request) {
 		password := r.FormValue("password")
 		passwordHash, err := hashPassword(password)
 		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+			displayInternalError(w)
 			return
 		}
 
@@ -157,13 +165,13 @@ func userEdit(w http.ResponseWriter, r *http.Request) {
 			Surname:      surname,
 		})
 		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+			displayInternalError(w)
 			return
 		}
 	} else {
 		id, err := strconv.Atoi(r.FormValue("id"))
 		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+			displayInternalError(w)
 			return
 		}
 
@@ -175,7 +183,7 @@ func userEdit(w http.ResponseWriter, r *http.Request) {
 			Surname:  surname,
 		})
 		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+			displayInternalError(w)
 			return
 		}
 	}
