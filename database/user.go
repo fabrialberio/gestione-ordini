@@ -2,6 +2,7 @@ package database
 
 import (
 	"fmt"
+	"log"
 	"time"
 
 	"gorm.io/gorm/clause"
@@ -10,6 +11,7 @@ import (
 type User struct {
 	ID           int       `gorm:"column:id;primaryKey"`
 	RoleID       int       `gorm:"column:id_ruolo"`
+	Role         Role      `gorm:"foreignKey:RoleID"`
 	Username     string    `gorm:"column:username"`
 	PasswordHash string    `gorm:"column:password_hash"`
 	Name         string    `gorm:"column:nome"`
@@ -27,13 +29,13 @@ type Role struct {
 func (Role) TableName() string { return "ruoli" }
 
 const (
-	RoleIDCook int = iota
+	RoleIDCook int = iota + 1
 	RoleIDManager
 	RoleIDAdministrator
 )
 
 const (
-	PermIDViewProducts int = iota
+	PermIDViewProducts int = iota + 1
 	PermIDViewAllOrders
 	PermIDEditProducts
 	PermIDEditOwnOrder
@@ -42,7 +44,7 @@ const (
 )
 
 const (
-	UserOrderByID int = iota
+	UserOrderByID int = iota + 1
 	UserOrderByRole
 	UserOrderByUsername
 	UserOrderByName
@@ -60,6 +62,16 @@ func (db *Database) GetRoleName(id int) (string, error) {
 	return role.Name, nil
 }
 
+func (db *Database) GetRoles() ([]Role, error) {
+	var roles []Role
+
+	if db.conn.Find(&roles).Error != nil {
+		return nil, fmt.Errorf("error fetching roles")
+	}
+
+	return roles, nil
+}
+
 func (db *Database) GetUser(id int) (*User, error) {
 	var user User
 
@@ -70,7 +82,7 @@ func (db *Database) GetUser(id int) (*User, error) {
 	return &user, nil
 }
 
-func (db *Database) GetUsers(orderBy int) ([]User, error) {
+func (db *Database) GetUsers(orderBy int, orderDesc bool) ([]User, error) {
 	var orderByString string
 	var users []User
 
@@ -91,9 +103,11 @@ func (db *Database) GetUsers(orderBy int) ([]User, error) {
 		return nil, fmt.Errorf("invalid orderBy value: %d", orderBy)
 	}
 
-	err := db.conn.Find(&users).Order(clause.OrderByColumn{
+	log.Println(orderByString, orderDesc)
+
+	err := db.conn.Preload(clause.Associations).Find(&users).Order(clause.OrderByColumn{
 		Column: clause.Column{Name: orderByString},
-		Desc:   true,
+		Desc:   orderDesc,
 	}).Error
 	if err != nil {
 		return nil, err
@@ -113,26 +127,12 @@ func (db *Database) GetUserByUsername(username string) (*User, error) {
 	return user, nil
 }
 
-func (db *Database) AddUser(
-	roleId int,
-	username string,
-	passwordHash string,
-	name string,
-	surname string,
-) error {
-	err := db.conn.Model(&User{}).Create(&User{
-		RoleID:       roleId,
-		Username:     username,
-		PasswordHash: passwordHash,
-		Name:         name,
-		Surname:      surname,
-		CreatedAt:    time.Now(),
-	}).Error
-	if err != nil {
-		return err
-	}
+func (db *Database) AddUser(user User) error {
+	return db.conn.Create(&user).Error
+}
 
-	return nil
+func (db *Database) UpdateUser(user User) error {
+	return db.conn.Model(&user).Updates(user).Error
 }
 
 func (db *Database) UserHasPerm(userId int, permissionId int) (bool, error) {
