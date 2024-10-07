@@ -3,7 +3,7 @@
   {{ template "head.html" }} 
   <body>
     <div class="bg-surface min-h-screen">
-      <div class="mx-auto w-full max-w-screen-xl">
+      <header class="mx-auto w-full max-w-screen-xl">
         <div class="flex p-4">
           <div class="btn-lg">
             <i class="fa-bars fas"></i>
@@ -13,9 +13,9 @@
             <i class="fa-right-to-bracket fas"></i>
           </a>
         </div>
-      </div>
-      <div hx-get="/admin/usersPage" hx-trigger="load" hx-target="this">
-      </div>
+      </header>
+      <main hx-get="/admin/usersPage" hx-trigger="load" hx-target="this">
+      </main>
     </div>
   </body>
 </html>

@@ -3,16 +3,16 @@
   {{ template "head.html" }} 
   <body>
     <div class="bg-surface min-h-screen">
-      <div class="mx-auto w-full max-w-screen-xl">
+      <header class="mx-auto w-full max-w-screen-xl">
         <div class="flex p-4">
           <a class="btn-lg" href="/admin">
             <i class="fa-arrow-left fas"></i>
             Indietro
           </a>
         </div>
-      </div>
+      </header>
 
-      <div class="flex justify-center items-center">
+      <main class="flex justify-center items-center">
         <div class="space-y-4 px-6 w-full max-w-xl">
           <h2 class="text-h2">
           {{ if .IsNew }}
@@ -68,7 +68,7 @@
             </div>
           </form>
         </div>
-      </div>
+      </main>
     </div>
   </body>
 </html>
