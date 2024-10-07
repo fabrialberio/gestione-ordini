@@ -52,34 +52,18 @@ const (
 	UserOrderByCreatedAt
 )
 
-func (db *Database) GetRoleName(id int) (string, error) {
-	var role Role
-
-	if db.conn.Take(&role, id).Error != nil {
-		return "", fmt.Errorf("role with ID %d not found", id)
-	}
-
-	return role.Name, nil
-}
-
 func (db *Database) GetRoles() ([]Role, error) {
 	var roles []Role
 
-	if db.conn.Find(&roles).Error != nil {
-		return nil, fmt.Errorf("error fetching roles")
-	}
-
-	return roles, nil
+	err := db.conn.Find(&roles).Error
+	return roles, err
 }
 
-func (db *Database) GetUser(id int) (*User, error) {
+func (db *Database) GetUser(id int) (User, error) {
 	var user User
 
-	if db.conn.Take(&user, id).Error != nil {
-		return nil, fmt.Errorf("user with ID %d not found", id)
-	}
-
-	return &user, nil
+	err := db.conn.Take(&user, id).Error
+	return user, err
 }
 
 func (db *Database) GetUsers(orderBy int, orderDesc bool) ([]User, error) {
@@ -109,25 +93,17 @@ func (db *Database) GetUsers(orderBy int, orderDesc bool) ([]User, error) {
 		Column: clause.Column{Name: orderByString},
 		Desc:   orderDesc,
 	}).Error
-	if err != nil {
-		return nil, err
-	}
-
-	return users, nil
+	return users, err
 }
 
 func (db *Database) GetUserByUsername(username string) (*User, error) {
 	var user *User
 
 	err := db.conn.Model(&User{}).Take(&user, "username = ?", username).Error
-	if err != nil {
-		return nil, err
-	}
-
-	return user, nil
+	return user, err
 }
 
-func (db *Database) AddUser(user User) error {
+func (db *Database) CreateUser(user User) error {
 	return db.conn.Create(&user).Error
 }
 

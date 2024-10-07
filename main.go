@@ -105,7 +105,7 @@ func addAdminUserIfNotExists() {
 			log.Fatalf("Error hashing admin password: %v", err)
 		}
 
-		err = db.AddUser(database.User{
+		err = db.CreateUser(database.User{
 			RoleID:       database.RoleIDAdministrator,
 			Username:     "admin",
 			PasswordHash: hash,

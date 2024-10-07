@@ -105,7 +105,7 @@ func usersEdit(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var data struct {
-		User  *database.User
+		User  database.User
 		Roles []database.Role
 		IsNew bool
 	}
@@ -113,7 +113,7 @@ func usersEdit(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.Atoi(r.URL.Query().Get("id"))
 	if err != nil {
 		data.IsNew = true
-		data.User = &database.User{}
+		data.User = database.User{}
 	} else {
 		user, err := db.GetUser(id)
 		if err != nil {
@@ -158,7 +158,7 @@ func usersApplyEdit(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		err = db.AddUser(database.User{
+		err = db.CreateUser(database.User{
 			RoleID:       roleId,
 			Username:     username,
 			PasswordHash: passwordHash,
