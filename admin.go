@@ -6,15 +6,23 @@ import (
 	"strconv"
 )
 
+func displayUnauthorized(w http.ResponseWriter) {
+	http.Error(w, "Non autorizzato", http.StatusForbidden)
+}
+
+func displayInternalError(w http.ResponseWriter) {
+	http.Error(w, "Errore interno", http.StatusInternalServerError)
+}
+
 func checkPerm(w http.ResponseWriter, r *http.Request, permId int) bool {
 	claims, err := getSessionCookie(r)
 	if err != nil {
-		http.Error(w, "Non autorizzato", http.StatusForbidden)
+		displayUnauthorized(w)
 		return false
 	}
 
 	if ok, err := db.UserHasPerm(claims.UserID, permId); err != nil || !ok {
-		http.Error(w, "Non autorizzato", http.StatusForbidden)
+		displayUnauthorized(w)
 		return false
 	}
 
@@ -24,12 +32,12 @@ func checkPerm(w http.ResponseWriter, r *http.Request, permId int) bool {
 func checkRole(w http.ResponseWriter, r *http.Request, roleId int) bool {
 	claims, err := getSessionCookie(r)
 	if err != nil {
-		http.Error(w, "Non autorizzato", http.StatusForbidden)
+		displayUnauthorized(w)
 		return false
 	}
 
 	if claims.RoleID != roleId {
-		http.Error(w, "Non autorizzato", http.StatusForbidden)
+		displayUnauthorized(w)
 		return false
 	}
 
@@ -53,14 +61,11 @@ func users(w http.ResponseWriter, r *http.Request) {
 	var data struct {
 		OrderBy   int
 		OrderDesc bool
-		Columns   []struct {
-			Index int
-			Name  string
-		}
-		Users []database.User
+		Headers   interface{}
+		Users     []database.User
 	}
 
-	data.Columns = []struct {
+	data.Headers = []struct {
 		Index int
 		Name  string
 	}{
@@ -77,9 +82,9 @@ func users(w http.ResponseWriter, r *http.Request) {
 	}
 	data.OrderDesc = r.URL.Query().Get("orderDesc") == "true"
 
-	data.Users, err = db.GetUsers(data.OrderBy)
+	data.Users, err = db.GetUsers(data.OrderBy, data.OrderDesc)
 	if err != nil {
-		http.Error(w, "Errore interno", http.StatusInternalServerError)
+		displayInternalError(w)
 		return
 	}
 
@@ -103,7 +108,7 @@ func user(w http.ResponseWriter, r *http.Request) {
 	} else {
 		user, err := db.GetUser(id)
 		if err != nil {
-			http.Error(w, "Errore interno", http.StatusInternalServerError)
+			displayInternalError(w)
 			return
 		}
 

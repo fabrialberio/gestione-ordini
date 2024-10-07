@@ -14,7 +14,7 @@
       <table class="w-full table-auto">
         <thead>
          <tr>
-            {{ range .Columns }}
+            {{ range .Headers }}
             <th class="cursor-pointer selectable" hx-get="/admin/users?orderBy={{ .Index }}&orderDesc={{ if eq .Index $.OrderBy }}{{ not $.OrderDesc }}{{ else }}false{{ end }}" hx-target="#usersPage" hx-swap="outerHTML">
               {{ .Name }}
               <i class="{{ if $.OrderDesc }}fa-sort-up{{ else }}fa-sort{{ end }} fas{{ if ne $.OrderBy .Index }} opacity-0{{ end }}"></i>
@@ -27,7 +27,7 @@
           {{ range .Users }}
           <tr>
             <td>{{ .ID }}</td>
-            <td>{{ .RoleID }}</td>
+            <td>{{ .Role.Name }}</td>
             <td>{{ .Username }}</td>
             <td>{{ .Name }}</td>
             <td>{{ .Surname }}</td>
