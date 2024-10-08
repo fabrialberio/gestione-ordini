@@ -108,7 +108,12 @@ func (db *Database) CreateUser(user User) error {
 }
 
 func (db *Database) UpdateUser(user User) error {
-	return db.conn.Model(&user).Updates(user).Error
+	columns := []string{"id_ruolo", "username", "nome", "cognome"}
+	if user.PasswordHash != "" {
+		columns = append(columns, "password_hash")
+	}
+
+	return db.conn.Model(&user).Select(columns).Updates(user).Error
 }
 
 func (db *Database) DeleteUser(id int) error {
