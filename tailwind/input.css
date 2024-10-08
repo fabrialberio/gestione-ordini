@@ -46,14 +46,10 @@
     @apply bg-primary text-on-primary;
 }
 
-table>tbody {
-    @apply bg-white
-}
-
 table>thead>tr>th {
     @apply p-2 text-left
 }
 
 table>tbody>tr>td {
-    @apply px-2 py-1 border-outline border-t
+    @apply px-2 py-1 border-outline
 }
