@@ -89,10 +89,10 @@ func (db *Database) GetUsers(orderBy int, orderDesc bool) ([]User, error) {
 
 	log.Println(orderByString, orderDesc)
 
-	err := db.conn.Preload(clause.Associations).Find(&users).Order(clause.OrderByColumn{
+	err := db.conn.Preload(clause.Associations).Order(clause.OrderByColumn{
 		Column: clause.Column{Name: orderByString},
 		Desc:   orderDesc,
-	}).Error
+	}).Find(&users).Error
 	return users, err
 }
 
