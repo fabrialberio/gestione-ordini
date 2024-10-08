@@ -3,7 +3,7 @@ USE gestioneordini;
 INSERT INTO ruoli (id, nome) VALUES
     (1, "Cuoco"),
     (2, "Magazziniere"),
-    (3, "Ammministratore");
+    (3, "Amministratore");
 
 INSERT INTO permessi (id, nome) VALUES
     (1, "vedi_prodotti"),
