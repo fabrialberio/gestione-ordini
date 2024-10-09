@@ -37,7 +37,7 @@ func main() {
 	mux.HandleFunc("/login", logRequest(login))
 	mux.HandleFunc("/logout", logRequest(logout))
 
-	mux.HandleFunc("/cook", logRequest(index))
+	mux.HandleFunc("/cook", logRequest(cook))
 	mux.HandleFunc("/manager", logRequest(index))
 
 	mux.HandleFunc("/admin", logRequest(admin))
