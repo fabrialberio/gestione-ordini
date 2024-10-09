@@ -18,7 +18,7 @@ func index(w http.ResponseWriter, r *http.Request) (interface{}, error) {
 	}
 
 	claims, err := getSessionCookie(r)
-	if err == http.ErrNoCookie {
+	if err == ErrNoCookie {
 		data.ErrorMsg = html.EscapeString(r.URL.Query().Get("errormsg"))
 	} else if err != nil {
 		data.ErrorMsg = "Sessione scaduta"
