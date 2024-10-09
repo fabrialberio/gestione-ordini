@@ -44,7 +44,7 @@ func main() {
 
 	router.Post("/login", login)
 	router.Post("/logout", logout)
-	router.Post("/admin/user/edit", adminUsersEdit)
+	router.Post("/admin/user/edit", adminUserEdit)
 
 	log.Println("Server started on port 8080.")
 	log.Fatal(router.ListenAndServe(":8080"))

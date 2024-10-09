@@ -84,7 +84,7 @@ func adminUser(w http.ResponseWriter, r *http.Request) (interface{}, error) {
 	return data, nil
 }
 
-func adminUsersEdit(w http.ResponseWriter, r *http.Request) error {
+func adminUserEdit(w http.ResponseWriter, r *http.Request) error {
 	if err := checkPerm(r, database.PermIDEditUsers); err != nil {
 		return err
 	}
