@@ -36,6 +36,8 @@ func main() {
 
 	router.GetTemplate("/", "login.html", index)
 	router.GetTemplate("/cook", "cook.html", cook)
+	router.GetTemplate("/cook/order", "order.html", cookOrder)
+	router.GetTemplate("/cook/ordersList", "ordersList.html", cookOrdersList)
 	router.GetTemplate("/manager", "manager.html", cook)
 	router.GetTemplate("/admin", "admin.html", admin)
 	router.GetTemplate("/admin/user", "user.html", adminUser)
@@ -44,6 +46,7 @@ func main() {
 
 	router.Post("/login", login)
 	router.Post("/logout", logout)
+	router.Post("/cook/order/edit", cookOrderEdit)
 	router.Post("/admin/user/edit", adminUserEdit)
 
 	log.Println("Server started on port 8080.")

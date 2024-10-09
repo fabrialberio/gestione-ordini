@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+  {{ template "head.html" }} 
+  <body class="bg-surface min-h-screen">
+    <header class="mx-auto w-full max-w-screen-xl">
+      <div class="flex p-4">
+        <a class="btn-lg" href="/cook">
+          <i class="fa-arrow-left fas"></i>
+          Indietro
+        </a>
+      </div>
+    </header>
+
+    <main class="flex justify-center items-center">
+      <div class="space-y-4 px-6 w-full max-w-xl">
+        <h2 class="text-h2">
+        {{ if .IsNew }}
+          Nuovo ordine
+        {{ else }}
+          Modifica ordine
+        {{ end }}
+        </h2>
+        <form class="space-y-4" method="post" action="/cook/order/edit">
+          <input type="hidden" name="id" value="{{ .Order.ID }}">
+          <input type="hidden" name="isNew" value="{{ .IsNew }}">
+          <input type="hidden" name="userId" value="{{ .UserID }}">
+          <div>
+            <label>Prodotto</label>
+            <select class="w-full input" name="productId">
+              {{ range .Products }}
+              <option value="{{ .ID }}"{{ if eq .ID $.Order.ProductID }} selected{{ end }}>{{ .Name }}</option>
+              {{ end }}
+            </select>
+          </div>
+          <div>
+            <label>Quantità</label>
+            <input class="w-full input" type="text" name="amount" value="{{ .Order.Amount }}">
+          </div>
+          <div>
+            <label>Richiesto per</label>
+            <input class="w-full input" type="date" name="requestedAt" value="{{ .Order.RequestedAt }}">
+          </div>
+          <div class="flex gap-4 pt-4">
+            {{ if not .IsNew }}
+            <button class="w-24 btn-lg" type="submit" name="delete">
+              Elimina
+            </button>
+            {{ end }}
+            <button class="ml-auto w-24 btn-lg suggested" type="submit">
+              {{ if .IsNew }}
+              Crea
+              {{ else }}
+              Salva
+              {{ end }}
+            </button>
+          </div>
+          
+        </form>
+      </div>
+    </main>
+  </body>
+</html>

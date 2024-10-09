@@ -1,13 +1,33 @@
 <!DOCTYPE html>
 <html>
   {{ template "head.html" }}
-  <body>
-    <header>
-
+  <body class="bg-surface">
+    <header class="mx-auto w-full max-w-screen-xl">
+      <div class="flex p-4">
+        <form class="ml-auto" method="post" action="/logout">
+          <button class="btn-lg" type="submit">
+            Esci
+            <i class="fa-right-to-bracket fas"></i>
+          </button>
+        </form> 
+      </div>
     </header>
 
-    <main>
-      Ciao cuoco!
+    <main class="flex justify-center items-center">
+      <div class="space-y-4 px-6 w-full max-w-xl">
+        <div class="flex items-center">
+          <h2 class="text-h2">
+            I tuoi ordini
+          </h2>
+          <a class="ml-auto btn-md suggested" href="/cook/order">
+            <i class="fa-add fas"></i>
+            Aggiungi
+          </a>
+        </div>
+        
+        <div hx-get="/cook/ordersList" hx-trigger="load" hx-target="this">
+        </div>
+      </div>
     </main>
   </body>
 </html>

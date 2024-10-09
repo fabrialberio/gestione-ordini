@@ -1,0 +1,13 @@
+<div id="ordersList" class="border-collapse border-outline border rounded-lg overflow-x-auto">
+  {{ if .Orders }}
+  {{ range .Orders }}
+  <dl class="flex items-center">
+    <dd>{{ .ID }}</dd>
+  </dl>
+  {{ end }}
+  {{ else }}
+  <p class="flex justify-center p-4">
+    Ancora nessun ordine.
+  </p>
+  {{ end }}
+</div>
