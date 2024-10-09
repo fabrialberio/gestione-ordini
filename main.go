@@ -34,17 +34,17 @@ func main() {
 
 	router.HandleFunc("/public/", http.FileServerFS(publicFS).ServeHTTP)
 
-	router.HandleTemplate("/", "index.html", index)
+	router.HandleTemplate("/", "login.html", index)
 	router.HandleTemplate("/cook", "cook.html", cook)
 	router.HandleTemplate("/manager", "manager.html", cook)
 	router.HandleTemplate("/admin", "admin.html", admin)
-	router.HandleTemplate("/admin/users/edit", "user.html", usersEdit)
-	router.HandleTemplate("/admin/usersPage", "usersPage.html", usersPage)
-	router.HandleTemplate("/admin/usersTable", "usersTable.html", usersTable)
+	router.HandleTemplate("/admin/user", "user.html", adminUser)
+	router.HandleTemplate("/admin/users", "users.html", adminUsers)
+	router.HandleTemplate("/admin/usersTable", "usersTable.html", adminUsersTable)
 
 	router.HandlePost("/login", login)
 	router.HandlePost("/logout", logout)
-	router.HandlePost("/admin/users/applyEdit", usersApplyEdit)
+	router.HandlePost("/admin/user/edit", adminUsersEdit)
 
 	log.Println("Server started on port 8080.")
 	log.Fatal(router.ListenAndServe(":8080"))

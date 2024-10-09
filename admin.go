@@ -10,11 +10,11 @@ func admin(w http.ResponseWriter, r *http.Request) (interface{}, error) {
 	return nil, checkRole(r, database.RoleIDAdministrator)
 }
 
-func usersPage(w http.ResponseWriter, r *http.Request) (interface{}, error) {
+func adminUsers(w http.ResponseWriter, r *http.Request) (interface{}, error) {
 	return nil, checkPerm(r, database.PermIDEditUsers)
 }
 
-func usersTable(w http.ResponseWriter, r *http.Request) (interface{}, error) {
+func adminUsersTable(w http.ResponseWriter, r *http.Request) (interface{}, error) {
 	if err := checkPerm(r, database.PermIDEditUsers); err != nil {
 		return nil, err
 	}
@@ -52,7 +52,7 @@ func usersTable(w http.ResponseWriter, r *http.Request) (interface{}, error) {
 	return data, nil
 }
 
-func usersEdit(w http.ResponseWriter, r *http.Request) (interface{}, error) {
+func adminUser(w http.ResponseWriter, r *http.Request) (interface{}, error) {
 	if err := checkPerm(r, database.PermIDEditUsers); err != nil {
 		return nil, err
 	}
@@ -84,7 +84,7 @@ func usersEdit(w http.ResponseWriter, r *http.Request) (interface{}, error) {
 	return data, nil
 }
 
-func usersApplyEdit(w http.ResponseWriter, r *http.Request) error {
+func adminUsersEdit(w http.ResponseWriter, r *http.Request) error {
 	if err := checkPerm(r, database.PermIDEditUsers); err != nil {
 		return err
 	}
