@@ -2,7 +2,6 @@ package database
 
 import (
 	"fmt"
-	"log"
 	"time"
 
 	"gorm.io/gorm/clause"
@@ -86,8 +85,6 @@ func (db *Database) GetUsers(orderBy int, orderDesc bool) ([]User, error) {
 	default:
 		return nil, fmt.Errorf("invalid orderBy value: %d", orderBy)
 	}
-
-	log.Println(orderByString, orderDesc)
 
 	err := db.conn.Preload(clause.Associations).Order(clause.OrderByColumn{
 		Column: clause.Column{Name: orderByString},
