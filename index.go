@@ -7,6 +7,10 @@ import (
 )
 
 func index(w http.ResponseWriter, r *http.Request) (interface{}, error) {
+	if r.URL.Path != "/" {
+		http.Redirect(w, r, "/", http.StatusSeeOther)
+	}
+
 	var data struct {
 		UserID   int
 		RoleID   int
