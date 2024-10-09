@@ -30,21 +30,21 @@ func main() {
 
 	addAdminUserIfNotExists()
 
-	router := router.NewRouter(templ)
+	router := router.NewRouter(templ, "error.html")
 
-	router.HandleFunc("/public/", http.FileServerFS(publicFS).ServeHTTP)
+	router.Get("/public/", http.FileServerFS(publicFS).ServeHTTP)
 
-	router.HandleTemplate("/", "login.html", index)
-	router.HandleTemplate("/cook", "cook.html", cook)
-	router.HandleTemplate("/manager", "manager.html", cook)
-	router.HandleTemplate("/admin", "admin.html", admin)
-	router.HandleTemplate("/admin/user", "user.html", adminUser)
-	router.HandleTemplate("/admin/users", "users.html", adminUsers)
-	router.HandleTemplate("/admin/usersTable", "usersTable.html", adminUsersTable)
+	router.GetTemplate("/", "login.html", index)
+	router.GetTemplate("/cook", "cook.html", cook)
+	router.GetTemplate("/manager", "manager.html", cook)
+	router.GetTemplate("/admin", "admin.html", admin)
+	router.GetTemplate("/admin/user", "user.html", adminUser)
+	router.GetTemplate("/admin/users", "users.html", adminUsers)
+	router.GetTemplate("/admin/usersTable", "usersTable.html", adminUsersTable)
 
-	router.HandlePost("/login", login)
-	router.HandlePost("/logout", logout)
-	router.HandlePost("/admin/user/edit", adminUsersEdit)
+	router.Post("/login", login)
+	router.Post("/logout", logout)
+	router.Post("/admin/user/edit", adminUsersEdit)
 
 	log.Println("Server started on port 8080.")
 	log.Fatal(router.ListenAndServe(":8080"))

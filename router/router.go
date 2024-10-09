@@ -7,23 +7,25 @@ import (
 )
 
 type Router struct {
-	mux   *http.ServeMux
-	templ *template.Template
+	mux               *http.ServeMux
+	templ             *template.Template
+	errorTemplateName string
 }
 
 type TemplateDataFunc func(w http.ResponseWriter, r *http.Request) (interface{}, error)
 
 type PostFunc func(w http.ResponseWriter, r *http.Request) error
 
-func htmlError(w http.ResponseWriter, r *http.Request, message string, status int) {
+func (rt *Router) htmlError(w http.ResponseWriter, r *http.Request, message string) {
 	log.Printf("%s %s %s Error: %v", r.RemoteAddr, r.Method, r.URL, message)
-	http.Error(w, message, status)
+	rt.templ.ExecuteTemplate(w, rt.errorTemplateName, message)
 }
 
-func NewRouter(templ *template.Template) Router {
+func NewRouter(templ *template.Template, errorTemplateName string) Router {
 	return Router{
-		mux:   http.NewServeMux(),
-		templ: templ,
+		mux:               http.NewServeMux(),
+		templ:             templ,
+		errorTemplateName: errorTemplateName,
 	}
 }
 
@@ -31,40 +33,30 @@ func (rt *Router) ListenAndServe(addr string) error {
 	return http.ListenAndServe(addr, rt.mux)
 }
 
-func (rt *Router) HandleFunc(pattern string, handlerFunc http.HandlerFunc) {
-	rt.mux.HandleFunc(pattern, handlerFunc)
-}
-
-func (rt *Router) HandleTemplate(pattern string, templateName string, dataFunc TemplateDataFunc) {
+func (rt *Router) Get(pattern string, getFunc http.HandlerFunc) {
 	handlerFunc := func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodGet {
-			htmlError(w, r, "Method not allowed", http.StatusMethodNotAllowed)
-			return
-		}
-
-		data, err := dataFunc(w, r)
-		if err != nil {
-			htmlError(w, r, err.Error(), http.StatusInternalServerError)
+			rt.htmlError(w, r, "Method not allowed")
 			return
 		}
 
 		log.Printf("%s %s %s", r.RemoteAddr, r.Method, r.URL)
-		rt.templ.ExecuteTemplate(w, templateName, data)
+		getFunc(w, r)
 	}
 
 	rt.mux.HandleFunc(pattern, handlerFunc)
 }
 
-func (rt *Router) HandlePost(pattern string, postFunc PostFunc) {
+func (rt *Router) Post(pattern string, postFunc PostFunc) {
 	handlerFunc := func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodPost {
-			htmlError(w, r, "Method not allowed", http.StatusMethodNotAllowed)
+			rt.htmlError(w, r, "Method not allowed")
 			return
 		}
 
 		err := postFunc(w, r)
 		if err != nil {
-			htmlError(w, r, err.Error(), http.StatusInternalServerError)
+			rt.htmlError(w, r, err.Error())
 			return
 		}
 
@@ -72,4 +64,18 @@ func (rt *Router) HandlePost(pattern string, postFunc PostFunc) {
 	}
 
 	rt.mux.HandleFunc(pattern, handlerFunc)
+}
+
+func (rt *Router) GetTemplate(pattern string, templateName string, dataFunc TemplateDataFunc) {
+	getFunc := func(w http.ResponseWriter, r *http.Request) {
+		data, err := dataFunc(w, r)
+		if err != nil {
+			rt.htmlError(w, r, err.Error())
+			return
+		}
+
+		rt.templ.ExecuteTemplate(w, templateName, data)
+	}
+
+	rt.Get(pattern, getFunc)
 }
