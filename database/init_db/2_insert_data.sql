@@ -17,6 +17,7 @@ INSERT INTO ruolo_permesso (id_ruolo, id_permesso) VALUES
     (1, 1),
     (1, 4),
     (2, 2),
+    (2, 3),
     (3, 3),
     (3, 5),
     (3, 6);
