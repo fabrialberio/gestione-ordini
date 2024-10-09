@@ -136,3 +136,29 @@ func unsetSessionCookie(w http.ResponseWriter) {
 		MaxAge:   -1,
 	})
 }
+
+func checkPerm(r *http.Request, permId int) error {
+	claims, err := getSessionCookie(r)
+	if err != nil {
+		return fmt.Errorf("cookie non trovato")
+	}
+
+	if ok, err := db.UserHasPerm(claims.UserID, permId); err != nil || !ok {
+		return fmt.Errorf("permesso non valido")
+	}
+
+	return nil
+}
+
+func checkRole(r *http.Request, roleId int) error {
+	claims, err := getSessionCookie(r)
+	if err != nil {
+		return fmt.Errorf("cookie non trovato")
+	}
+
+	if claims.RoleID != roleId {
+		return fmt.Errorf("ruolo non valido")
+	}
+
+	return nil
+}

@@ -6,25 +6,17 @@ import (
 	"strconv"
 )
 
-func admin(w http.ResponseWriter, r *http.Request) {
-	if !checkRole(w, r, database.RoleIDAdministrator) {
-		return
-	}
-
-	templ.ExecuteTemplate(w, "admin.html", nil)
+func admin(w http.ResponseWriter, r *http.Request) (interface{}, error) {
+	return nil, checkRole(r, database.RoleIDAdministrator)
 }
 
-func usersPage(w http.ResponseWriter, r *http.Request) {
-	if !checkPerm(w, r, database.PermIDEditUsers) {
-		return
-	}
-
-	templ.ExecuteTemplate(w, "usersPage.html", nil)
+func usersPage(w http.ResponseWriter, r *http.Request) (interface{}, error) {
+	return nil, checkPerm(r, database.PermIDEditUsers)
 }
 
-func usersTable(w http.ResponseWriter, r *http.Request) {
-	if !checkPerm(w, r, database.PermIDEditUsers) {
-		return
+func usersTable(w http.ResponseWriter, r *http.Request) (interface{}, error) {
+	if err := checkPerm(r, database.PermIDEditUsers); err != nil {
+		return nil, err
 	}
 
 	var err error
@@ -54,16 +46,15 @@ func usersTable(w http.ResponseWriter, r *http.Request) {
 
 	data.Users, err = db.GetUsers(data.OrderBy, data.OrderDesc)
 	if err != nil {
-		htmlError(w, http.StatusInternalServerError)
-		return
+		return nil, err
 	}
 
-	templ.ExecuteTemplate(w, "usersTable.html", data)
+	return data, nil
 }
 
-func usersEdit(w http.ResponseWriter, r *http.Request) {
-	if !checkPerm(w, r, database.PermIDEditUsers) {
-		return
+func usersEdit(w http.ResponseWriter, r *http.Request) (interface{}, error) {
+	if err := checkPerm(r, database.PermIDEditUsers); err != nil {
+		return nil, err
 	}
 
 	var data struct {
@@ -79,8 +70,7 @@ func usersEdit(w http.ResponseWriter, r *http.Request) {
 	} else {
 		user, err := db.GetUser(id)
 		if err != nil {
-			htmlError(w, http.StatusInternalServerError)
-			return
+			return nil, err
 		}
 
 		data.User = user
@@ -88,16 +78,15 @@ func usersEdit(w http.ResponseWriter, r *http.Request) {
 
 	data.Roles, err = db.GetRoles()
 	if err != nil {
-		htmlError(w, http.StatusInternalServerError)
-		return
+		return nil, err
 	}
 
-	templ.ExecuteTemplate(w, "user.html", data)
+	return data, nil
 }
 
-func usersApplyEdit(w http.ResponseWriter, r *http.Request) {
-	if !checkPerm(w, r, database.PermIDEditUsers) {
-		return
+func usersApplyEdit(w http.ResponseWriter, r *http.Request) error {
+	if err := checkPerm(r, database.PermIDEditUsers); err != nil {
+		return err
 	}
 
 	isNew := r.FormValue("isNew") == "true"
@@ -105,8 +94,7 @@ func usersApplyEdit(w http.ResponseWriter, r *http.Request) {
 
 	roleId, err := strconv.Atoi(r.FormValue("roleId"))
 	if err != nil {
-		htmlError(w, http.StatusInternalServerError)
-		return
+		return err
 	}
 	username := r.FormValue("username")
 	name := r.FormValue("name")
@@ -116,8 +104,7 @@ func usersApplyEdit(w http.ResponseWriter, r *http.Request) {
 		password := r.FormValue("password")
 		passwordHash, err := hashPassword(password)
 		if err != nil {
-			htmlError(w, http.StatusInternalServerError)
-			return
+			return err
 		}
 
 		err = db.CreateUser(database.User{
@@ -128,21 +115,18 @@ func usersApplyEdit(w http.ResponseWriter, r *http.Request) {
 			Surname:      surname,
 		})
 		if err != nil {
-			htmlError(w, http.StatusInternalServerError)
-			return
+			return err
 		}
 	} else {
 		id, err := strconv.Atoi(r.FormValue("id"))
 		if err != nil {
-			htmlError(w, http.StatusInternalServerError)
-			return
+			return err
 		}
 
 		if delete {
 			err = db.DeleteUser(id)
 			if err != nil {
-				htmlError(w, http.StatusInternalServerError)
-				return
+				return err
 			}
 		} else {
 			err = db.UpdateUser(database.User{
@@ -153,11 +137,11 @@ func usersApplyEdit(w http.ResponseWriter, r *http.Request) {
 				Surname:  surname,
 			})
 			if err != nil {
-				htmlError(w, http.StatusInternalServerError)
-				return
+				return err
 			}
 		}
 	}
 
 	http.Redirect(w, r, "/admin", http.StatusSeeOther)
+	return nil
 }

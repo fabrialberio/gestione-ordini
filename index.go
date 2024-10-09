@@ -6,7 +6,7 @@ import (
 	"net/http"
 )
 
-func index(w http.ResponseWriter, r *http.Request) {
+func index(w http.ResponseWriter, r *http.Request) (interface{}, error) {
 	var data struct {
 		UserID   int
 		RoleID   int
@@ -24,15 +24,10 @@ func index(w http.ResponseWriter, r *http.Request) {
 		data.RoleID = claims.RoleID
 	}
 
-	templ.ExecuteTemplate(w, "index.html", data)
+	return data, nil
 }
 
-func login(w http.ResponseWriter, r *http.Request) {
-	if r.Method != http.MethodPost {
-		http.Error(w, "Metodo non consentito", http.StatusMethodNotAllowed)
-		return
-	}
-
+func login(w http.ResponseWriter, r *http.Request) error {
 	username := r.FormValue("username")
 	password := r.FormValue("password")
 	dest := ""
@@ -61,9 +56,11 @@ func login(w http.ResponseWriter, r *http.Request) {
 	}
 
 	http.Redirect(w, r, dest, http.StatusSeeOther)
+	return nil
 }
 
-func logout(w http.ResponseWriter, r *http.Request) {
+func logout(w http.ResponseWriter, r *http.Request) error {
 	unsetSessionCookie(w)
 	http.Redirect(w, r, "/", http.StatusSeeOther)
+	return nil
 }

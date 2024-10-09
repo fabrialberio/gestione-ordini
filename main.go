@@ -4,17 +4,16 @@ import (
 	"embed"
 	"fmt"
 	"gestione-ordini/database"
+	"gestione-ordini/router"
+	"html/template"
 	"log"
 	"net/http"
 	"os"
-	"text/template"
 	"time"
 )
 
 var (
 	db *database.Database
-
-	templ *template.Template
 
 	//go:embed public
 	publicFS embed.FS
@@ -23,7 +22,7 @@ var (
 func main() {
 	checkEnvVars()
 
-	templ = template.Must(template.ParseGlob("templates/*.html"))
+	templ := template.Must(template.ParseGlob("templates/*.html"))
 	template.Must(templ.ParseGlob("templates/**/*.html"))
 
 	db = createDatabase()
@@ -31,23 +30,24 @@ func main() {
 
 	addAdminUserIfNotExists()
 
-	mux := http.NewServeMux()
-	mux.Handle("/public/", http.FileServerFS(publicFS))
-	mux.HandleFunc("/", logRequest(index))
-	mux.HandleFunc("/login", logRequest(login))
-	mux.HandleFunc("/logout", logRequest(logout))
+	router := router.NewRouter(templ)
 
-	mux.HandleFunc("/cook", logRequest(cook))
-	mux.HandleFunc("/manager", logRequest(index))
+	router.HandleFunc("/public/", http.FileServerFS(publicFS).ServeHTTP)
 
-	mux.HandleFunc("/admin", logRequest(admin))
-	mux.HandleFunc("/admin/users/edit", logRequest(usersEdit))
-	mux.HandleFunc("/admin/usersPage", logRequest(usersPage))
-	mux.HandleFunc("/admin/usersTable", logRequest(usersTable))
-	mux.HandleFunc("/admin/users/applyEdit", logRequest(usersApplyEdit))
+	router.HandleTemplate("/", "index.html", index)
+	router.HandleTemplate("/cook", "cook.html", cook)
+	router.HandleTemplate("/manager", "manager.html", cook)
+	router.HandleTemplate("/admin", "admin.html", admin)
+	router.HandleTemplate("/admin/users/edit", "user.html", usersEdit)
+	router.HandleTemplate("/admin/usersPage", "usersPage.html", usersPage)
+	router.HandleTemplate("/admin/usersTable", "usersTable.html", usersTable)
+
+	router.HandlePost("/login", login)
+	router.HandlePost("/logout", logout)
+	router.HandlePost("/admin/users/applyEdit", usersApplyEdit)
 
 	log.Println("Server started on port 8080.")
-	log.Fatal(http.ListenAndServe(":8080", mux))
+	log.Fatal(router.ListenAndServe(":8080"))
 }
 
 func checkEnvVars() {
