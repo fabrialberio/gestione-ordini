@@ -17,6 +17,13 @@ var (
 	publicKey  *rsa.PublicKey
 )
 
+var (
+	ErrNoCookie    = fmt.Errorf("cookie not found")
+	ErrInvalidJWT  = fmt.Errorf("invalid JWT")
+	ErrInvalidRole = fmt.Errorf("invalid role")
+	ErrInvalidPerm = fmt.Errorf("invalid permission")
+)
+
 func init() {
 	privateKeyBytes, err := os.ReadFile("private.key")
 	if err != nil {
@@ -102,12 +109,12 @@ const SessionCookieName = "jwt"
 func getSessionCookie(r *http.Request) (*UserClaims, error) {
 	cookie, err := r.Cookie(SessionCookieName)
 	if err != nil {
-		return nil, err
+		return nil, ErrNoCookie
 	}
 
 	claims, err := validateJWT(cookie.Value)
 	if err != nil {
-		return nil, err
+		return nil, ErrInvalidJWT
 	}
 
 	return claims, nil
@@ -140,11 +147,11 @@ func unsetSessionCookie(w http.ResponseWriter) {
 func checkPerm(r *http.Request, permId int) error {
 	claims, err := getSessionCookie(r)
 	if err != nil {
-		return fmt.Errorf("cookie non trovato")
+		return ErrNoCookie
 	}
 
 	if ok, err := db.UserHasPerm(claims.UserID, permId); err != nil || !ok {
-		return fmt.Errorf("permesso non valido")
+		return ErrInvalidPerm
 	}
 
 	return nil
@@ -153,11 +160,11 @@ func checkPerm(r *http.Request, permId int) error {
 func checkRole(r *http.Request, roleId int) error {
 	claims, err := getSessionCookie(r)
 	if err != nil {
-		return fmt.Errorf("cookie non trovato")
+		return ErrNoCookie
 	}
 
 	if claims.RoleID != roleId {
-		return fmt.Errorf("ruolo non valido")
+		return ErrInvalidRole
 	}
 
 	return nil
