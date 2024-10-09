@@ -50,13 +50,6 @@ func main() {
 	log.Fatal(http.ListenAndServe(":8080", mux))
 }
 
-func logRequest(h http.HandlerFunc) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		log.Printf("%s %s %s", r.RemoteAddr, r.Method, r.URL)
-		h(w, r)
-	}
-}
-
 func checkEnvVars() {
 	envVars := []string{
 		"MYSQL_USER",

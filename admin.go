@@ -6,44 +6,6 @@ import (
 	"strconv"
 )
 
-func displayUnauthorized(w http.ResponseWriter) {
-	http.Error(w, "Non autorizzato", http.StatusForbidden)
-}
-
-func displayInternalError(w http.ResponseWriter) {
-	http.Error(w, "Errore interno", http.StatusInternalServerError)
-}
-
-func checkPerm(w http.ResponseWriter, r *http.Request, permId int) bool {
-	claims, err := getSessionCookie(r)
-	if err != nil {
-		displayUnauthorized(w)
-		return false
-	}
-
-	if ok, err := db.UserHasPerm(claims.UserID, permId); err != nil || !ok {
-		displayUnauthorized(w)
-		return false
-	}
-
-	return true
-}
-
-func checkRole(w http.ResponseWriter, r *http.Request, roleId int) bool {
-	claims, err := getSessionCookie(r)
-	if err != nil {
-		displayUnauthorized(w)
-		return false
-	}
-
-	if claims.RoleID != roleId {
-		displayUnauthorized(w)
-		return false
-	}
-
-	return true
-}
-
 func admin(w http.ResponseWriter, r *http.Request) {
 	if !checkRole(w, r, database.RoleIDAdministrator) {
 		return
@@ -92,7 +54,7 @@ func usersTable(w http.ResponseWriter, r *http.Request) {
 
 	data.Users, err = db.GetUsers(data.OrderBy, data.OrderDesc)
 	if err != nil {
-		displayInternalError(w)
+		htmlError(w, http.StatusInternalServerError)
 		return
 	}
 
@@ -117,7 +79,7 @@ func usersEdit(w http.ResponseWriter, r *http.Request) {
 	} else {
 		user, err := db.GetUser(id)
 		if err != nil {
-			displayInternalError(w)
+			htmlError(w, http.StatusInternalServerError)
 			return
 		}
 
@@ -126,7 +88,7 @@ func usersEdit(w http.ResponseWriter, r *http.Request) {
 
 	data.Roles, err = db.GetRoles()
 	if err != nil {
-		displayInternalError(w)
+		htmlError(w, http.StatusInternalServerError)
 		return
 	}
 
@@ -143,7 +105,7 @@ func usersApplyEdit(w http.ResponseWriter, r *http.Request) {
 
 	roleId, err := strconv.Atoi(r.FormValue("roleId"))
 	if err != nil {
-		displayInternalError(w)
+		htmlError(w, http.StatusInternalServerError)
 		return
 	}
 	username := r.FormValue("username")
@@ -154,7 +116,7 @@ func usersApplyEdit(w http.ResponseWriter, r *http.Request) {
 		password := r.FormValue("password")
 		passwordHash, err := hashPassword(password)
 		if err != nil {
-			displayInternalError(w)
+			htmlError(w, http.StatusInternalServerError)
 			return
 		}
 
@@ -166,20 +128,20 @@ func usersApplyEdit(w http.ResponseWriter, r *http.Request) {
 			Surname:      surname,
 		})
 		if err != nil {
-			displayInternalError(w)
+			htmlError(w, http.StatusInternalServerError)
 			return
 		}
 	} else {
 		id, err := strconv.Atoi(r.FormValue("id"))
 		if err != nil {
-			displayInternalError(w)
+			htmlError(w, http.StatusInternalServerError)
 			return
 		}
 
 		if delete {
 			err = db.DeleteUser(id)
 			if err != nil {
-				displayInternalError(w)
+				htmlError(w, http.StatusInternalServerError)
 				return
 			}
 		} else {
@@ -191,7 +153,7 @@ func usersApplyEdit(w http.ResponseWriter, r *http.Request) {
 				Surname:  surname,
 			})
 			if err != nil {
-				displayInternalError(w)
+				htmlError(w, http.StatusInternalServerError)
 				return
 			}
 		}
