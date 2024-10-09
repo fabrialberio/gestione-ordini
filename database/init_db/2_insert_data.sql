@@ -16,6 +16,7 @@ INSERT INTO permessi (id, nome) VALUES
 INSERT INTO ruolo_permesso (id_ruolo, id_permesso) VALUES
     (1, 1),
     (1, 4),
+    (2, 1),
     (2, 2),
     (2, 3),
     (3, 3),
