@@ -30,27 +30,27 @@ func main() {
 
 	addAdminUserIfNotExists()
 
-	router := router.NewRouter(templ, "error.html")
+	rt := router.NewRouter(templ)
 
-	router.Get("/public/", http.FileServerFS(publicFS).ServeHTTP)
+	rt.Get("/public/", http.FileServerFS(publicFS).ServeHTTP)
 
-	router.GetTemplate("/", "login.html", index)
-	router.GetTemplate("/cook", "cook.html", cook)
-	router.GetTemplate("/cook/order", "order.html", cookOrder)
-	router.GetTemplate("/cook/ordersList", "ordersList.html", cookOrdersList)
-	router.GetTemplate("/manager", "manager.html", cook)
-	router.GetTemplate("/admin", "admin.html", admin)
-	router.GetTemplate("/admin/user", "user.html", adminUser)
-	router.GetTemplate("/admin/users", "users.html", adminUsers)
-	router.GetTemplate("/admin/usersTable", "usersTable.html", adminUsersTable)
+	rt.GetTemplate("/", "login.html", index)
+	rt.GetTemplate("/cook", "cook.html", cook)
+	rt.GetTemplate("/cook/order", "order.html", cookOrder)
+	rt.GetTemplate("/cook/ordersList", "ordersList.html", cookOrdersList)
+	rt.GetTemplate("/manager", "manager.html", cook)
+	rt.GetTemplate("/admin", "admin.html", admin)
+	rt.GetTemplate("/admin/user", "user.html", adminUser)
+	rt.GetTemplate("/admin/users", "users.html", adminUsers)
+	rt.GetTemplate("/admin/usersTable", "usersTable.html", adminUsersTable)
 
-	router.Post("/login", login)
-	router.Post("/logout", logout)
-	router.Post("/cook/order/edit", cookOrderEdit)
-	router.Post("/admin/user/edit", adminUserEdit)
+	rt.Post("/login", login)
+	rt.Post("/logout", logout)
+	rt.Post("/cook/order/edit", cookOrderEdit)
+	rt.Post("/admin/user/edit", adminUserEdit)
 
 	log.Println("Server started on port 8080.")
-	log.Fatal(router.ListenAndServe(":8080"))
+	log.Fatal(rt.ListenAndServe(":8080"))
 }
 
 func checkEnvVars() {
