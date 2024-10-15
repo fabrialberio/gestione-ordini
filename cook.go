@@ -9,11 +9,7 @@ import (
 )
 
 func cook(w http.ResponseWriter, r *http.Request) (interface{}, error) {
-	if err := checkRole(r, database.RoleIDCook); err != nil {
-		return nil, err
-	}
-
-	return nil, nil
+	return nil, checkRole(r, database.RoleIDCook)
 }
 
 func cookOrdersList(w http.ResponseWriter, r *http.Request) (interface{}, error) {
