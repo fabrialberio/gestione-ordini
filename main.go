@@ -30,7 +30,7 @@ func main() {
 
 	addAdminUserIfNotExists()
 
-	rt := router.NewRouter(templ)
+	rt := router.New(templ)
 
 	rt.Get("/public/", http.FileServerFS(publicFS).ServeHTTP)
 
@@ -38,7 +38,9 @@ func main() {
 	rt.GetTemplate("/cook", "cook.html", cook)
 	rt.GetTemplate("/cook/order", "order.html", cookOrder)
 	rt.GetTemplate("/cook/ordersList", "ordersList.html", cookOrdersList)
-	rt.GetTemplate("/manager", "manager.html", cook)
+	rt.GetTemplate("/manager", "manager.html", manager)
+	rt.GetTemplate("/manager/product", "product.html", managerProduct)
+	rt.GetTemplate("/manager/productsTable", "productsTable.html", managerProductsTable)
 	rt.GetTemplate("/admin", "admin.html", admin)
 	rt.GetTemplate("/admin/user", "user.html", adminUser)
 	rt.GetTemplate("/admin/users", "users.html", adminUsers)

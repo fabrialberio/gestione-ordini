@@ -24,7 +24,7 @@ func (rt *Router) htmlError(w http.ResponseWriter, r *http.Request, message stri
 	rt.templ.ExecuteTemplate(w, errorTemplateName, message)
 }
 
-func NewRouter(templ *template.Template) Router {
+func New(templ *template.Template) Router {
 	return Router{
 		mux:   http.NewServeMux(),
 		templ: templ,
