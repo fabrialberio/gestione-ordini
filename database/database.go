@@ -7,15 +7,15 @@ import (
 	"gorm.io/gorm"
 )
 
-type Database struct {
-	conn *gorm.DB
-}
-
 var (
 	ErrRecordNotFound = gorm.ErrRecordNotFound
 )
 
-func NewDatabase(dsn string) (*Database, error) {
+type GormDB struct {
+	conn *gorm.DB
+}
+
+func New(dsn string) (*GormDB, error) {
 	db, err := gorm.Open(mysql.New(mysql.Config{
 		DSN:               dsn + "?parseTime=true",
 		DefaultStringSize: 255,
@@ -32,10 +32,7 @@ func NewDatabase(dsn string) (*Database, error) {
 	db.AutoMigrate(&User{})
 	db.AutoMigrate(&Role{})
 
-	return &Database{db}, nil
+	return &GormDB{db}, nil
 }
 
-func (db *Database) Close() error {
-	// TODO: Remove
-	return nil
-}
+func (db *GormDB) Close() {}

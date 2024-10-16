@@ -13,7 +13,7 @@ import (
 )
 
 var (
-	db *database.Database
+	db *database.GormDB
 
 	//go:embed public
 	publicFS embed.FS
@@ -72,7 +72,7 @@ func checkEnvVars() {
 	}
 }
 
-func createDatabase() *database.Database {
+func createDatabase() *database.GormDB {
 	dsn := fmt.Sprintf(
 		"%s:%s@tcp(%s:3306)/%s",
 		os.Getenv("MYSQL_USER"),
@@ -81,7 +81,7 @@ func createDatabase() *database.Database {
 		os.Getenv("MYSQL_DATABASE"),
 	)
 
-	db, err := database.NewDatabase(dsn)
+	db, err := database.New(dsn)
 	for n_retries := 0; err != nil; n_retries++ {
 		if n_retries == 5 {
 			log.Fatalf("Error creating database after %v retries: %v", n_retries, err)
@@ -89,7 +89,7 @@ func createDatabase() *database.Database {
 
 		time.Sleep(5 * time.Second)
 		log.Printf("Error creating database, retrying: %v", err)
-		db, err = database.NewDatabase(dsn)
+		db, err = database.New(dsn)
 	}
 	log.Println("Database created successfully.")
 
@@ -97,7 +97,7 @@ func createDatabase() *database.Database {
 }
 
 func addAdminUserIfNotExists() {
-	_, err := db.GetUserByUsername("admin")
+	_, err := db.FindUserWithUsername("admin")
 	if err == database.ErrRecordNotFound {
 		hash, err := hashPassword(os.Getenv("ADMIN_PASSWORD"))
 		if err != nil {

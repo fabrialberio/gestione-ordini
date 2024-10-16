@@ -37,7 +37,7 @@ func login(w http.ResponseWriter, r *http.Request) error {
 	dest := ""
 
 	var ok bool
-	user, _ := db.GetUserByUsername(username)
+	user, _ := db.FindUserWithUsername(username)
 	if user != nil {
 		ok = verifyPassword(user.PasswordHash, password)
 	} else {

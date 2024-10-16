@@ -51,21 +51,21 @@ const (
 	UserOrderByCreatedAt
 )
 
-func (db *Database) GetRoles() ([]Role, error) {
+func (db *GormDB) FindAllRoles() ([]Role, error) {
 	var roles []Role
 
 	err := db.conn.Find(&roles).Error
 	return roles, err
 }
 
-func (db *Database) GetUser(id int) (User, error) {
+func (db *GormDB) FindUser(id int) (User, error) {
 	var user User
 
 	err := db.conn.Take(&user, id).Error
 	return user, err
 }
 
-func (db *Database) GetUsers(orderBy int, orderDesc bool) ([]User, error) {
+func (db *GormDB) FindAllUsers(orderBy int, orderDesc bool) ([]User, error) {
 	var orderByString string
 	var users []User
 
@@ -93,18 +93,18 @@ func (db *Database) GetUsers(orderBy int, orderDesc bool) ([]User, error) {
 	return users, err
 }
 
-func (db *Database) GetUserByUsername(username string) (*User, error) {
+func (db *GormDB) FindUserWithUsername(username string) (*User, error) {
 	var user *User
 
 	err := db.conn.Model(&User{}).Take(&user, "username = ?", username).Error
 	return user, err
 }
 
-func (db *Database) CreateUser(user User) error {
+func (db *GormDB) CreateUser(user User) error {
 	return db.conn.Create(&user).Error
 }
 
-func (db *Database) UpdateUser(user User) error {
+func (db *GormDB) UpdateUser(user User) error {
 	columns := []string{"id_ruolo", "username", "nome", "cognome"}
 	if user.PasswordHash != "" {
 		columns = append(columns, "password_hash")
@@ -113,17 +113,17 @@ func (db *Database) UpdateUser(user User) error {
 	return db.conn.Model(&user).Select(columns).Updates(user).Error
 }
 
-func (db *Database) DeleteUser(id int) error {
+func (db *GormDB) DeleteUser(id int) error {
 	return db.conn.Delete(&User{}, id).Error
 }
 
-func (db *Database) UserHasPerm(userId int, permissionId int) (bool, error) {
+func (db *GormDB) UserHasPerm(userId int, permId int) (bool, error) {
 	rows, err := db.conn.Model(&User{}).
 		Select("utenti.id").
 		Joins("JOIN ruoli ON utenti.id_ruolo = ruoli.id").
 		Joins("JOIN ruolo_permesso ON ruoli.id = ruolo_permesso.id_ruolo").
 		Joins("JOIN permessi ON ruolo_permesso.id_permesso = permessi.id").
-		Where("utenti.id = ? AND permessi.id = ?", userId, permissionId).
+		Where("utenti.id = ? AND permessi.id = ?", userId, permId).
 		Rows()
 
 	if err != nil {

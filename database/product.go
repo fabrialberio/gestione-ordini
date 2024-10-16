@@ -35,50 +35,50 @@ type Product struct {
 
 func (Product) TableName() string { return "prodotti" }
 
-func (db *Database) GetProductTypes() ([]ProductType, error) {
+func (db *GormDB) FindAllProductTypes() ([]ProductType, error) {
 	var productTypes []ProductType
 
 	err := db.conn.Preload(clause.Associations).Find(&productTypes).Error
 	return productTypes, err
 }
 
-func (db *Database) GetSuppliers() ([]Supplier, error) {
+func (db *GormDB) FindAllSuppliers() ([]Supplier, error) {
 	var suppliers []Supplier
 
 	err := db.conn.Preload(clause.Associations).Find(&suppliers).Error
 	return suppliers, err
 }
 
-func (db *Database) GetUnitsOfMeasure() ([]UnitOfMeasure, error) {
+func (db *GormDB) FindAllUnitsOfMeasure() ([]UnitOfMeasure, error) {
 	var unitsOfMeasure []UnitOfMeasure
 
 	err := db.conn.Preload(clause.Associations).Find(&unitsOfMeasure).Error
 	return unitsOfMeasure, err
 }
 
-func (db *Database) GetProducts() ([]Product, error) {
+func (db *GormDB) FindAllProducts() ([]Product, error) {
 	var products []Product
 
 	err := db.conn.Preload(clause.Associations).Find(&products).Error
 	return products, err
 }
 
-func (db *Database) GetProduct(id int) (Product, error) {
+func (db *GormDB) FindProduct(id int) (Product, error) {
 	var product Product
 
 	err := db.conn.Take(&product, id).Error
 	return product, err
 }
 
-func (db *Database) CreateProduct(product Product) error {
+func (db *GormDB) CreateProduct(product Product) error {
 	return db.conn.Create(&product).Error
 }
 
-func (db *Database) UpdateProduct(product Product) error {
+func (db *GormDB) UpdateProduct(product Product) error {
 	columns := []string{"id_tipologia", "id_fornitore", "id_unita_di_misura", "nome"}
 	return db.conn.Model(&product).Select(columns).Updates(product).Error
 }
 
-func (db *Database) DeleteProduct(id int) error {
+func (db *GormDB) DeleteProduct(id int) error {
 	return db.conn.Delete(&Product{}, id).Error
 }

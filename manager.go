@@ -35,7 +35,7 @@ func managerProductsTable(w http.ResponseWriter, r *http.Request) (interface{}, 
 	}
 	data.OrderDesc = r.URL.Query().Get("orderDesc") == "true"
 
-	data.Products, err = db.GetProducts()
+	data.Products, err = db.FindAllProducts()
 	if err != nil {
 		return nil, err
 	}
@@ -62,7 +62,7 @@ func managerProduct(w http.ResponseWriter, r *http.Request) (interface{}, error)
 		data.IsNew = true
 		data.Product = database.Product{}
 	} else {
-		product, err := db.GetProduct(id)
+		product, err := db.FindProduct(id)
 		if err != nil {
 			return nil, err
 		}
@@ -70,17 +70,17 @@ func managerProduct(w http.ResponseWriter, r *http.Request) (interface{}, error)
 		data.Product = product
 	}
 
-	data.ProductTypes, err = db.GetProductTypes()
+	data.ProductTypes, err = db.FindAllProductTypes()
 	if err != nil {
 		return nil, err
 	}
 
-	data.Suppliers, err = db.GetSuppliers()
+	data.Suppliers, err = db.FindAllSuppliers()
 	if err != nil {
 		return nil, err
 	}
 
-	data.UnitsOfMeasure, err = db.GetUnitsOfMeasure()
+	data.UnitsOfMeasure, err = db.FindAllUnitsOfMeasure()
 	log.Println(data.UnitsOfMeasure)
 	if err != nil {
 		return nil, err

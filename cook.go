@@ -26,7 +26,7 @@ func cookOrdersList(w http.ResponseWriter, r *http.Request) (interface{}, error)
 		return nil, err
 	}
 
-	data.Orders, err = db.GetOrdersByUserID(claims.UserID)
+	data.Orders, err = db.FindAllOrdersWithUserID(claims.UserID)
 	if err != nil {
 		return nil, err
 	}
@@ -53,7 +53,7 @@ func cookOrder(w http.ResponseWriter, r *http.Request) (interface{}, error) {
 			Amount: 1,
 		}
 	} else {
-		order, err := db.GetOrder(id)
+		order, err := db.FindOrder(id)
 		if err != nil {
 			return nil, err
 		}
@@ -67,7 +67,7 @@ func cookOrder(w http.ResponseWriter, r *http.Request) (interface{}, error) {
 	}
 	data.UserID = claims.UserID
 
-	data.Products, err = db.GetProducts()
+	data.Products, err = db.FindAllProducts()
 	if err != nil {
 		return nil, err
 	}

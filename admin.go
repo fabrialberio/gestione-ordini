@@ -44,7 +44,7 @@ func adminUsersTable(w http.ResponseWriter, r *http.Request) (interface{}, error
 	}
 	data.OrderDesc = r.URL.Query().Get("orderDesc") == "true"
 
-	data.Users, err = db.GetUsers(data.OrderBy, data.OrderDesc)
+	data.Users, err = db.FindAllUsers(data.OrderBy, data.OrderDesc)
 	if err != nil {
 		return nil, err
 	}
@@ -68,7 +68,7 @@ func adminUser(w http.ResponseWriter, r *http.Request) (interface{}, error) {
 		data.IsNew = true
 		data.User = database.User{}
 	} else {
-		user, err := db.GetUser(id)
+		user, err := db.FindUser(id)
 		if err != nil {
 			return nil, err
 		}
@@ -76,7 +76,7 @@ func adminUser(w http.ResponseWriter, r *http.Request) (interface{}, error) {
 		data.User = user
 	}
 
-	data.Roles, err = db.GetRoles()
+	data.Roles, err = db.FindAllRoles()
 	if err != nil {
 		return nil, err
 	}
