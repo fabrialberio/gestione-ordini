@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+  {{ template "head.html" }} 
+  <body class="bg-surface min-h-screen">
+    <header class="mx-auto w-full max-w-screen-xl">
+      <div class="flex p-4">
+        <a class="btn-lg" href="/manager">
+          <i class="fa-arrow-left fas"></i>
+          Indietro
+        </a>
+      </div>
+    </header>
+
+    <main class="flex justify-center items-center">
+      <div class="space-y-4 px-6 w-full max-w-xl">
+        <h2 class="text-h2">
+        {{ if .IsNew }}
+          Nuovo prodotto
+        {{ else }}
+          Modifica prodotto
+        {{ end }}
+        </h2>
+        <form class="space-y-4" method="post" action="/manager/product/edit">
+          <input type="hidden" name="id" value="{{ .Product.ID }}">
+          <input type="hidden" name="isNew" value="{{ .IsNew }}">
+          
+          <div>
+            <label>Nome</label>
+            <input class="w-full input" type="text" name="name" value="{{ .Product.Name }}">
+          </div>
+          <div>
+            <label>Tipologia di prodotto</label>
+            <select class="w-full input" name="productTypeId">
+              {{ range .ProductTypes }}
+              <option value="{{ .ID }}"{{ if eq .ID $.Product.ProductTypeID }} selected{{ end }}>{{ .Name }}</option>
+              {{ end }}
+            </select>
+          </div>
+          <div>
+            <label>Fornitore</label>
+            <select class="w-full input" name="supplierId">
+              {{ range .Suppliers }}
+              <option value="{{ .ID }}"{{ if eq .ID $.Product.SupplierID }} selected{{ end }}>{{ .Name }}</option>
+              {{ end }}
+            </select>
+          </div>
+          <div>
+            <label>Unità di misura</label>
+            <select class="w-full input" name="unitOfMeasureId">
+              {{ range .UnitsOfMeasure }}
+              <option value="{{ .ID }}"{{ if eq .ID $.Product.UnitOfMeasureID }} selected{{ end }}>{{ .Symbol }}</option>
+              {{ end }}
+            </select>
+          </div>
+
+          <div class="flex gap-4 pt-4">
+            {{ if not .IsNew }}
+            <button class="w-24 btn-lg" type="submit" name="delete">
+              Elimina
+            </button>
+            {{ end }}
+            <button class="ml-auto w-24 btn-lg suggested" type="submit">
+              {{ if .IsNew }}
+              Crea
+              {{ else }}
+              Salva
+              {{ end }}
+            </button>
+          </div>
+          
+        </form>
+      </div>
+    </main>
+  </body>
+</html>

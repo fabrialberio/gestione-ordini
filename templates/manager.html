@@ -1,13 +1,36 @@
 <!DOCTYPE html>
 <html>
   {{ template "head.html" }}
-  <body>
-    <header>
-
+  <body class="bg-surface">
+    <header class="mx-auto w-full max-w-screen-xl">
+      <div class="flex p-4">
+        <div class="btn-lg">
+          <i class="fa-bars fas"></i>
+        </div>
+        <form class="ml-auto" method="post" action="/logout">
+          <button class="btn-lg" type="submit">
+            Esci
+            <i class="fa-right-to-bracket fas"></i>
+          </button>
+        </form> 
+      </div>
     </header>
 
-    <main>
-      Ciao magazziniere!
+    <main class="flex justify-center items-center">
+      <div class="space-y-4 px-6 w-full max-w-xl">
+        <div class="flex items-center">
+          <h2 class="text-h2">
+            Prodotti
+          </h2>
+          <a class="ml-auto btn-md suggested" href="/manager/product">
+            <i class="fa-add fas"></i>
+            Aggiungi
+          </a>
+        </div>
+        
+        <div hx-get="/manager/productsTable" hx-trigger="load" hx-target="this">
+        </div>
+      </div>
     </main>
   </body>
 </html>

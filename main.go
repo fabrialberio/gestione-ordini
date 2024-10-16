@@ -50,6 +50,7 @@ func main() {
 	rt.Post("/logout", logout)
 	rt.Post("/cook/order/edit", cookOrderEdit)
 	rt.Post("/admin/user/edit", adminUserEdit)
+	rt.Post("/manager/product/edit", managerProductEdit)
 
 	log.Println("Server started on port 8080.")
 	log.Fatal(rt.ListenAndServe(":8080"))

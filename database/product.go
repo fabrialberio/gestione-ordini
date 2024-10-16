@@ -1,5 +1,7 @@
 package database
 
+import "gorm.io/gorm/clause"
+
 type ProductType struct {
 	ID   int    `gorm:"column:id;primaryKey"`
 	Name string `gorm:"column:nome;size:255"`
@@ -33,11 +35,39 @@ type Product struct {
 
 func (Product) TableName() string { return "prodotti" }
 
+func (db *Database) GetProductTypes() ([]ProductType, error) {
+	var productTypes []ProductType
+
+	err := db.conn.Preload(clause.Associations).Find(&productTypes).Error
+	return productTypes, err
+}
+
+func (db *Database) GetSuppliers() ([]Supplier, error) {
+	var suppliers []Supplier
+
+	err := db.conn.Preload(clause.Associations).Find(&suppliers).Error
+	return suppliers, err
+}
+
+func (db *Database) GetUnitsOfMeasure() ([]UnitOfMeasure, error) {
+	var unitsOfMeasure []UnitOfMeasure
+
+	err := db.conn.Preload(clause.Associations).Find(&unitsOfMeasure).Error
+	return unitsOfMeasure, err
+}
+
 func (db *Database) GetProducts() ([]Product, error) {
 	var products []Product
 
-	err := db.conn.Find(&products).Error
+	err := db.conn.Preload(clause.Associations).Find(&products).Error
 	return products, err
+}
+
+func (db *Database) GetProduct(id int) (Product, error) {
+	var product Product
+
+	err := db.conn.Take(&product, id).Error
+	return product, err
 }
 
 func (db *Database) CreateProduct(product Product) error {
