@@ -6,19 +6,15 @@ import (
 	"strconv"
 )
 
-func admin(w http.ResponseWriter, r *http.Request) (interface{}, error) {
-	return nil, checkRole(r, database.RoleIDAdministrator)
+func HandleGetAdmin(w http.ResponseWriter, r *http.Request) {
+	templ.ExecuteTemplate(w, "admin.html", nil)
 }
 
-func adminUsers(w http.ResponseWriter, r *http.Request) (interface{}, error) {
-	return nil, checkPerm(r, database.PermIDEditUsers)
+func HandleGetAdminUsers(w http.ResponseWriter, r *http.Request) {
+	templ.ExecuteTemplate(w, "users.html", nil)
 }
 
-func adminUsersTable(w http.ResponseWriter, r *http.Request) (interface{}, error) {
-	if err := checkPerm(r, database.PermIDEditUsers); err != nil {
-		return nil, err
-	}
-
+func HandleGetAdminUsersTable(w http.ResponseWriter, r *http.Request) {
 	var err error
 	var data struct {
 		OrderBy   int
@@ -46,31 +42,29 @@ func adminUsersTable(w http.ResponseWriter, r *http.Request) (interface{}, error
 
 	data.Users, err = db.FindAllUsers(data.OrderBy, data.OrderDesc)
 	if err != nil {
-		return nil, err
+		HandleError(w, r, err)
+		return
 	}
 
-	return data, nil
+	templ.ExecuteTemplate(w, "usersTable.html", data)
 }
 
-func adminUser(w http.ResponseWriter, r *http.Request) (interface{}, error) {
-	if err := checkPerm(r, database.PermIDEditUsers); err != nil {
-		return nil, err
-	}
-
+func HandleGetAdminUser(w http.ResponseWriter, r *http.Request) {
 	var data struct {
 		User  database.User
 		Roles []database.Role
 		IsNew bool
 	}
 
-	id, err := strconv.Atoi(r.URL.Query().Get("id"))
+	id, err := strconv.Atoi(r.PathValue("id"))
 	if err != nil {
 		data.IsNew = true
 		data.User = database.User{}
 	} else {
 		user, err := db.FindUser(id)
 		if err != nil {
-			return nil, err
+			HandleError(w, r, err)
+			return
 		}
 
 		data.User = user
@@ -78,23 +72,21 @@ func adminUser(w http.ResponseWriter, r *http.Request) (interface{}, error) {
 
 	data.Roles, err = db.FindAllRoles()
 	if err != nil {
-		return nil, err
+		HandleError(w, r, err)
+		return
 	}
 
-	return data, nil
+	templ.ExecuteTemplate(w, "user.html", data)
 }
 
-func adminUserEdit(w http.ResponseWriter, r *http.Request) error {
-	if err := checkPerm(r, database.PermIDEditUsers); err != nil {
-		return err
-	}
-
+func HandlePostAdminUser(w http.ResponseWriter, r *http.Request) {
 	isNew := r.FormValue("isNew") == "true"
 	delete := r.Form.Has("delete")
 
 	roleId, err := strconv.Atoi(r.FormValue("roleId"))
 	if err != nil {
-		return err
+		HandleError(w, r, err)
+		return
 	}
 	username := r.FormValue("username")
 	name := r.FormValue("name")
@@ -104,7 +96,8 @@ func adminUserEdit(w http.ResponseWriter, r *http.Request) error {
 		password := r.FormValue("password")
 		passwordHash, err := hashPassword(password)
 		if err != nil {
-			return err
+			HandleError(w, r, err)
+			return
 		}
 
 		err = db.CreateUser(database.User{
@@ -115,18 +108,21 @@ func adminUserEdit(w http.ResponseWriter, r *http.Request) error {
 			Surname:      surname,
 		})
 		if err != nil {
-			return err
+			HandleError(w, r, err)
+			return
 		}
 	} else {
 		id, err := strconv.Atoi(r.FormValue("id"))
 		if err != nil {
-			return err
+			HandleError(w, r, err)
+			return
 		}
 
 		if delete {
 			err = db.DeleteUser(id)
 			if err != nil {
-				return err
+				HandleError(w, r, err)
+				return
 			}
 		} else {
 			err = db.UpdateUser(database.User{
@@ -137,11 +133,11 @@ func adminUserEdit(w http.ResponseWriter, r *http.Request) error {
 				Surname:  surname,
 			})
 			if err != nil {
-				return err
+				HandleError(w, r, err)
+				return
 			}
 		}
 	}
 
 	http.Redirect(w, r, "/admin", http.StatusSeeOther)
-	return nil
 }

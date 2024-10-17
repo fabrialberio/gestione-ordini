@@ -20,7 +20,7 @@
           Modifica ordine
         {{ end }}
         </h2>
-        <form class="space-y-4" method="post" action="/cook/order/edit">
+        <form class="space-y-4" method="post" action="/cook/orders">
           <input type="hidden" name="id" value="{{ .Order.ID }}">
           <input type="hidden" name="isNew" value="{{ .IsNew }}">
           <input type="hidden" name="userId" value="{{ .UserID }}">

@@ -4,7 +4,6 @@ import (
 	"embed"
 	"fmt"
 	"gestione-ordini/database"
-	"gestione-ordini/router"
 	"html/template"
 	"log"
 	"net/http"
@@ -15,6 +14,8 @@ import (
 var (
 	db *database.GormDB
 
+	templ *template.Template
+
 	//go:embed public
 	publicFS embed.FS
 )
@@ -22,7 +23,7 @@ var (
 func main() {
 	checkEnvVars()
 
-	templ := template.Must(template.ParseGlob("templates/*.html"))
+	templ = template.Must(template.ParseGlob("templates/*.html"))
 	template.Must(templ.ParseGlob("templates/**/*.html"))
 
 	db = createDatabase()
@@ -30,30 +31,42 @@ func main() {
 
 	addAdminUserIfNotExists()
 
-	rt := router.New(templ)
+	cookMux := http.NewServeMux()
+	cookMux.HandleFunc("GET /", HandleGetCook)
+	cookMux.HandleFunc("GET /ordersList", CheckPerm(database.PermIDEditOwnOrder, HandleGetCookOrdersList))
+	cookMux.HandleFunc("GET /orders/{id}", HandleGetCookOrder)
+	cookMux.HandleFunc("POST /orders", HandlePostCookOrder)
 
-	rt.Get("/public/", http.FileServerFS(publicFS).ServeHTTP)
+	adminMux := http.NewServeMux()
+	adminMux.HandleFunc("GET /", HandleGetAdmin)
+	adminMux.HandleFunc("GET /usersTable", HandleGetAdminUsersTable)
+	adminMux.HandleFunc("GET /users", HandleGetAdminUsers)
+	adminMux.HandleFunc("GET /users/{id}", HandleGetAdminUser)
+	adminMux.HandleFunc("POST /users", HandlePostAdminUser)
 
-	rt.GetTemplate("/", "login.html", index)
-	rt.GetTemplate("/cook", "cook.html", cook)
-	rt.GetTemplate("/cook/order", "order.html", cookOrder)
-	rt.GetTemplate("/cook/ordersList", "ordersList.html", cookOrdersList)
-	rt.GetTemplate("/manager", "manager.html", manager)
-	rt.GetTemplate("/manager/product", "product.html", managerProduct)
-	rt.GetTemplate("/manager/productsTable", "productsTable.html", managerProductsTable)
-	rt.GetTemplate("/admin", "admin.html", admin)
-	rt.GetTemplate("/admin/user", "user.html", adminUser)
-	rt.GetTemplate("/admin/users", "users.html", adminUsers)
-	rt.GetTemplate("/admin/usersTable", "usersTable.html", adminUsersTable)
+	managerMux := http.NewServeMux()
+	managerMux.HandleFunc("GET /", HandleGetManager)
+	managerMux.HandleFunc("GET /productsTable", HandleGetManagerProductsTable)
+	managerMux.HandleFunc("GET /products/{id}", HandleGetManagerProduct)
+	managerMux.HandleFunc("POST /products", HandlePostManagerProduct)
 
-	rt.Post("/login", login)
-	rt.Post("/logout", logout)
-	rt.Post("/cook/order/edit", cookOrderEdit)
-	rt.Post("/admin/user/edit", adminUserEdit)
-	rt.Post("/manager/product/edit", managerProductEdit)
+	mux := http.NewServeMux()
+	mux.HandleFunc("/", HandleGetIndex)
+	mux.Handle("GET /public/", http.FileServerFS(publicFS))
+	mux.Handle("/cook/", WithRole(database.RoleIDCook, http.StripPrefix("/cook", cookMux)))
+	mux.Handle("/manager/", WithRole(database.RoleIDManager, http.StripPrefix("/manager", managerMux)))
+	mux.Handle("/admin/", WithRole(database.RoleIDAdministrator, http.StripPrefix("/admin", adminMux)))
+
+	mux.HandleFunc("POST /login", HandlePostLogin)
+	mux.HandleFunc("POST /logout", HandlePostLogout)
+
+	server := http.Server{
+		Addr:    ":8080",
+		Handler: WithLogging(mux),
+	}
 
 	log.Println("Server started on port 8080.")
-	log.Fatal(rt.ListenAndServe(":8080"))
+	log.Fatal(server.ListenAndServe())
 }
 
 func checkEnvVars() {

@@ -8,37 +8,31 @@ import (
 	"time"
 )
 
-func cook(w http.ResponseWriter, r *http.Request) (interface{}, error) {
-	return nil, checkRole(r, database.RoleIDCook)
+func HandleGetCook(w http.ResponseWriter, r *http.Request) {
+	templ.ExecuteTemplate(w, "cook.html", nil)
 }
 
-func cookOrdersList(w http.ResponseWriter, r *http.Request) (interface{}, error) {
-	if err := checkPerm(r, database.PermIDEditOwnOrder); err != nil {
-		return nil, err
-	}
-
+func HandleGetCookOrdersList(w http.ResponseWriter, r *http.Request) {
 	var data struct {
 		Orders []database.Order
 	}
 
 	claims, err := getSessionCookie(r)
 	if err != nil {
-		return nil, err
+		HandleError(w, r, err)
+		return
 	}
 
 	data.Orders, err = db.FindAllOrdersWithUserID(claims.UserID)
 	if err != nil {
-		return nil, err
+		HandleError(w, r, err)
+		return
 	}
 
-	return data, nil
+	templ.ExecuteTemplate(w, "ordersList.html", data)
 }
 
-func cookOrder(w http.ResponseWriter, r *http.Request) (interface{}, error) {
-	if err := checkPerm(r, database.PermIDEditOwnOrder); err != nil {
-		return nil, err
-	}
-
+func HandleGetCookOrder(w http.ResponseWriter, r *http.Request) {
 	var data struct {
 		Order    database.Order
 		Products []database.Product
@@ -46,7 +40,7 @@ func cookOrder(w http.ResponseWriter, r *http.Request) (interface{}, error) {
 		IsNew    bool
 	}
 
-	id, err := strconv.Atoi(r.URL.Query().Get("id"))
+	id, err := strconv.Atoi(r.PathValue("id"))
 	if err != nil {
 		data.IsNew = true
 		data.Order = database.Order{
@@ -55,7 +49,8 @@ func cookOrder(w http.ResponseWriter, r *http.Request) (interface{}, error) {
 	} else {
 		order, err := db.FindOrder(id)
 		if err != nil {
-			return nil, err
+			HandleError(w, r, err)
+			return
 		}
 
 		data.Order = order
@@ -63,24 +58,22 @@ func cookOrder(w http.ResponseWriter, r *http.Request) (interface{}, error) {
 
 	claims, err := getSessionCookie(r)
 	if err != nil {
-		return nil, err
+		HandleError(w, r, err)
+		return
 	}
 	data.UserID = claims.UserID
 
 	data.Products, err = db.FindAllProducts()
 	if err != nil {
-		return nil, err
+		HandleError(w, r, err)
+		return
 	}
 	log.Println(data.Products)
 
-	return data, nil
+	templ.ExecuteTemplate(w, "order.html", data)
 }
 
-func cookOrderEdit(w http.ResponseWriter, r *http.Request) error {
-	if err := checkPerm(r, database.PermIDEditOwnOrder); err != nil {
-		return err
-	}
-
+func HandlePostCookOrder(w http.ResponseWriter, r *http.Request) {
 	isNew := r.FormValue("isNew") == "true"
 	delete := r.Form.Has("delete")
 
@@ -99,18 +92,21 @@ func cookOrderEdit(w http.ResponseWriter, r *http.Request) error {
 			RequestedAt: requestedAt,
 		})
 		if err != nil {
-			return err
+			HandleError(w, r, err)
+			return
 		}
 	} else {
 		id, err := strconv.Atoi(r.FormValue("id"))
 		if err != nil {
-			return err
+			HandleError(w, r, err)
+			return
 		}
 
 		if delete {
 			err = db.DeleteOrder(id)
 			if err != nil {
-				return err
+				HandleError(w, r, err)
+				return
 			}
 		} else {
 			err = db.UpdateOrder(database.Order{
@@ -120,11 +116,11 @@ func cookOrderEdit(w http.ResponseWriter, r *http.Request) error {
 				Amount:    amount,
 			})
 			if err != nil {
-				return err
+				HandleError(w, r, err)
+				return
 			}
 		}
 	}
 
 	http.Redirect(w, r, "/cook", http.StatusSeeOther)
-	return nil
 }

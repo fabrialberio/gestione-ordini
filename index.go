@@ -6,7 +6,7 @@ import (
 	"net/http"
 )
 
-func index(w http.ResponseWriter, r *http.Request) (interface{}, error) {
+func HandleGetIndex(w http.ResponseWriter, r *http.Request) {
 	if r.URL.Path != "/" {
 		http.Redirect(w, r, "/", http.StatusSeeOther)
 	}
@@ -28,10 +28,10 @@ func index(w http.ResponseWriter, r *http.Request) (interface{}, error) {
 		data.RoleID = claims.RoleID
 	}
 
-	return data, nil
+	templ.ExecuteTemplate(w, "login.html", data)
 }
 
-func login(w http.ResponseWriter, r *http.Request) error {
+func HandlePostLogin(w http.ResponseWriter, r *http.Request) {
 	username := r.FormValue("username")
 	password := r.FormValue("password")
 	dest := ""
@@ -60,11 +60,9 @@ func login(w http.ResponseWriter, r *http.Request) error {
 	}
 
 	http.Redirect(w, r, dest, http.StatusSeeOther)
-	return nil
 }
 
-func logout(w http.ResponseWriter, r *http.Request) error {
+func HandlePostLogout(w http.ResponseWriter, r *http.Request) {
 	unsetSessionCookie(w)
 	http.Redirect(w, r, "/", http.StatusSeeOther)
-	return nil
 }

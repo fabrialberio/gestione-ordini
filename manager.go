@@ -7,15 +7,11 @@ import (
 	"strconv"
 )
 
-func manager(w http.ResponseWriter, r *http.Request) (interface{}, error) {
-	return nil, checkRole(r, database.RoleIDManager)
+func HandleGetManager(w http.ResponseWriter, r *http.Request) {
+	templ.ExecuteTemplate(w, "manager.html", nil)
 }
 
-func managerProductsTable(w http.ResponseWriter, r *http.Request) (interface{}, error) {
-	if err := checkPerm(r, database.PermIDViewProducts); err != nil {
-		return nil, err
-	}
-
+func HandleGetManagerProductsTable(w http.ResponseWriter, r *http.Request) {
 	var err error
 	var data struct {
 		OrderBy   int
@@ -37,18 +33,14 @@ func managerProductsTable(w http.ResponseWriter, r *http.Request) (interface{}, 
 
 	data.Products, err = db.FindAllProducts()
 	if err != nil {
-		return nil, err
+		HandleError(w, r, err)
+		return
 	}
 
-	return data, nil
+	templ.ExecuteTemplate(w, "productsTable.html", data)
 }
 
-func managerProduct(w http.ResponseWriter, r *http.Request) (interface{}, error) {
-	err := checkPerm(r, database.PermIDEditProducts)
-	if err != nil {
-		return nil, err
-	}
-
+func HandleGetManagerProduct(w http.ResponseWriter, r *http.Request) {
 	var data struct {
 		Product        database.Product
 		ProductTypes   []database.ProductType
@@ -57,14 +49,15 @@ func managerProduct(w http.ResponseWriter, r *http.Request) (interface{}, error)
 		IsNew          bool
 	}
 
-	id, err := strconv.Atoi(r.URL.Query().Get("id"))
+	id, err := strconv.Atoi(r.PathValue("id"))
 	if err != nil {
 		data.IsNew = true
 		data.Product = database.Product{}
 	} else {
 		product, err := db.FindProduct(id)
 		if err != nil {
-			return nil, err
+			HandleError(w, r, err)
+			return
 		}
 
 		data.Product = product
@@ -72,28 +65,27 @@ func managerProduct(w http.ResponseWriter, r *http.Request) (interface{}, error)
 
 	data.ProductTypes, err = db.FindAllProductTypes()
 	if err != nil {
-		return nil, err
+		HandleError(w, r, err)
+		return
 	}
 
 	data.Suppliers, err = db.FindAllSuppliers()
 	if err != nil {
-		return nil, err
+		HandleError(w, r, err)
+		return
 	}
 
 	data.UnitsOfMeasure, err = db.FindAllUnitsOfMeasure()
 	log.Println(data.UnitsOfMeasure)
 	if err != nil {
-		return nil, err
+		HandleError(w, r, err)
+		return
 	}
 
-	return data, nil
+	templ.ExecuteTemplate(w, "product.html", data)
 }
 
-func managerProductEdit(w http.ResponseWriter, r *http.Request) error {
-	if err := checkPerm(r, database.PermIDEditProducts); err != nil {
-		return err
-	}
-
+func HandlePostManagerProduct(w http.ResponseWriter, r *http.Request) {
 	isNew := r.FormValue("isNew") == "true"
 	delete := r.Form.Has("delete")
 
@@ -110,18 +102,21 @@ func managerProductEdit(w http.ResponseWriter, r *http.Request) error {
 			Name:            name,
 		})
 		if err != nil {
-			return err
+			HandleError(w, r, err)
+			return
 		}
 	} else {
 		id, err := strconv.Atoi(r.FormValue("id"))
 		if err != nil {
-			return err
+			HandleError(w, r, err)
+			return
 		}
 
 		if delete {
 			err = db.DeleteProduct(id)
 			if err != nil {
-				return err
+				HandleError(w, r, err)
+				return
 			}
 		} else {
 			err = db.UpdateProduct(database.Product{
@@ -132,11 +127,11 @@ func managerProductEdit(w http.ResponseWriter, r *http.Request) error {
 				Name:            name,
 			})
 			if err != nil {
-				return err
+				HandleError(w, r, err)
+				return
 			}
 		}
 	}
 
 	http.Redirect(w, r, "/manager", http.StatusSeeOther)
-	return nil
 }
