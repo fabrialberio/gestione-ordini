@@ -21,8 +21,6 @@ var (
 )
 
 func main() {
-	checkEnvVars()
-
 	templ = template.Must(template.ParseGlob("templates/*.html"))
 	template.Must(templ.ParseGlob("templates/**/*.html"))
 
@@ -33,7 +31,7 @@ func main() {
 
 	cookMux := http.NewServeMux()
 	cookMux.HandleFunc("GET /", HandleGetCook)
-	cookMux.HandleFunc("GET /ordersList", CheckPerm(database.PermIDEditOwnOrder, HandleGetCookOrdersList))
+	cookMux.HandleFunc("GET /ordersList", HandleGetCookOrdersList)
 	cookMux.HandleFunc("GET /orders/{id}", HandleGetCookOrder)
 	cookMux.HandleFunc("POST /orders", HandlePostCookOrder)
 
@@ -67,22 +65,6 @@ func main() {
 
 	log.Println("Server started on port 8080.")
 	log.Fatal(server.ListenAndServe())
-}
-
-func checkEnvVars() {
-	envVars := []string{
-		"MYSQL_USER",
-		"MYSQL_PASSWORD",
-		"MYSQL_CONTAINER_NAME",
-		"MYSQL_DATABASE",
-		"ADMIN_PASSWORD",
-	}
-
-	for _, envVar := range envVars {
-		if _, ok := os.LookupEnv(envVar); !ok {
-			log.Fatalf("Environment variable %s is not set.", envVar)
-		}
-	}
 }
 
 func createDatabase() *database.GormDB {
