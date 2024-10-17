@@ -8,7 +8,7 @@ import (
 )
 
 func HandleGetManager(w http.ResponseWriter, r *http.Request) {
-	templ.ExecuteTemplate(w, "manager.html", nil)
+	GetRequestContext(r).Templ.ExecuteTemplate(w, "manager.html", nil)
 }
 
 func HandleGetManagerProductsTable(w http.ResponseWriter, r *http.Request) {
@@ -31,13 +31,13 @@ func HandleGetManagerProductsTable(w http.ResponseWriter, r *http.Request) {
 	}
 	data.OrderDesc = r.URL.Query().Get("orderDesc") == "true"
 
-	data.Products, err = db.FindAllProducts()
+	data.Products, err = GetRequestContext(r).DB.FindAllProducts()
 	if err != nil {
 		HandleError(w, r, err)
 		return
 	}
 
-	templ.ExecuteTemplate(w, "productsTable.html", data)
+	GetRequestContext(r).Templ.ExecuteTemplate(w, "productsTable.html", data)
 }
 
 func HandleGetManagerProduct(w http.ResponseWriter, r *http.Request) {
@@ -54,7 +54,7 @@ func HandleGetManagerProduct(w http.ResponseWriter, r *http.Request) {
 		data.IsNew = true
 		data.Product = database.Product{}
 	} else {
-		product, err := db.FindProduct(id)
+		product, err := GetRequestContext(r).DB.FindProduct(id)
 		if err != nil {
 			HandleError(w, r, err)
 			return
@@ -63,26 +63,26 @@ func HandleGetManagerProduct(w http.ResponseWriter, r *http.Request) {
 		data.Product = product
 	}
 
-	data.ProductTypes, err = db.FindAllProductTypes()
+	data.ProductTypes, err = GetRequestContext(r).DB.FindAllProductTypes()
 	if err != nil {
 		HandleError(w, r, err)
 		return
 	}
 
-	data.Suppliers, err = db.FindAllSuppliers()
+	data.Suppliers, err = GetRequestContext(r).DB.FindAllSuppliers()
 	if err != nil {
 		HandleError(w, r, err)
 		return
 	}
 
-	data.UnitsOfMeasure, err = db.FindAllUnitsOfMeasure()
+	data.UnitsOfMeasure, err = GetRequestContext(r).DB.FindAllUnitsOfMeasure()
 	log.Println(data.UnitsOfMeasure)
 	if err != nil {
 		HandleError(w, r, err)
 		return
 	}
 
-	templ.ExecuteTemplate(w, "product.html", data)
+	GetRequestContext(r).Templ.ExecuteTemplate(w, "product.html", data)
 }
 
 func HandlePostManagerProduct(w http.ResponseWriter, r *http.Request) {
@@ -95,7 +95,7 @@ func HandlePostManagerProduct(w http.ResponseWriter, r *http.Request) {
 	name := r.FormValue("requestedAt")
 
 	if isNew {
-		err := db.CreateProduct(database.Product{
+		err := GetRequestContext(r).DB.CreateProduct(database.Product{
 			ProductTypeID:   productTypeId,
 			SupplierID:      supplierId,
 			UnitOfMeasureID: unitOfMeasureId,
@@ -113,13 +113,13 @@ func HandlePostManagerProduct(w http.ResponseWriter, r *http.Request) {
 		}
 
 		if delete {
-			err = db.DeleteProduct(id)
+			err = GetRequestContext(r).DB.DeleteProduct(id)
 			if err != nil {
 				HandleError(w, r, err)
 				return
 			}
 		} else {
-			err = db.UpdateProduct(database.Product{
+			err = GetRequestContext(r).DB.UpdateProduct(database.Product{
 				ID:              id,
 				ProductTypeID:   productTypeId,
 				SupplierID:      supplierId,

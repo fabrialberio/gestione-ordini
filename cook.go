@@ -9,7 +9,7 @@ import (
 )
 
 func HandleGetCook(w http.ResponseWriter, r *http.Request) {
-	templ.ExecuteTemplate(w, "cook.html", nil)
+	GetRequestContext(r).Templ.ExecuteTemplate(w, "cook.html", nil)
 }
 
 func HandleGetCookOrdersList(w http.ResponseWriter, r *http.Request) {
@@ -23,13 +23,13 @@ func HandleGetCookOrdersList(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	data.Orders, err = db.FindAllOrdersWithUserID(user.ID)
+	data.Orders, err = GetRequestContext(r).DB.FindAllOrdersWithUserID(user.ID)
 	if err != nil {
 		HandleError(w, r, err)
 		return
 	}
 
-	templ.ExecuteTemplate(w, "ordersList.html", data)
+	GetRequestContext(r).Templ.ExecuteTemplate(w, "ordersList.html", data)
 }
 
 func HandleGetCookOrder(w http.ResponseWriter, r *http.Request) {
@@ -47,7 +47,7 @@ func HandleGetCookOrder(w http.ResponseWriter, r *http.Request) {
 			Amount: 1,
 		}
 	} else {
-		order, err := db.FindOrder(id)
+		order, err := GetRequestContext(r).DB.FindOrder(id)
 		if err != nil {
 			HandleError(w, r, err)
 			return
@@ -63,14 +63,14 @@ func HandleGetCookOrder(w http.ResponseWriter, r *http.Request) {
 	}
 	data.UserID = user.ID
 
-	data.Products, err = db.FindAllProducts()
+	data.Products, err = GetRequestContext(r).DB.FindAllProducts()
 	if err != nil {
 		HandleError(w, r, err)
 		return
 	}
 	log.Println(data.Products)
 
-	templ.ExecuteTemplate(w, "order.html", data)
+	GetRequestContext(r).Templ.ExecuteTemplate(w, "order.html", data)
 }
 
 func HandlePostCookOrder(w http.ResponseWriter, r *http.Request) {
@@ -85,7 +85,7 @@ func HandlePostCookOrder(w http.ResponseWriter, r *http.Request) {
 	log.Println(requestedAt)
 
 	if isNew {
-		err := db.CreateOrder(database.Order{
+		err := GetRequestContext(r).DB.CreateOrder(database.Order{
 			ProductID:   productId,
 			UserID:      userId,
 			Amount:      amount,
@@ -103,13 +103,13 @@ func HandlePostCookOrder(w http.ResponseWriter, r *http.Request) {
 		}
 
 		if delete {
-			err = db.DeleteOrder(id)
+			err = GetRequestContext(r).DB.DeleteOrder(id)
 			if err != nil {
 				HandleError(w, r, err)
 				return
 			}
 		} else {
-			err = db.UpdateOrder(database.Order{
+			err = GetRequestContext(r).DB.UpdateOrder(database.Order{
 				ID:        id,
 				ProductID: productId,
 				UserID:    userId,

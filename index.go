@@ -15,7 +15,7 @@ func HandleGetIndex(w http.ResponseWriter, r *http.Request) {
 		ErrorMsg string
 	}
 
-	_, err := GetAuthenticatedUser(r)
+	err := GetRequestContext(r).AuthenticationErr
 	if err == ErrNoCookie {
 		data.ErrorMsg = html.EscapeString(r.URL.Query().Get("errormsg"))
 	} else if err != nil {
@@ -24,7 +24,7 @@ func HandleGetIndex(w http.ResponseWriter, r *http.Request) {
 	} else {
 	}
 
-	templ.ExecuteTemplate(w, "login.html", data)
+	GetRequestContext(r).Templ.ExecuteTemplate(w, "login.html", data)
 }
 
 func HandlePostLogin(w http.ResponseWriter, r *http.Request) {
@@ -33,7 +33,7 @@ func HandlePostLogin(w http.ResponseWriter, r *http.Request) {
 	dest := ""
 
 	var ok bool
-	user, _ := db.FindUserWithUsername(username)
+	user, _ := GetRequestContext(r).DB.FindUserWithUsername(username)
 	if user != nil {
 		ok = verifyPassword(user.PasswordHash, password)
 	} else {

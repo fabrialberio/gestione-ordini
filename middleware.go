@@ -25,15 +25,29 @@ func WithLogging(next http.Handler) http.Handler {
 	})
 }
 
+func WithContext(reqCtx RequestContext, next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		user, err := GetAuthenticatedUser(r)
+		reqCtx.AuthenticatedUser = user
+		reqCtx.AuthenticationErr = err
+
+		ctx := r.Context()
+		ctx = StoreRequestContext(ctx, reqCtx)
+		r = r.WithContext(ctx)
+
+		next.ServeHTTP(w, r)
+	})
+}
+
 func WithRole(roleId int, next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		claims, err := GetAuthenticatedUser(r)
-		if err != nil {
+		user := GetRequestContext(r).AuthenticatedUser
+		if user == nil {
 			HandleError(w, r, ErrNoCookie)
 			return
 		}
 
-		if claims.RoleID != roleId {
+		if user.RoleID != roleId {
 			HandleError(w, r, ErrInvalidRole)
 			return
 		}

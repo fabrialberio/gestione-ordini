@@ -7,11 +7,11 @@ import (
 )
 
 func HandleGetAdmin(w http.ResponseWriter, r *http.Request) {
-	templ.ExecuteTemplate(w, "admin.html", nil)
+	GetRequestContext(r).Templ.ExecuteTemplate(w, "admin.html", nil)
 }
 
 func HandleGetAdminUsers(w http.ResponseWriter, r *http.Request) {
-	templ.ExecuteTemplate(w, "users.html", nil)
+	GetRequestContext(r).Templ.ExecuteTemplate(w, "users.html", nil)
 }
 
 func HandleGetAdminUsersTable(w http.ResponseWriter, r *http.Request) {
@@ -40,13 +40,13 @@ func HandleGetAdminUsersTable(w http.ResponseWriter, r *http.Request) {
 	}
 	data.OrderDesc = r.URL.Query().Get("orderDesc") == "true"
 
-	data.Users, err = db.FindAllUsers(data.OrderBy, data.OrderDesc)
+	data.Users, err = GetRequestContext(r).DB.FindAllUsers(data.OrderBy, data.OrderDesc)
 	if err != nil {
 		HandleError(w, r, err)
 		return
 	}
 
-	templ.ExecuteTemplate(w, "usersTable.html", data)
+	GetRequestContext(r).Templ.ExecuteTemplate(w, "usersTable.html", data)
 }
 
 func HandleGetAdminUser(w http.ResponseWriter, r *http.Request) {
@@ -61,7 +61,7 @@ func HandleGetAdminUser(w http.ResponseWriter, r *http.Request) {
 		data.IsNew = true
 		data.User = database.User{}
 	} else {
-		user, err := db.FindUser(id)
+		user, err := GetRequestContext(r).DB.FindUser(id)
 		if err != nil {
 			HandleError(w, r, err)
 			return
@@ -70,13 +70,13 @@ func HandleGetAdminUser(w http.ResponseWriter, r *http.Request) {
 		data.User = user
 	}
 
-	data.Roles, err = db.FindAllRoles()
+	data.Roles, err = GetRequestContext(r).DB.FindAllRoles()
 	if err != nil {
 		HandleError(w, r, err)
 		return
 	}
 
-	templ.ExecuteTemplate(w, "user.html", data)
+	GetRequestContext(r).Templ.ExecuteTemplate(w, "user.html", data)
 }
 
 func HandlePostAdminUser(w http.ResponseWriter, r *http.Request) {
@@ -100,7 +100,7 @@ func HandlePostAdminUser(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		err = db.CreateUser(database.User{
+		err = GetRequestContext(r).DB.CreateUser(database.User{
 			RoleID:       roleId,
 			Username:     username,
 			PasswordHash: passwordHash,
@@ -119,13 +119,13 @@ func HandlePostAdminUser(w http.ResponseWriter, r *http.Request) {
 		}
 
 		if delete {
-			err = db.DeleteUser(id)
+			err = GetRequestContext(r).DB.DeleteUser(id)
 			if err != nil {
 				HandleError(w, r, err)
 				return
 			}
 		} else {
-			err = db.UpdateUser(database.User{
+			err = GetRequestContext(r).DB.UpdateUser(database.User{
 				ID:       id,
 				RoleID:   roleId,
 				Username: username,

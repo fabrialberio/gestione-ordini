@@ -11,23 +11,21 @@ import (
 	"time"
 )
 
-var (
-	db *database.GormDB
-
-	templ *template.Template
-
-	//go:embed public
-	publicFS embed.FS
-)
+//go:embed public
+var publicFS embed.FS
 
 func main() {
-	templ = template.Must(template.ParseGlob("templates/*.html"))
+	templ := template.Must(template.ParseGlob("templates/*.html"))
 	template.Must(templ.ParseGlob("templates/**/*.html"))
 
-	db = createDatabase()
+	db := createDatabase()
 	defer db.Close()
+	addAdminUserIfNotExists(db)
 
-	addAdminUserIfNotExists()
+	reqCtx := RequestContext{
+		DB:    db,
+		Templ: templ,
+	}
 
 	cookMux := http.NewServeMux()
 	cookMux.HandleFunc("GET /", HandleGetCook)
@@ -60,7 +58,7 @@ func main() {
 
 	server := http.Server{
 		Addr:    ":8080",
-		Handler: WithLogging(mux),
+		Handler: WithLogging(WithContext(reqCtx, mux)),
 	}
 
 	log.Println("Server started on port 8080.")
@@ -91,7 +89,7 @@ func createDatabase() *database.GormDB {
 	return db
 }
 
-func addAdminUserIfNotExists() {
+func addAdminUserIfNotExists(db *database.GormDB) {
 	_, err := db.FindUserWithUsername("admin")
 	if err == database.ErrRecordNotFound {
 		hash, err := hashPassword(os.Getenv("ADMIN_PASSWORD"))
