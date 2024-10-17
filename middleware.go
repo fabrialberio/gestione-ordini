@@ -25,17 +25,6 @@ func WithLogging(next http.Handler) http.Handler {
 	})
 }
 
-func CheckPerm(permId int, next http.HandlerFunc) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		if err := checkPerm(r, permId); err != nil {
-			HandleError(w, r, err)
-			return
-		}
-
-		next(w, r)
-	}
-}
-
 func WithRole(roleId int, next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if err := checkRole(r, roleId); err != nil {
