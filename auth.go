@@ -3,6 +3,7 @@ package main
 import (
 	"crypto/rsa"
 	"fmt"
+	"gestione-ordini/database"
 	"log"
 	"net/http"
 	"os"
@@ -46,16 +47,17 @@ func init() {
 	}
 }
 
-type UserClaims struct {
-	UserID int `json:"userId"`
-	RoleID int `json:"roleId"`
+type userClaims struct {
+	database.User
 	jwt.RegisteredClaims
 }
 
 func generateJWT(userId int, roleId int) (string, error) {
-	claims := UserClaims{
-		UserID: userId,
-		RoleID: roleId,
+	claims := userClaims{
+		User: database.User{
+			ID:     userId,
+			RoleID: roleId,
+		},
 		RegisteredClaims: jwt.RegisteredClaims{
 			IssuedAt:  jwt.NewNumericDate(time.Now()),
 			ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Hour * 3)),
@@ -72,8 +74,8 @@ func generateJWT(userId int, roleId int) (string, error) {
 	return tokenString, nil
 }
 
-func validateJWT(tokenString string) (*UserClaims, error) {
-	token, err := jwt.ParseWithClaims(tokenString, &UserClaims{}, func(t *jwt.Token) (interface{}, error) {
+func validateJWT(tokenString string) (*userClaims, error) {
+	token, err := jwt.ParseWithClaims(tokenString, &userClaims{}, func(t *jwt.Token) (interface{}, error) {
 		if _, ok := t.Method.(*jwt.SigningMethodRSA); !ok {
 			return nil, fmt.Errorf("unexpected signing method: %v", t.Header["alg"])
 		}
@@ -83,7 +85,7 @@ func validateJWT(tokenString string) (*UserClaims, error) {
 		return nil, err
 	}
 
-	if claims, ok := token.Claims.(*UserClaims); ok && token.Valid {
+	if claims, ok := token.Claims.(*userClaims); ok && token.Valid {
 		return claims, nil
 	} else {
 		return nil, fmt.Errorf("invalid token")
@@ -106,7 +108,7 @@ func verifyPassword(passwordHash string, password string) bool {
 
 const SessionCookieName = "jwt"
 
-func getSessionCookie(r *http.Request) (*UserClaims, error) {
+func GetAuthenticatedUser(r *http.Request) (*database.User, error) {
 	cookie, err := r.Cookie(SessionCookieName)
 	if err != nil {
 		return nil, ErrNoCookie
@@ -117,10 +119,10 @@ func getSessionCookie(r *http.Request) (*UserClaims, error) {
 		return nil, ErrInvalidJWT
 	}
 
-	return claims, nil
+	return &claims.User, nil
 }
 
-func setSessionCookie(w http.ResponseWriter, userId int, roleId int) error {
+func SetAuthenticatedUser(w http.ResponseWriter, userId int, roleId int) error {
 	token, err := generateJWT(userId, roleId)
 	if err != nil {
 		return err
@@ -135,37 +137,11 @@ func setSessionCookie(w http.ResponseWriter, userId int, roleId int) error {
 	return nil
 }
 
-func unsetSessionCookie(w http.ResponseWriter) {
+func UnsetAuthenticatedUser(w http.ResponseWriter) {
 	http.SetCookie(w, &http.Cookie{
 		Name:     SessionCookieName,
 		Value:    "",
 		HttpOnly: true,
 		MaxAge:   -1,
 	})
-}
-
-func checkPerm(r *http.Request, permId int) error {
-	claims, err := getSessionCookie(r)
-	if err != nil {
-		return ErrNoCookie
-	}
-
-	if ok, err := db.UserHasPerm(claims.UserID, permId); err != nil || !ok {
-		return ErrInvalidPerm
-	}
-
-	return nil
-}
-
-func checkRole(r *http.Request, roleId int) error {
-	claims, err := getSessionCookie(r)
-	if err != nil {
-		return ErrNoCookie
-	}
-
-	if claims.RoleID != roleId {
-		return ErrInvalidRole
-	}
-
-	return nil
 }

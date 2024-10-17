@@ -12,20 +12,16 @@ func HandleGetIndex(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var data struct {
-		UserID   int
-		RoleID   int
 		ErrorMsg string
 	}
 
-	claims, err := getSessionCookie(r)
+	_, err := GetAuthenticatedUser(r)
 	if err == ErrNoCookie {
 		data.ErrorMsg = html.EscapeString(r.URL.Query().Get("errormsg"))
 	} else if err != nil {
 		data.ErrorMsg = "Sessione scaduta"
-		unsetSessionCookie(w)
+		UnsetAuthenticatedUser(w)
 	} else {
-		data.UserID = claims.UserID
-		data.RoleID = claims.RoleID
 	}
 
 	templ.ExecuteTemplate(w, "login.html", data)
@@ -45,7 +41,7 @@ func HandlePostLogin(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if ok {
-		setSessionCookie(w, user.ID, user.RoleID)
+		SetAuthenticatedUser(w, user.ID, user.RoleID)
 		switch user.RoleID {
 		case database.RoleIDCook:
 			dest = "/cook"
@@ -55,7 +51,7 @@ func HandlePostLogin(w http.ResponseWriter, r *http.Request) {
 			dest = "/admin"
 		}
 	} else {
-		unsetSessionCookie(w)
+		UnsetAuthenticatedUser(w)
 		dest = "/?errormsg=Password errata"
 	}
 
@@ -63,6 +59,6 @@ func HandlePostLogin(w http.ResponseWriter, r *http.Request) {
 }
 
 func HandlePostLogout(w http.ResponseWriter, r *http.Request) {
-	unsetSessionCookie(w)
+	UnsetAuthenticatedUser(w)
 	http.Redirect(w, r, "/", http.StatusSeeOther)
 }

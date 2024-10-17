@@ -27,8 +27,14 @@ func WithLogging(next http.Handler) http.Handler {
 
 func WithRole(roleId int, next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		if err := checkRole(r, roleId); err != nil {
-			HandleError(w, r, err)
+		claims, err := GetAuthenticatedUser(r)
+		if err != nil {
+			HandleError(w, r, ErrNoCookie)
+			return
+		}
+
+		if claims.RoleID != roleId {
+			HandleError(w, r, ErrInvalidRole)
 			return
 		}
 

@@ -17,13 +17,13 @@ func HandleGetCookOrdersList(w http.ResponseWriter, r *http.Request) {
 		Orders []database.Order
 	}
 
-	claims, err := getSessionCookie(r)
+	user, err := GetAuthenticatedUser(r)
 	if err != nil {
 		HandleError(w, r, err)
 		return
 	}
 
-	data.Orders, err = db.FindAllOrdersWithUserID(claims.UserID)
+	data.Orders, err = db.FindAllOrdersWithUserID(user.ID)
 	if err != nil {
 		HandleError(w, r, err)
 		return
@@ -56,12 +56,12 @@ func HandleGetCookOrder(w http.ResponseWriter, r *http.Request) {
 		data.Order = order
 	}
 
-	claims, err := getSessionCookie(r)
+	user, err := GetAuthenticatedUser(r)
 	if err != nil {
 		HandleError(w, r, err)
 		return
 	}
-	data.UserID = claims.UserID
+	data.UserID = user.ID
 
 	data.Products, err = db.FindAllProducts()
 	if err != nil {
