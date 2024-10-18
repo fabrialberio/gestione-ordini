@@ -1,9 +1,9 @@
-package main
+package auth
 
 import (
 	"crypto/rsa"
 	"fmt"
-	"gestione-ordini/database"
+	"gestione-ordini/pkg/database"
 	"log"
 	"net/http"
 	"os"
@@ -92,7 +92,7 @@ func validateJWT(tokenString string) (*userClaims, error) {
 	}
 }
 
-func hashPassword(password string) (string, error) {
+func HashPassword(password string) (string, error) {
 	hash, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 	if err != nil {
 		return "", err
@@ -101,7 +101,7 @@ func hashPassword(password string) (string, error) {
 	return string(hash), nil
 }
 
-func verifyPassword(passwordHash string, password string) bool {
+func VerifyPassword(passwordHash string, password string) bool {
 	err := bcrypt.CompareHashAndPassword([]byte(passwordHash), []byte(password))
 	return err == nil
 }

@@ -1,6 +1,9 @@
-package main
+package middleware
 
 import (
+	"gestione-ordini/pkg/auth"
+	"gestione-ordini/pkg/handlers"
+	"gestione-ordini/pkg/reqContext"
 	"log"
 	"net/http"
 )
@@ -25,14 +28,14 @@ func WithLogging(next http.Handler) http.Handler {
 	})
 }
 
-func WithContext(reqCtx RequestContext, next http.Handler) http.Handler {
+func WithContext(reqCtx reqContext.RequestContext, next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		user, err := GetAuthenticatedUser(r)
+		user, err := auth.GetAuthenticatedUser(r)
 		reqCtx.AuthenticatedUser = user
 		reqCtx.AuthenticationErr = err
 
 		ctx := r.Context()
-		ctx = StoreRequestContext(ctx, reqCtx)
+		ctx = reqContext.StoreRequestContext(ctx, reqCtx)
 		r = r.WithContext(ctx)
 
 		next.ServeHTTP(w, r)
@@ -41,14 +44,14 @@ func WithContext(reqCtx RequestContext, next http.Handler) http.Handler {
 
 func WithRole(roleId int, next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		user := GetRequestContext(r).AuthenticatedUser
+		user := reqContext.GetRequestContext(r).AuthenticatedUser
 		if user == nil {
-			HandleError(w, r, ErrNoCookie)
+			handlers.HandleError(w, r, auth.ErrNoCookie)
 			return
 		}
 
 		if user.RoleID != roleId {
-			HandleError(w, r, ErrInvalidRole)
+			handlers.HandleError(w, r, auth.ErrInvalidRole)
 			return
 		}
 

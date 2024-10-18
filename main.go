@@ -3,7 +3,11 @@ package main
 import (
 	"embed"
 	"fmt"
-	"gestione-ordini/database"
+	"gestione-ordini/pkg/auth"
+	"gestione-ordini/pkg/database"
+	"gestione-ordini/pkg/handlers"
+	"gestione-ordini/pkg/middleware"
+	"gestione-ordini/pkg/reqContext"
 	"html/template"
 	"log"
 	"net/http"
@@ -22,43 +26,43 @@ func main() {
 	defer db.Close()
 	addAdminUserIfNotExists(db)
 
-	reqCtx := RequestContext{
+	reqCtx := reqContext.RequestContext{
 		DB:    db,
 		Templ: templ,
 	}
 
 	cookMux := http.NewServeMux()
-	cookMux.HandleFunc("GET /", HandleGetCook)
-	cookMux.HandleFunc("GET /ordersList", HandleGetCookOrdersList)
-	cookMux.HandleFunc("GET /orders/{id}", HandleGetCookOrder)
-	cookMux.HandleFunc("POST /orders", HandlePostCookOrder)
+	cookMux.HandleFunc("GET /", handlers.GetCook)
+	cookMux.HandleFunc("GET /ordersList", handlers.GetCookOrdersList)
+	cookMux.HandleFunc("GET /orders/{id}", handlers.GetCookOrder)
+	cookMux.HandleFunc("POST /orders", handlers.PostCookOrder)
 
 	adminMux := http.NewServeMux()
-	adminMux.HandleFunc("GET /", HandleGetAdmin)
-	adminMux.HandleFunc("GET /usersTable", HandleGetAdminUsersTable)
-	adminMux.HandleFunc("GET /users", HandleGetAdminUsers)
-	adminMux.HandleFunc("GET /users/{id}", HandleGetAdminUser)
-	adminMux.HandleFunc("POST /users", HandlePostAdminUser)
+	adminMux.HandleFunc("GET /", handlers.GetAdmin)
+	adminMux.HandleFunc("GET /usersTable", handlers.GetAdminUsersTable)
+	adminMux.HandleFunc("GET /users", handlers.GetAdminUsers)
+	adminMux.HandleFunc("GET /users/{id}", handlers.GetAdminUser)
+	adminMux.HandleFunc("POST /users", handlers.PostAdminUser)
 
 	managerMux := http.NewServeMux()
-	managerMux.HandleFunc("GET /", HandleGetManager)
-	managerMux.HandleFunc("GET /productsTable", HandleGetManagerProductsTable)
-	managerMux.HandleFunc("GET /products/{id}", HandleGetManagerProduct)
-	managerMux.HandleFunc("POST /products", HandlePostManagerProduct)
+	managerMux.HandleFunc("GET /", handlers.GetManager)
+	managerMux.HandleFunc("GET /productsTable", handlers.GetManagerProductsTable)
+	managerMux.HandleFunc("GET /products/{id}", handlers.GetManagerProduct)
+	managerMux.HandleFunc("POST /products", handlers.PostManagerProduct)
 
 	mux := http.NewServeMux()
-	mux.HandleFunc("/", HandleGetIndex)
+	mux.HandleFunc("/", handlers.GetIndex)
 	mux.Handle("GET /public/", http.FileServerFS(publicFS))
-	mux.Handle("/cook/", WithRole(database.RoleIDCook, http.StripPrefix("/cook", cookMux)))
-	mux.Handle("/manager/", WithRole(database.RoleIDManager, http.StripPrefix("/manager", managerMux)))
-	mux.Handle("/admin/", WithRole(database.RoleIDAdministrator, http.StripPrefix("/admin", adminMux)))
+	mux.Handle("/cook/", middleware.WithRole(database.RoleIDCook, http.StripPrefix("/cook", cookMux)))
+	mux.Handle("/manager/", middleware.WithRole(database.RoleIDManager, http.StripPrefix("/manager", managerMux)))
+	mux.Handle("/admin/", middleware.WithRole(database.RoleIDAdministrator, http.StripPrefix("/admin", adminMux)))
 
-	mux.HandleFunc("POST /login", HandlePostLogin)
-	mux.HandleFunc("POST /logout", HandlePostLogout)
+	mux.HandleFunc("POST /login", handlers.PostLogin)
+	mux.HandleFunc("POST /logout", handlers.PostLogout)
 
 	server := http.Server{
 		Addr:    ":8080",
-		Handler: WithLogging(WithContext(reqCtx, mux)),
+		Handler: middleware.WithLogging(middleware.WithContext(reqCtx, mux)),
 	}
 
 	log.Println("Server started on port 8080.")
@@ -92,7 +96,7 @@ func createDatabase() *database.GormDB {
 func addAdminUserIfNotExists(db *database.GormDB) {
 	_, err := db.FindUserWithUsername("admin")
 	if err == database.ErrRecordNotFound {
-		hash, err := hashPassword(os.Getenv("ADMIN_PASSWORD"))
+		hash, err := auth.HashPassword(os.Getenv("ADMIN_PASSWORD"))
 		if err != nil {
 			log.Fatalf("Error hashing admin password: %v", err)
 		}

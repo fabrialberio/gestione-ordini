@@ -1,12 +1,14 @@
-package main
+package handlers
 
 import (
-	"gestione-ordini/database"
+	"gestione-ordini/pkg/auth"
+	"gestione-ordini/pkg/database"
+	"gestione-ordini/pkg/reqContext"
 	"html"
 	"net/http"
 )
 
-func HandleGetIndex(w http.ResponseWriter, r *http.Request) {
+func GetIndex(w http.ResponseWriter, r *http.Request) {
 	if r.URL.Path != "/" {
 		http.Redirect(w, r, "/", http.StatusSeeOther)
 	}
@@ -15,33 +17,33 @@ func HandleGetIndex(w http.ResponseWriter, r *http.Request) {
 		ErrorMsg string
 	}
 
-	err := GetRequestContext(r).AuthenticationErr
-	if err == ErrNoCookie {
+	err := reqContext.GetRequestContext(r).AuthenticationErr
+	if err == auth.ErrNoCookie {
 		data.ErrorMsg = html.EscapeString(r.URL.Query().Get("errormsg"))
 	} else if err != nil {
 		data.ErrorMsg = "Sessione scaduta"
-		UnsetAuthenticatedUser(w)
+		auth.UnsetAuthenticatedUser(w)
 	} else {
 	}
 
-	GetRequestContext(r).Templ.ExecuteTemplate(w, "login.html", data)
+	reqContext.GetRequestContext(r).Templ.ExecuteTemplate(w, "login.html", data)
 }
 
-func HandlePostLogin(w http.ResponseWriter, r *http.Request) {
+func PostLogin(w http.ResponseWriter, r *http.Request) {
 	username := r.FormValue("username")
 	password := r.FormValue("password")
 	dest := ""
 
 	var ok bool
-	user, _ := GetRequestContext(r).DB.FindUserWithUsername(username)
+	user, _ := reqContext.GetRequestContext(r).DB.FindUserWithUsername(username)
 	if user != nil {
-		ok = verifyPassword(user.PasswordHash, password)
+		ok = auth.VerifyPassword(user.PasswordHash, password)
 	} else {
 		ok = false
 	}
 
 	if ok {
-		SetAuthenticatedUser(w, user.ID, user.RoleID)
+		auth.SetAuthenticatedUser(w, user.ID, user.RoleID)
 		switch user.RoleID {
 		case database.RoleIDCook:
 			dest = "/cook"
@@ -51,14 +53,14 @@ func HandlePostLogin(w http.ResponseWriter, r *http.Request) {
 			dest = "/admin"
 		}
 	} else {
-		UnsetAuthenticatedUser(w)
+		auth.UnsetAuthenticatedUser(w)
 		dest = "/?errormsg=Password errata"
 	}
 
 	http.Redirect(w, r, dest, http.StatusSeeOther)
 }
 
-func HandlePostLogout(w http.ResponseWriter, r *http.Request) {
-	UnsetAuthenticatedUser(w)
+func PostLogout(w http.ResponseWriter, r *http.Request) {
+	auth.UnsetAuthenticatedUser(w)
 	http.Redirect(w, r, "/", http.StatusSeeOther)
 }

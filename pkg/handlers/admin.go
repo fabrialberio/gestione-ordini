@@ -1,20 +1,22 @@
-package main
+package handlers
 
 import (
-	"gestione-ordini/database"
+	"gestione-ordini/pkg/auth"
+	"gestione-ordini/pkg/database"
+	"gestione-ordini/pkg/reqContext"
 	"net/http"
 	"strconv"
 )
 
-func HandleGetAdmin(w http.ResponseWriter, r *http.Request) {
-	GetRequestContext(r).Templ.ExecuteTemplate(w, "admin.html", nil)
+func GetAdmin(w http.ResponseWriter, r *http.Request) {
+	reqContext.GetRequestContext(r).Templ.ExecuteTemplate(w, "admin.html", nil)
 }
 
-func HandleGetAdminUsers(w http.ResponseWriter, r *http.Request) {
-	GetRequestContext(r).Templ.ExecuteTemplate(w, "users.html", nil)
+func GetAdminUsers(w http.ResponseWriter, r *http.Request) {
+	reqContext.GetRequestContext(r).Templ.ExecuteTemplate(w, "users.html", nil)
 }
 
-func HandleGetAdminUsersTable(w http.ResponseWriter, r *http.Request) {
+func GetAdminUsersTable(w http.ResponseWriter, r *http.Request) {
 	var err error
 	var data struct {
 		OrderBy   int
@@ -40,16 +42,16 @@ func HandleGetAdminUsersTable(w http.ResponseWriter, r *http.Request) {
 	}
 	data.OrderDesc = r.URL.Query().Get("orderDesc") == "true"
 
-	data.Users, err = GetRequestContext(r).DB.FindAllUsers(data.OrderBy, data.OrderDesc)
+	data.Users, err = reqContext.GetRequestContext(r).DB.FindAllUsers(data.OrderBy, data.OrderDesc)
 	if err != nil {
 		HandleError(w, r, err)
 		return
 	}
 
-	GetRequestContext(r).Templ.ExecuteTemplate(w, "usersTable.html", data)
+	reqContext.GetRequestContext(r).Templ.ExecuteTemplate(w, "usersTable.html", data)
 }
 
-func HandleGetAdminUser(w http.ResponseWriter, r *http.Request) {
+func GetAdminUser(w http.ResponseWriter, r *http.Request) {
 	var data struct {
 		User  database.User
 		Roles []database.Role
@@ -61,7 +63,7 @@ func HandleGetAdminUser(w http.ResponseWriter, r *http.Request) {
 		data.IsNew = true
 		data.User = database.User{}
 	} else {
-		user, err := GetRequestContext(r).DB.FindUser(id)
+		user, err := reqContext.GetRequestContext(r).DB.FindUser(id)
 		if err != nil {
 			HandleError(w, r, err)
 			return
@@ -70,16 +72,16 @@ func HandleGetAdminUser(w http.ResponseWriter, r *http.Request) {
 		data.User = user
 	}
 
-	data.Roles, err = GetRequestContext(r).DB.FindAllRoles()
+	data.Roles, err = reqContext.GetRequestContext(r).DB.FindAllRoles()
 	if err != nil {
 		HandleError(w, r, err)
 		return
 	}
 
-	GetRequestContext(r).Templ.ExecuteTemplate(w, "user.html", data)
+	reqContext.GetRequestContext(r).Templ.ExecuteTemplate(w, "user.html", data)
 }
 
-func HandlePostAdminUser(w http.ResponseWriter, r *http.Request) {
+func PostAdminUser(w http.ResponseWriter, r *http.Request) {
 	isNew := r.FormValue("isNew") == "true"
 	delete := r.Form.Has("delete")
 
@@ -94,13 +96,13 @@ func HandlePostAdminUser(w http.ResponseWriter, r *http.Request) {
 
 	if isNew {
 		password := r.FormValue("password")
-		passwordHash, err := hashPassword(password)
+		passwordHash, err := auth.HashPassword(password)
 		if err != nil {
 			HandleError(w, r, err)
 			return
 		}
 
-		err = GetRequestContext(r).DB.CreateUser(database.User{
+		err = reqContext.GetRequestContext(r).DB.CreateUser(database.User{
 			RoleID:       roleId,
 			Username:     username,
 			PasswordHash: passwordHash,
@@ -119,13 +121,13 @@ func HandlePostAdminUser(w http.ResponseWriter, r *http.Request) {
 		}
 
 		if delete {
-			err = GetRequestContext(r).DB.DeleteUser(id)
+			err := reqContext.GetRequestContext(r).DB.DeleteUser(id)
 			if err != nil {
 				HandleError(w, r, err)
 				return
 			}
 		} else {
-			err = GetRequestContext(r).DB.UpdateUser(database.User{
+			err = reqContext.GetRequestContext(r).DB.UpdateUser(database.User{
 				ID:       id,
 				RoleID:   roleId,
 				Username: username,

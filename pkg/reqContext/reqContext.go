@@ -1,8 +1,8 @@
-package main
+package reqContext
 
 import (
 	"context"
-	"gestione-ordini/database"
+	"gestione-ordini/pkg/database"
 	"html/template"
 	"net/http"
 )
