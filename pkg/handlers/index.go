@@ -1,9 +1,9 @@
 package handlers
 
 import (
+	"gestione-ordini/pkg/appContext"
 	"gestione-ordini/pkg/auth"
 	"gestione-ordini/pkg/database"
-	"gestione-ordini/pkg/reqContext"
 	"html"
 	"net/http"
 )
@@ -17,7 +17,7 @@ func GetIndex(w http.ResponseWriter, r *http.Request) {
 		ErrorMsg string
 	}
 
-	err := reqContext.GetRequestContext(r).AuthenticationErr
+	err := appContext.FromRequest(r).AuthenticationErr
 	if err == auth.ErrNoCookie {
 		data.ErrorMsg = html.EscapeString(r.URL.Query().Get("errormsg"))
 	} else if err != nil {
@@ -26,14 +26,14 @@ func GetIndex(w http.ResponseWriter, r *http.Request) {
 	} else {
 	}
 
-	reqContext.GetRequestContext(r).Templ.ExecuteTemplate(w, "login.html", data)
+	appContext.FromRequest(r).Templ.ExecuteTemplate(w, "login.html", data)
 }
 
 func PostLogin(w http.ResponseWriter, r *http.Request) {
 	username := r.FormValue("username")
 	password := r.FormValue("password")
 
-	user, _ := reqContext.GetRequestContext(r).DB.FindUserWithUsername(username)
+	user, _ := appContext.FromRequest(r).DB.FindUserWithUsername(username)
 	if user == nil {
 		http.Redirect(w, r, "/", http.StatusSeeOther)
 		return

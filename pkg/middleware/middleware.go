@@ -1,9 +1,9 @@
 package middleware
 
 import (
+	appContext "gestione-ordini/pkg/appContext"
 	"gestione-ordini/pkg/auth"
 	"gestione-ordini/pkg/handlers"
-	"gestione-ordini/pkg/reqContext"
 	"log"
 	"net/http"
 )
@@ -28,14 +28,14 @@ func WithLogging(next http.Handler) http.Handler {
 	})
 }
 
-func WithContext(reqCtx reqContext.RequestContext, next http.Handler) http.Handler {
+func WithContext(reqCtx appContext.AppContext, next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		user, err := auth.GetAuthenticatedUser(r)
 		reqCtx.AuthenticatedUser = user
 		reqCtx.AuthenticationErr = err
 
 		ctx := r.Context()
-		ctx = reqContext.StoreRequestContext(ctx, reqCtx)
+		ctx = appContext.WithContext(ctx, reqCtx)
 		r = r.WithContext(ctx)
 
 		next.ServeHTTP(w, r)
@@ -44,7 +44,7 @@ func WithContext(reqCtx reqContext.RequestContext, next http.Handler) http.Handl
 
 func WithRole(roleId int, next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		user := reqContext.GetRequestContext(r).AuthenticatedUser
+		user := appContext.FromRequest(r).AuthenticatedUser
 		if user == nil {
 			handlers.HandleError(w, r, auth.ErrNoCookie)
 			return

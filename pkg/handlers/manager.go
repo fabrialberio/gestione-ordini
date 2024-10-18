@@ -1,15 +1,15 @@
 package handlers
 
 import (
+	"gestione-ordini/pkg/appContext"
 	"gestione-ordini/pkg/database"
-	"gestione-ordini/pkg/reqContext"
 	"log"
 	"net/http"
 	"strconv"
 )
 
 func GetManager(w http.ResponseWriter, r *http.Request) {
-	reqContext.GetRequestContext(r).Templ.ExecuteTemplate(w, "manager.html", nil)
+	appContext.FromRequest(r).Templ.ExecuteTemplate(w, "manager.html", nil)
 }
 
 func GetManagerProductsTable(w http.ResponseWriter, r *http.Request) {
@@ -32,13 +32,13 @@ func GetManagerProductsTable(w http.ResponseWriter, r *http.Request) {
 	}
 	data.OrderDesc = r.URL.Query().Get("orderDesc") == "true"
 
-	data.Products, err = reqContext.GetRequestContext(r).DB.FindAllProducts()
+	data.Products, err = appContext.FromRequest(r).DB.FindAllProducts()
 	if err != nil {
 		HandleError(w, r, err)
 		return
 	}
 
-	reqContext.GetRequestContext(r).Templ.ExecuteTemplate(w, "productsTable.html", data)
+	appContext.FromRequest(r).Templ.ExecuteTemplate(w, "productsTable.html", data)
 }
 
 func GetManagerProduct(w http.ResponseWriter, r *http.Request) {
@@ -55,7 +55,7 @@ func GetManagerProduct(w http.ResponseWriter, r *http.Request) {
 		data.IsNew = true
 		data.Product = database.Product{}
 	} else {
-		product, err := reqContext.GetRequestContext(r).DB.FindProduct(id)
+		product, err := appContext.FromRequest(r).DB.FindProduct(id)
 		if err != nil {
 			HandleError(w, r, err)
 			return
@@ -64,26 +64,26 @@ func GetManagerProduct(w http.ResponseWriter, r *http.Request) {
 		data.Product = product
 	}
 
-	data.ProductTypes, err = reqContext.GetRequestContext(r).DB.FindAllProductTypes()
+	data.ProductTypes, err = appContext.FromRequest(r).DB.FindAllProductTypes()
 	if err != nil {
 		HandleError(w, r, err)
 		return
 	}
 
-	data.Suppliers, err = reqContext.GetRequestContext(r).DB.FindAllSuppliers()
+	data.Suppliers, err = appContext.FromRequest(r).DB.FindAllSuppliers()
 	if err != nil {
 		HandleError(w, r, err)
 		return
 	}
 
-	data.UnitsOfMeasure, err = reqContext.GetRequestContext(r).DB.FindAllUnitsOfMeasure()
+	data.UnitsOfMeasure, err = appContext.FromRequest(r).DB.FindAllUnitsOfMeasure()
 	log.Println(data.UnitsOfMeasure)
 	if err != nil {
 		HandleError(w, r, err)
 		return
 	}
 
-	reqContext.GetRequestContext(r).Templ.ExecuteTemplate(w, "product.html", data)
+	appContext.FromRequest(r).Templ.ExecuteTemplate(w, "product.html", data)
 }
 
 func PostManagerProduct(w http.ResponseWriter, r *http.Request) {
@@ -96,7 +96,7 @@ func PostManagerProduct(w http.ResponseWriter, r *http.Request) {
 	name := r.FormValue("requestedAt")
 
 	if isNew {
-		err := reqContext.GetRequestContext(r).DB.CreateProduct(database.Product{
+		err := appContext.FromRequest(r).DB.CreateProduct(database.Product{
 			ProductTypeID:   productTypeId,
 			SupplierID:      supplierId,
 			UnitOfMeasureID: unitOfMeasureId,
@@ -114,13 +114,13 @@ func PostManagerProduct(w http.ResponseWriter, r *http.Request) {
 		}
 
 		if delete {
-			err = reqContext.GetRequestContext(r).DB.DeleteProduct(id)
+			err = appContext.FromRequest(r).DB.DeleteProduct(id)
 			if err != nil {
 				HandleError(w, r, err)
 				return
 			}
 		} else {
-			err = reqContext.GetRequestContext(r).DB.UpdateProduct(database.Product{
+			err = appContext.FromRequest(r).DB.UpdateProduct(database.Product{
 				ID:              id,
 				ProductTypeID:   productTypeId,
 				SupplierID:      supplierId,

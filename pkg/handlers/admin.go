@@ -1,19 +1,19 @@
 package handlers
 
 import (
+	"gestione-ordini/pkg/appContext"
 	"gestione-ordini/pkg/auth"
 	"gestione-ordini/pkg/database"
-	"gestione-ordini/pkg/reqContext"
 	"net/http"
 	"strconv"
 )
 
 func GetAdmin(w http.ResponseWriter, r *http.Request) {
-	reqContext.GetRequestContext(r).Templ.ExecuteTemplate(w, "admin.html", nil)
+	appContext.FromRequest(r).Templ.ExecuteTemplate(w, "admin.html", nil)
 }
 
 func GetAdminUsers(w http.ResponseWriter, r *http.Request) {
-	reqContext.GetRequestContext(r).Templ.ExecuteTemplate(w, "users.html", nil)
+	appContext.FromRequest(r).Templ.ExecuteTemplate(w, "users.html", nil)
 }
 
 func GetAdminUsersTable(w http.ResponseWriter, r *http.Request) {
@@ -42,13 +42,13 @@ func GetAdminUsersTable(w http.ResponseWriter, r *http.Request) {
 	}
 	data.OrderDesc = r.URL.Query().Get("orderDesc") == "true"
 
-	data.Users, err = reqContext.GetRequestContext(r).DB.FindAllUsers(data.OrderBy, data.OrderDesc)
+	data.Users, err = appContext.FromRequest(r).DB.FindAllUsers(data.OrderBy, data.OrderDesc)
 	if err != nil {
 		HandleError(w, r, err)
 		return
 	}
 
-	reqContext.GetRequestContext(r).Templ.ExecuteTemplate(w, "usersTable.html", data)
+	appContext.FromRequest(r).Templ.ExecuteTemplate(w, "usersTable.html", data)
 }
 
 func GetAdminUser(w http.ResponseWriter, r *http.Request) {
@@ -63,7 +63,7 @@ func GetAdminUser(w http.ResponseWriter, r *http.Request) {
 		data.IsNew = true
 		data.User = database.User{}
 	} else {
-		user, err := reqContext.GetRequestContext(r).DB.FindUser(id)
+		user, err := appContext.FromRequest(r).DB.FindUser(id)
 		if err != nil {
 			HandleError(w, r, err)
 			return
@@ -72,13 +72,13 @@ func GetAdminUser(w http.ResponseWriter, r *http.Request) {
 		data.User = user
 	}
 
-	data.Roles, err = reqContext.GetRequestContext(r).DB.FindAllRoles()
+	data.Roles, err = appContext.FromRequest(r).DB.FindAllRoles()
 	if err != nil {
 		HandleError(w, r, err)
 		return
 	}
 
-	reqContext.GetRequestContext(r).Templ.ExecuteTemplate(w, "user.html", data)
+	appContext.FromRequest(r).Templ.ExecuteTemplate(w, "user.html", data)
 }
 
 func PostAdminUser(w http.ResponseWriter, r *http.Request) {
@@ -102,7 +102,7 @@ func PostAdminUser(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		err = reqContext.GetRequestContext(r).DB.CreateUser(database.User{
+		err = appContext.FromRequest(r).DB.CreateUser(database.User{
 			RoleID:       roleId,
 			Username:     username,
 			PasswordHash: passwordHash,
@@ -121,13 +121,13 @@ func PostAdminUser(w http.ResponseWriter, r *http.Request) {
 		}
 
 		if delete {
-			err := reqContext.GetRequestContext(r).DB.DeleteUser(id)
+			err := appContext.FromRequest(r).DB.DeleteUser(id)
 			if err != nil {
 				HandleError(w, r, err)
 				return
 			}
 		} else {
-			err = reqContext.GetRequestContext(r).DB.UpdateUser(database.User{
+			err = appContext.FromRequest(r).DB.UpdateUser(database.User{
 				ID:       id,
 				RoleID:   roleId,
 				Username: username,

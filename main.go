@@ -3,11 +3,11 @@ package main
 import (
 	"embed"
 	"fmt"
+	"gestione-ordini/pkg/appContext"
 	"gestione-ordini/pkg/auth"
 	"gestione-ordini/pkg/database"
 	"gestione-ordini/pkg/handlers"
 	"gestione-ordini/pkg/middleware"
-	"gestione-ordini/pkg/reqContext"
 	"html/template"
 	"log"
 	"net/http"
@@ -26,7 +26,7 @@ func main() {
 	defer db.Close()
 	addAdminUserIfNotExists(db)
 
-	reqCtx := reqContext.RequestContext{
+	appCtx := appContext.AppContext{
 		DB:    db,
 		Templ: templ,
 	}
@@ -62,7 +62,7 @@ func main() {
 
 	server := http.Server{
 		Addr:    ":8080",
-		Handler: middleware.WithLogging(middleware.WithContext(reqCtx, mux)),
+		Handler: middleware.WithLogging(middleware.WithContext(appCtx, mux)),
 	}
 
 	log.Println("Server started on port 8080.")

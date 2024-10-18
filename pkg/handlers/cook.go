@@ -1,9 +1,9 @@
 package handlers
 
 import (
+	"gestione-ordini/pkg/appContext"
 	"gestione-ordini/pkg/auth"
 	"gestione-ordini/pkg/database"
-	"gestione-ordini/pkg/reqContext"
 	"log"
 	"net/http"
 	"strconv"
@@ -11,7 +11,7 @@ import (
 )
 
 func GetCook(w http.ResponseWriter, r *http.Request) {
-	reqContext.GetRequestContext(r).Templ.ExecuteTemplate(w, "cook.html", nil)
+	appContext.FromRequest(r).Templ.ExecuteTemplate(w, "cook.html", nil)
 }
 
 func GetCookOrdersList(w http.ResponseWriter, r *http.Request) {
@@ -25,13 +25,13 @@ func GetCookOrdersList(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	data.Orders, err = reqContext.GetRequestContext(r).DB.FindAllOrdersWithUserID(user.ID)
+	data.Orders, err = appContext.FromRequest(r).DB.FindAllOrdersWithUserID(user.ID)
 	if err != nil {
 		HandleError(w, r, err)
 		return
 	}
 
-	reqContext.GetRequestContext(r).Templ.ExecuteTemplate(w, "ordersList.html", data)
+	appContext.FromRequest(r).Templ.ExecuteTemplate(w, "ordersList.html", data)
 }
 
 func GetCookOrder(w http.ResponseWriter, r *http.Request) {
@@ -49,7 +49,7 @@ func GetCookOrder(w http.ResponseWriter, r *http.Request) {
 			Amount: 1,
 		}
 	} else {
-		order, err := reqContext.GetRequestContext(r).DB.FindOrder(id)
+		order, err := appContext.FromRequest(r).DB.FindOrder(id)
 		if err != nil {
 			HandleError(w, r, err)
 			return
@@ -65,14 +65,14 @@ func GetCookOrder(w http.ResponseWriter, r *http.Request) {
 	}
 	data.UserID = user.ID
 
-	data.Products, err = reqContext.GetRequestContext(r).DB.FindAllProducts()
+	data.Products, err = appContext.FromRequest(r).DB.FindAllProducts()
 	if err != nil {
 		HandleError(w, r, err)
 		return
 	}
 	log.Println(data.Products)
 
-	reqContext.GetRequestContext(r).Templ.ExecuteTemplate(w, "order.html", data)
+	appContext.FromRequest(r).Templ.ExecuteTemplate(w, "order.html", data)
 }
 
 func PostCookOrder(w http.ResponseWriter, r *http.Request) {
@@ -87,7 +87,7 @@ func PostCookOrder(w http.ResponseWriter, r *http.Request) {
 	log.Println(requestedAt)
 
 	if isNew {
-		err := reqContext.GetRequestContext(r).DB.CreateOrder(database.Order{
+		err := appContext.FromRequest(r).DB.CreateOrder(database.Order{
 			ProductID:   productId,
 			UserID:      userId,
 			Amount:      amount,
@@ -105,13 +105,13 @@ func PostCookOrder(w http.ResponseWriter, r *http.Request) {
 		}
 
 		if delete {
-			err = reqContext.GetRequestContext(r).DB.DeleteOrder(id)
+			err = appContext.FromRequest(r).DB.DeleteOrder(id)
 			if err != nil {
 				HandleError(w, r, err)
 				return
 			}
 		} else {
-			err = reqContext.GetRequestContext(r).DB.UpdateOrder(database.Order{
+			err = appContext.FromRequest(r).DB.UpdateOrder(database.Order{
 				ID:        id,
 				ProductID: productId,
 				UserID:    userId,
