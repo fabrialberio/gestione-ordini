@@ -32,29 +32,27 @@ func GetIndex(w http.ResponseWriter, r *http.Request) {
 func PostLogin(w http.ResponseWriter, r *http.Request) {
 	username := r.FormValue("username")
 	password := r.FormValue("password")
-	dest := ""
 
-	var ok bool
 	user, _ := reqContext.GetRequestContext(r).DB.FindUserWithUsername(username)
-	if user != nil {
-		ok = auth.VerifyPassword(user.PasswordHash, password)
-	} else {
-		ok = false
+	if user == nil {
+		http.Redirect(w, r, "/", http.StatusSeeOther)
+		return
 	}
 
-	if ok {
-		auth.SetAuthenticatedUser(w, user.ID, user.RoleID)
-		switch user.RoleID {
-		case database.RoleIDCook:
-			dest = "/cook"
-		case database.RoleIDManager:
-			dest = "/manager"
-		case database.RoleIDAdministrator:
-			dest = "/admin"
-		}
-	} else {
-		auth.UnsetAuthenticatedUser(w)
-		dest = "/?errormsg=Password errata"
+	err := auth.SetAuthenticatedUser(w, user, password)
+	if err != nil {
+		http.Redirect(w, r, "/?errormsg=Password errata", http.StatusSeeOther)
+		return
+	}
+
+	var dest string
+	switch user.RoleID {
+	case database.RoleIDCook:
+		dest = "/cook"
+	case database.RoleIDManager:
+		dest = "/manager"
+	case database.RoleIDAdministrator:
+		dest = "/admin"
 	}
 
 	http.Redirect(w, r, dest, http.StatusSeeOther)
