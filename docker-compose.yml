@@ -7,7 +7,7 @@ services:
       - .env
     volumes:
       - mysql-data:/var/lib/mysql
-      - ./database/init_db/:/docker-entrypoint-initdb.d
+      - ./migrations/:/docker-entrypoint-initdb.d
     networks:
       - gestione-ordini-network
 
