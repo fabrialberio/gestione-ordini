@@ -53,3 +53,27 @@ table>thead>tr>th {
 table>tbody>tr>td {
     @apply px-2 py-1
 }
+
+.sidebar {
+    @apply top-0 left-0 z-40 fixed h-full transition-transform translate-x-0
+}
+
+.sidebar.collapsed {
+    @apply -translate-x-full
+}
+
+.content {
+    @apply sm:pl-0
+}
+
+.content.collapsed {
+    @apply pl-0
+}
+
+.scrim {
+    @apply top-0 left-0 z-20 fixed sm:hidden bg-scrim bg-opacity-10 w-screen h-screen
+}
+
+.scrim.collapsed {
+    @apply hidden
+}
