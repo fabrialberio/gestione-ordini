@@ -43,6 +43,7 @@ func main() {
 	adminMux.HandleFunc("GET /users", handlers.GetAdminUsers)
 	adminMux.HandleFunc("GET /users/{id}", handlers.GetAdminUser)
 	adminMux.HandleFunc("POST /users", handlers.PostAdminUser)
+	adminMux.HandleFunc("GET /products", handlers.GetAdminProducts)
 
 	managerMux := http.NewServeMux()
 	managerMux.HandleFunc("GET /", handlers.GetManager)

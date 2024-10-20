@@ -3,17 +3,41 @@ package handlers
 import (
 	"gestione-ordini/pkg/appContext"
 	"gestione-ordini/pkg/auth"
+	"gestione-ordini/pkg/components"
 	"gestione-ordini/pkg/database"
 	"net/http"
 	"strconv"
 )
 
+func adminSidebar(selected int) []components.SidebarDest {
+	return []components.SidebarDest{
+		{"/admin/users", "fa-users", "Utenti", selected == 0},
+		{"/admin/products", "fa-box-open", "Prodotti", selected == 1},
+	}
+}
+
 func GetAdmin(w http.ResponseWriter, r *http.Request) {
-	appContext.FromRequest(r).Templ.ExecuteTemplate(w, "admin.html", nil)
+	http.Redirect(w, r, "/admin/users", http.StatusSeeOther)
 }
 
 func GetAdminUsers(w http.ResponseWriter, r *http.Request) {
-	appContext.FromRequest(r).Templ.ExecuteTemplate(w, "users.html", nil)
+	data := struct {
+		Sidebar []components.SidebarDest
+	}{
+		Sidebar: adminSidebar(0),
+	}
+
+	appContext.FromRequest(r).Templ.ExecuteTemplate(w, "users.html", data)
+}
+
+func GetAdminProducts(w http.ResponseWriter, r *http.Request) {
+	data := struct {
+		Sidebar []components.SidebarDest
+	}{
+		Sidebar: adminSidebar(1),
+	}
+
+	appContext.FromRequest(r).Templ.ExecuteTemplate(w, "products.html", data)
 }
 
 func GetAdminUsersTable(w http.ResponseWriter, r *http.Request) {
