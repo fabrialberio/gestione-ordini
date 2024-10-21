@@ -30,7 +30,7 @@ func GetAdminUsers(w http.ResponseWriter, r *http.Request) {
 		Sidebar: adminSidebar(0),
 	}
 
-	appContext.FromRequest(r).Templ.ExecuteTemplate(w, "users.html", data)
+	appContext.FromRequest(r).Templ.ExecuteTemplate(w, "adminUsers.html", data)
 }
 
 func GetAdminProducts(w http.ResponseWriter, r *http.Request) {
@@ -40,7 +40,7 @@ func GetAdminProducts(w http.ResponseWriter, r *http.Request) {
 		Sidebar: adminSidebar(1),
 	}
 
-	appContext.FromRequest(r).Templ.ExecuteTemplate(w, "products.html", data)
+	appContext.FromRequest(r).Templ.ExecuteTemplate(w, "adminProducts.html", data)
 }
 
 func GetAdminUsersTable(w http.ResponseWriter, r *http.Request) {
@@ -75,7 +75,7 @@ func GetAdminUsersTable(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	appContext.FromRequest(r).Templ.ExecuteTemplate(w, "usersTable.html", data)
+	appContext.FromRequest(r).Templ.ExecuteTemplate(w, "adminUsersTable.html", data)
 }
 
 func GetAdminUser(w http.ResponseWriter, r *http.Request) {
@@ -105,7 +105,7 @@ func GetAdminUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	appContext.FromRequest(r).Templ.ExecuteTemplate(w, "user.html", data)
+	appContext.FromRequest(r).Templ.ExecuteTemplate(w, "adminUser.html", data)
 }
 
 func PostAdminUser(w http.ResponseWriter, r *http.Request) {

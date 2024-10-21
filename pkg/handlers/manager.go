@@ -9,7 +9,7 @@ import (
 	"strconv"
 )
 
-func getManagerSidebar(selected int) []components.SidebarDest {
+func managerSidebar(selected int) []components.SidebarDest {
 	sidebar := []components.SidebarDest{
 		{"/manager/allOrders", "fa-users", "Ordini", false},
 		{"/manager/products", "fa-box-open", "Prodotti", false},
@@ -27,10 +27,10 @@ func GetManagerProducts(w http.ResponseWriter, r *http.Request) {
 	data := struct {
 		Sidebar []components.SidebarDest
 	}{
-		Sidebar: getManagerSidebar(1),
+		Sidebar: managerSidebar(1),
 	}
 
-	err := appContext.FromRequest(r).Templ.ExecuteTemplate(w, "products.html", data)
+	err := appContext.FromRequest(r).Templ.ExecuteTemplate(w, "managerProducts.html", data)
 	if err != nil {
 		log.Println(err)
 	}
@@ -40,10 +40,10 @@ func GetManagerAllOrders(w http.ResponseWriter, r *http.Request) {
 	data := struct {
 		Sidebar []components.SidebarDest
 	}{
-		Sidebar: getManagerSidebar(0),
+		Sidebar: managerSidebar(0),
 	}
 
-	appContext.FromRequest(r).Templ.ExecuteTemplate(w, "allOrders.html", data)
+	appContext.FromRequest(r).Templ.ExecuteTemplate(w, "managerAllOrders.html", data)
 }
 
 func GetManagerProductsTable(w http.ResponseWriter, r *http.Request) {
@@ -72,7 +72,7 @@ func GetManagerProductsTable(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	appContext.FromRequest(r).Templ.ExecuteTemplate(w, "productsTable.html", data)
+	appContext.FromRequest(r).Templ.ExecuteTemplate(w, "managerProductsTable.html", data)
 }
 
 func GetManagerProduct(w http.ResponseWriter, r *http.Request) {
@@ -117,7 +117,7 @@ func GetManagerProduct(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	appContext.FromRequest(r).Templ.ExecuteTemplate(w, "product.html", data)
+	appContext.FromRequest(r).Templ.ExecuteTemplate(w, "managerProduct.html", data)
 }
 
 func PostManagerProduct(w http.ResponseWriter, r *http.Request) {

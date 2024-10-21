@@ -31,7 +31,7 @@ func GetCookOrdersList(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	appContext.FromRequest(r).Templ.ExecuteTemplate(w, "ordersList.html", data)
+	appContext.FromRequest(r).Templ.ExecuteTemplate(w, "cookOrdersList.html", data)
 }
 
 func GetCookOrder(w http.ResponseWriter, r *http.Request) {
@@ -72,7 +72,7 @@ func GetCookOrder(w http.ResponseWriter, r *http.Request) {
 	}
 	log.Println(data.Products)
 
-	appContext.FromRequest(r).Templ.ExecuteTemplate(w, "order.html", data)
+	appContext.FromRequest(r).Templ.ExecuteTemplate(w, "cookOrder.html", data)
 }
 
 func PostCookOrder(w http.ResponseWriter, r *http.Request) {
