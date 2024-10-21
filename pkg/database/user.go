@@ -43,11 +43,11 @@ const (
 )
 
 const (
-	UserOrderByID int = iota + 1
-	UserOrderByRole
-	UserOrderByUsername
-	UserOrderByName
-	UserOrderBySurname
+	OrderUserByID int = iota + 1
+	OrderUserByRole
+	OrderUserByUsername
+	OrderUserByName
+	OrderUserBySurname
 	UserOrderByCreatedAt
 )
 
@@ -70,15 +70,15 @@ func (db *GormDB) FindAllUsers(orderBy int, orderDesc bool) ([]User, error) {
 	var users []User
 
 	switch orderBy {
-	case UserOrderByID:
+	case OrderUserByID:
 		orderByString = "id"
-	case UserOrderByRole:
+	case OrderUserByRole:
 		orderByString = "id_ruolo"
-	case UserOrderByUsername:
+	case OrderUserByUsername:
 		orderByString = "username"
-	case UserOrderByName:
+	case OrderUserByName:
 		orderByString = "nome"
-	case UserOrderBySurname:
+	case OrderUserBySurname:
 		orderByString = "cognome"
 	case UserOrderByCreatedAt:
 		orderByString = "creato_il"

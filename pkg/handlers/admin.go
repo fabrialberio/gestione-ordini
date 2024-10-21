@@ -56,16 +56,16 @@ func GetAdminUsersTable(w http.ResponseWriter, r *http.Request) {
 		Index int
 		Name  string
 	}{
-		{database.UserOrderByID, "ID"},
-		{database.UserOrderByRole, "Ruolo"},
-		{database.UserOrderByUsername, "Username"},
-		{database.UserOrderByName, "Nome"},
-		{database.UserOrderBySurname, "Cognome"},
+		{database.OrderUserByID, "ID"},
+		{database.OrderUserByRole, "Ruolo"},
+		{database.OrderUserByUsername, "Username"},
+		{database.OrderUserByName, "Nome"},
+		{database.OrderUserBySurname, "Cognome"},
 	}
 
 	data.OrderBy, err = strconv.Atoi(r.URL.Query().Get("orderBy"))
 	if err != nil {
-		data.OrderBy = database.UserOrderByID
+		data.OrderBy = database.OrderUserByID
 	}
 	data.OrderDesc = r.URL.Query().Get("orderDesc") == "true"
 
