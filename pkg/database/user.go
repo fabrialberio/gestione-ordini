@@ -48,7 +48,7 @@ const (
 	OrderUserByUsername
 	OrderUserByName
 	OrderUserBySurname
-	UserOrderByCreatedAt
+	OrderUserByCreatedAt
 )
 
 func (db *GormDB) FindAllRoles() ([]Role, error) {
@@ -80,7 +80,7 @@ func (db *GormDB) FindAllUsers(orderBy int, orderDesc bool) ([]User, error) {
 		orderByString = "nome"
 	case OrderUserBySurname:
 		orderByString = "cognome"
-	case UserOrderByCreatedAt:
+	case OrderUserByCreatedAt:
 		orderByString = "creato_il"
 	default:
 		return nil, fmt.Errorf("invalid orderBy value: %d", orderBy)
