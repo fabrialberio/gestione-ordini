@@ -93,7 +93,7 @@ func PostCookOrder(w http.ResponseWriter, r *http.Request) {
 	delete := r.Form.Has("delete")
 
 	productId, _ := strconv.Atoi(r.FormValue(keyOrderProductID))
-	userId, _ := strconv.Atoi(r.FormValue(keyOrderProductID))
+	userId, _ := strconv.Atoi(r.FormValue(keyUserID))
 	amount, _ := strconv.Atoi(r.FormValue(keyOrderAmount))
 	requestedAt, _ := time.Parse(dateFormat, r.FormValue(keyOrderRequestedAt))
 
@@ -111,7 +111,7 @@ func PostCookOrder(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 	} else {
-		id, err := strconv.Atoi(r.FormValue("id"))
+		id, err := strconv.Atoi(r.FormValue(keyOrderID))
 		if err != nil {
 			HandleError(w, r, err)
 			return

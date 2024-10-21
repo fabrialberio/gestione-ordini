@@ -158,7 +158,7 @@ func PostManagerProduct(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 	} else {
-		id, err := strconv.Atoi(r.FormValue("id"))
+		id, err := strconv.Atoi(r.FormValue(keyOrderProductID))
 		if err != nil {
 			HandleError(w, r, err)
 			return
