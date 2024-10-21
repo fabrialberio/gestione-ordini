@@ -10,10 +10,13 @@ import (
 )
 
 func adminSidebar(selected int) []components.SidebarDest {
-	return []components.SidebarDest{
-		{"/admin/users", "fa-users", "Utenti", selected == 0},
-		{"/admin/products", "fa-box-open", "Prodotti", selected == 1},
+	sidebar := []components.SidebarDest{
+		{"/admin/users", "fa-users", "Utenti", false},
+		{"/admin/products", "fa-box-open", "Prodotti", false},
 	}
+	sidebar[selected].Selected = true
+
+	return sidebar
 }
 
 func GetAdmin(w http.ResponseWriter, r *http.Request) {
