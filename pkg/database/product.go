@@ -1,6 +1,10 @@
 package database
 
-import "gorm.io/gorm/clause"
+import (
+	"fmt"
+
+	"gorm.io/gorm/clause"
+)
 
 type ProductType struct {
 	ID   int    `gorm:"column:id;primaryKey"`
@@ -35,6 +39,14 @@ type Product struct {
 
 func (Product) TableName() string { return "prodotti" }
 
+const (
+	OrderProductByID = iota
+	OrderProductByProductType
+	OrderProductBySupplier
+	OrderProductByUnitOfMeasure
+	OrderProductByName
+)
+
 func (db *GormDB) FindAllProductTypes() ([]ProductType, error) {
 	var productTypes []ProductType
 
@@ -56,10 +68,29 @@ func (db *GormDB) FindAllUnitsOfMeasure() ([]UnitOfMeasure, error) {
 	return unitsOfMeasure, err
 }
 
-func (db *GormDB) FindAllProducts() ([]Product, error) {
+func (db *GormDB) FindAllProducts(orderBy int, orderDesc bool) ([]Product, error) {
+	var orderByString string
 	var products []Product
 
-	err := db.conn.Preload(clause.Associations).Find(&products).Error
+	switch orderBy {
+	case OrderProductByID:
+		orderByString = "id"
+	case OrderProductByProductType:
+		orderByString = "id_prodotto"
+	case OrderProductBySupplier:
+		orderByString = "id_fornitore"
+	case OrderProductByUnitOfMeasure:
+		orderByString = "id_unita_di_misura"
+	case OrderProductByName:
+		orderByString = "nome"
+	default:
+		return nil, fmt.Errorf("invalid orderBy value: %d", orderBy)
+	}
+
+	err := db.conn.Preload(clause.Associations).Order(clause.OrderByColumn{
+		Column: clause.Column{Name: orderByString},
+		Desc:   orderDesc,
+	}).Find(&products).Error
 	return products, err
 }
 
