@@ -62,7 +62,7 @@ func GetManagerProductsTable(w http.ResponseWriter, r *http.Request) {
 
 	data.OrderBy, err = strconv.Atoi(r.URL.Query().Get("orderBy"))
 	if err != nil {
-		data.OrderBy = database.UserOrderByID
+		data.OrderBy = database.OrderUserByID
 	}
 	data.OrderDesc = r.URL.Query().Get("orderDesc") == "true"
 

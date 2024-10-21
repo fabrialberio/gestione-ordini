@@ -45,17 +45,14 @@ func GetAdminProducts(w http.ResponseWriter, r *http.Request) {
 
 func GetAdminUsersTable(w http.ResponseWriter, r *http.Request) {
 	var err error
-	var data struct {
-		OrderBy   int
-		OrderDesc bool
-		Headers   interface{}
+	data := struct {
+		TableHead components.TableHead
 		Users     []database.User
+	}{
+		TableHead: components.TableHead{URL: destAdminUsersTable},
 	}
 
-	data.Headers = []struct {
-		Index int
-		Name  string
-	}{
+	data.TableHead.Headings = []components.TableHeading{
 		{database.OrderUserByID, "ID"},
 		{database.OrderUserByRole, "Ruolo"},
 		{database.OrderUserByUsername, "Username"},
@@ -63,19 +60,19 @@ func GetAdminUsersTable(w http.ResponseWriter, r *http.Request) {
 		{database.OrderUserBySurname, "Cognome"},
 	}
 
-	data.OrderBy, err = strconv.Atoi(r.URL.Query().Get("orderBy"))
+	data.TableHead.OrderBy, err = strconv.Atoi(r.URL.Query().Get("orderBy"))
 	if err != nil {
-		data.OrderBy = database.OrderUserByID
+		data.TableHead.OrderBy = database.OrderUserByID
 	}
-	data.OrderDesc = r.URL.Query().Get("orderDesc") == "true"
+	data.TableHead.OrderDesc = r.URL.Query().Get("orderDesc") == "true"
 
-	data.Users, err = appContext.FromRequest(r).DB.FindAllUsers(data.OrderBy, data.OrderDesc)
+	data.Users, err = appContext.FromRequest(r).DB.FindAllUsers(data.TableHead.OrderBy, data.TableHead.OrderDesc)
 	if err != nil {
 		HandleError(w, r, err)
 		return
 	}
 
-	appContext.FromRequest(r).Templ.ExecuteTemplate(w, "adminUsersTable.html", data)
+	appContext.FromRequest(r).Templ.ExecuteTemplate(w, "usersTable.html", data)
 }
 
 func GetAdminUser(w http.ResponseWriter, r *http.Request) {

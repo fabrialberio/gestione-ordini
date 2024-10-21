@@ -25,3 +25,15 @@ type SelectOption struct {
 	Value int
 	Text  string
 }
+
+type TableHead struct {
+	URL       string
+	OrderBy   int
+	OrderDesc bool
+	Headings  []TableHeading
+}
+
+type TableHeading struct {
+	Index int
+	Name  string
+}

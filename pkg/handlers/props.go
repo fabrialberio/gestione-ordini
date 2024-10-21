@@ -23,6 +23,7 @@ const (
 	destCook             = "/cook"
 	destAdminUsers       = "/admin/users"
 	destAdminProducts    = "/admin/products"
+	destAdminUsersTable  = "/admin/usersTable"
 	destManagerAllOrders = "/manager/allOrders"
 	destManagerProducts  = "/manager/products"
 )
