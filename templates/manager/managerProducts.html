@@ -4,14 +4,14 @@
   <body class="bg-surface">
     {{ template "sidebar" .Sidebar }}
 
-    <header class="mx-auto w-full max-w-screen-xl">
-      <div class="flex p-4">
-        {{ template "sidebarButton" }}
-        {{ template "logoutButton" }}
-      </div>
-    </header>
-
     <div class="content">
+      <header class="mx-auto w-full max-w-screen-xl">
+        <div class="flex p-4">
+          {{ template "sidebarButton" }}
+          {{ template "logoutButton" }}
+        </div>
+      </header>
+
       <main class="flex justify-center items-center">
         <div class="space-y-4 px-6 w-full max-w-xl">
           <div class="flex items-center">
