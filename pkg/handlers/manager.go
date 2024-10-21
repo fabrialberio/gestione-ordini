@@ -2,14 +2,48 @@ package handlers
 
 import (
 	"gestione-ordini/pkg/appContext"
+	"gestione-ordini/pkg/components"
 	"gestione-ordini/pkg/database"
 	"log"
 	"net/http"
 	"strconv"
 )
 
+func getManagerSidebar(selected int) []components.SidebarDest {
+	sidebar := []components.SidebarDest{
+		{"/manager/allOrders", "fa-users", "Ordini", false},
+		{"/manager/products", "fa-box-open", "Prodotti", false},
+	}
+	sidebar[selected].Selected = true
+
+	return sidebar
+}
+
 func GetManager(w http.ResponseWriter, r *http.Request) {
-	appContext.FromRequest(r).Templ.ExecuteTemplate(w, "manager.html", nil)
+	http.Redirect(w, r, "/manager/allOrders", http.StatusSeeOther)
+}
+
+func GetManagerProducts(w http.ResponseWriter, r *http.Request) {
+	data := struct {
+		Sidebar []components.SidebarDest
+	}{
+		Sidebar: getManagerSidebar(1),
+	}
+
+	err := appContext.FromRequest(r).Templ.ExecuteTemplate(w, "products.html", data)
+	if err != nil {
+		log.Println(err)
+	}
+}
+
+func GetManagerAllOrders(w http.ResponseWriter, r *http.Request) {
+	data := struct {
+		Sidebar []components.SidebarDest
+	}{
+		Sidebar: getManagerSidebar(0),
+	}
+
+	appContext.FromRequest(r).Templ.ExecuteTemplate(w, "allOrders.html", data)
 }
 
 func GetManagerProductsTable(w http.ResponseWriter, r *http.Request) {
