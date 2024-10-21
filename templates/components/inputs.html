@@ -1,0 +1,17 @@
+{{ define "input" }}
+<div>
+  <label>{{ .Label }}</label>
+  <input class="w-full input" type="{{ .Type }}" name="{{ .Name }}" value="{{ .DefaultValue }}">
+</div>
+{{ end }}
+
+{{ define "select" }}
+<div>
+  <label>{{ .Label }}</label>
+  <select class="w-full input" name="{{ .Name }}">
+    {{ range .Options }}
+    <option value="{{ .Value }}"{{ if eq .Value $.Selected }} selected{{ end }}>{{ .Text }}</option>
+    {{ end }}
+  </select>
+</div>
+{{ end }}

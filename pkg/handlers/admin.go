@@ -11,8 +11,8 @@ import (
 
 func adminSidebar(selected int) []components.SidebarDest {
 	sidebar := []components.SidebarDest{
-		{"/admin/users", "fa-users", "Utenti", false},
-		{"/admin/products", "fa-box-open", "Prodotti", false},
+		{destAdminUsers, "fa-users", "Utenti", false},
+		{destAdminProducts, "fa-box-open", "Prodotti", false},
 	}
 	sidebar[selected].Selected = true
 
@@ -20,7 +20,7 @@ func adminSidebar(selected int) []components.SidebarDest {
 }
 
 func GetAdmin(w http.ResponseWriter, r *http.Request) {
-	http.Redirect(w, r, "/admin/users", http.StatusSeeOther)
+	http.Redirect(w, r, destAdminUsers, http.StatusSeeOther)
 }
 
 func GetAdminUsers(w http.ResponseWriter, r *http.Request) {
@@ -80,9 +80,12 @@ func GetAdminUsersTable(w http.ResponseWriter, r *http.Request) {
 
 func GetAdminUser(w http.ResponseWriter, r *http.Request) {
 	var data struct {
-		User  database.User
-		Roles []database.Role
-		IsNew bool
+		User          database.User
+		NameInput     components.Input
+		SurnameInput  components.Input
+		UsernameInput components.Input
+		RoleSelect    components.Select
+		IsNew         bool
 	}
 
 	id, err := strconv.Atoi(r.PathValue("id"))
@@ -99,10 +102,20 @@ func GetAdminUser(w http.ResponseWriter, r *http.Request) {
 		data.User = user
 	}
 
-	data.Roles, err = appContext.FromRequest(r).DB.FindAllRoles()
+	data.NameInput = components.Input{"Nome", keyUserName, "text", data.User.Name}
+	data.SurnameInput = components.Input{"Cognome", keyUserSurname, "text", data.User.Surname}
+	data.UsernameInput = components.Input{"Username", keyUserUsername, "text", data.User.Username}
+
+	data.RoleSelect = components.Select{"Ruolo", keyUserRoleID, data.User.RoleID, []components.SelectOption{}}
+
+	roles, err := appContext.FromRequest(r).DB.FindAllRoles()
 	if err != nil {
 		HandleError(w, r, err)
 		return
+	}
+
+	for _, r := range roles {
+		data.RoleSelect.Options = append(data.RoleSelect.Options, components.SelectOption{int(r.ID), r.Name})
 	}
 
 	appContext.FromRequest(r).Templ.ExecuteTemplate(w, "adminUser.html", data)
@@ -112,17 +125,17 @@ func PostAdminUser(w http.ResponseWriter, r *http.Request) {
 	isNew := r.FormValue("isNew") == "true"
 	delete := r.Form.Has("delete")
 
-	roleId, err := strconv.Atoi(r.FormValue("roleId"))
+	roleId, err := strconv.Atoi(r.FormValue(keyUserRoleID))
 	if err != nil {
 		HandleError(w, r, err)
 		return
 	}
-	username := r.FormValue("username")
-	name := r.FormValue("name")
-	surname := r.FormValue("surname")
+	username := r.FormValue(keyUserUsername)
+	name := r.FormValue(keyUserName)
+	surname := r.FormValue(keyUserSurname)
 
 	if isNew {
-		password := r.FormValue("password")
+		password := r.FormValue(keyUserPassword)
 		passwordHash, err := auth.HashPassword(password)
 		if err != nil {
 			HandleError(w, r, err)
@@ -141,7 +154,7 @@ func PostAdminUser(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 	} else {
-		id, err := strconv.Atoi(r.FormValue("id"))
+		id, err := strconv.Atoi(r.FormValue(keyUserID))
 		if err != nil {
 			HandleError(w, r, err)
 			return
@@ -168,5 +181,5 @@ func PostAdminUser(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	http.Redirect(w, r, "/admin", http.StatusSeeOther)
+	http.Redirect(w, r, destAdminUsers, http.StatusSeeOther)
 }
