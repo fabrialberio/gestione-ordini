@@ -1,0 +1,15 @@
+{{ define "logoutButton" }}
+<form class="ml-auto" method="post" action="/logout">
+  <button class="btn-lg" type="submit">
+    Esci
+    <i class="fa-right-to-bracket fas"></i>
+  </button>
+</form>
+{{ end }}
+
+{{ define "backButton" }}
+<a class="btn-lg" onclick="history.back()">
+  <i class="fa-arrow-left fas"></i>
+  Indietro
+</a>
+{{ end }}

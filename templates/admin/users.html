@@ -8,12 +8,7 @@
       <header class="mx-auto max-w-screen-xl">
         <div class="flex p-4">
           {{ template "sidebarButton" }}
-          <form class="ml-auto" method="post" action="/logout">
-            <button class="btn-lg" type="submit">
-              Esci
-              <i class="fa-right-to-bracket fas"></i>
-            </button>
-          </form>
+          {{ template "logoutButton" }}
         </div>
       </header>
       

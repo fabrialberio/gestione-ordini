@@ -4,15 +4,8 @@
   <body class="bg-surface">
     <header class="mx-auto w-full max-w-screen-xl">
       <div class="flex p-4">
-        <div class="btn-lg">
-          <i class="fa-bars fas"></i>
-        </div>
-        <form class="ml-auto" method="post" action="/logout">
-          <button class="btn-lg" type="submit">
-            Esci
-            <i class="fa-right-to-bracket fas"></i>
-          </button>
-        </form> 
+        {{ template "sidebarButton" }}
+        {{ template "logoutButton" }}
       </div>
     </header>
 
