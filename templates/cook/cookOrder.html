@@ -21,22 +21,13 @@
           <input type="hidden" name="id" value="{{ .Order.ID }}">
           <input type="hidden" name="isNew" value="{{ .IsNew }}">
           <input type="hidden" name="userId" value="{{ .UserID }}">
-          <div>
-            <label>Prodotto</label>
-            <select class="w-full input" name="productId">
-              {{ range .Products }}
-              <option value="{{ .ID }}"{{ if eq .ID $.Order.ProductID }} selected{{ end }}>{{ .Name }}</option>
-              {{ end }}
-            </select>
-          </div>
-          <div>
-            <label>Quantità</label>
-            <input class="w-full input" type="text" name="amount" value="{{ .Order.Amount }}">
-          </div>
-          <div>
-            <label>Richiesto per</label>
-            <input class="w-full input" type="date" name="requestedAt" value="{{ .Order.RequestedAt }}">
-          </div>
+          
+          <!-- TODO: Aggiungere unità di misura -->
+
+          {{ template "select" .ProductSelect }}
+          {{ template "input" .AmountInput }}
+          {{ template "input" .RequestedAtInput }}
+          
           <div class="flex gap-4 pt-4">
             {{ if not .IsNew }}
             <button class="w-24 btn-lg" type="submit" name="delete">
