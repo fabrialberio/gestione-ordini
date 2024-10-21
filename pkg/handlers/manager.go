@@ -77,11 +77,12 @@ func GetManagerProductsTable(w http.ResponseWriter, r *http.Request) {
 
 func GetManagerProduct(w http.ResponseWriter, r *http.Request) {
 	var data struct {
-		Product        database.Product
-		ProductTypes   []database.ProductType
-		Suppliers      []database.Supplier
-		UnitsOfMeasure []database.UnitOfMeasure
-		IsNew          bool
+		Product             database.Product
+		NameInput           components.Input
+		ProductTypeSelect   components.Select
+		SupplierSelect      components.Select
+		UnitOfMeasureSelect components.Select
+		IsNew               bool
 	}
 
 	id, err := strconv.Atoi(r.PathValue("id"))
@@ -98,23 +99,39 @@ func GetManagerProduct(w http.ResponseWriter, r *http.Request) {
 		data.Product = product
 	}
 
-	data.ProductTypes, err = appContext.FromRequest(r).DB.FindAllProductTypes()
+	data.NameInput = components.Input{"Nome", keyProductName, "text", data.Product.Name}
+
+	productTypes, err := appContext.FromRequest(r).DB.FindAllProductTypes()
 	if err != nil {
 		HandleError(w, r, err)
 		return
 	}
 
-	data.Suppliers, err = appContext.FromRequest(r).DB.FindAllSuppliers()
+	data.ProductTypeSelect = components.Select{"Tipologia di prodotto", keyProductProductTypeID, data.Product.ProductTypeID, []components.SelectOption{}}
+	for _, p := range productTypes {
+		data.ProductTypeSelect.Options = append(data.ProductTypeSelect.Options, components.SelectOption{p.ID, p.Name})
+	}
+
+	suppliers, err := appContext.FromRequest(r).DB.FindAllSuppliers()
 	if err != nil {
 		HandleError(w, r, err)
 		return
 	}
 
-	data.UnitsOfMeasure, err = appContext.FromRequest(r).DB.FindAllUnitsOfMeasure()
-	log.Println(data.UnitsOfMeasure)
+	data.SupplierSelect = components.Select{"Fornitore", keyProductSupplierID, data.Product.SupplierID, []components.SelectOption{}}
+	for _, s := range suppliers {
+		data.SupplierSelect.Options = append(data.SupplierSelect.Options, components.SelectOption{s.ID, "Nome del fornitore"})
+	}
+
+	unitsOfMeasure, err := appContext.FromRequest(r).DB.FindAllUnitsOfMeasure()
 	if err != nil {
 		HandleError(w, r, err)
 		return
+	}
+
+	data.UnitOfMeasureSelect = components.Select{"Unità di misura", keyProductUnitOfMeasureID, data.Product.UnitOfMeasureID, []components.SelectOption{}}
+	for _, u := range unitsOfMeasure {
+		data.UnitOfMeasureSelect.Options = append(data.UnitOfMeasureSelect.Options, components.SelectOption{u.ID, u.Symbol})
 	}
 
 	appContext.FromRequest(r).Templ.ExecuteTemplate(w, "managerProduct.html", data)

@@ -21,34 +21,10 @@
           <input type="hidden" name="id" value="{{ .Product.ID }}">
           <input type="hidden" name="isNew" value="{{ .IsNew }}">
           
-          <div>
-            <label>Nome</label>
-            <input class="w-full input" type="text" name="name" value="{{ .Product.Name }}">
-          </div>
-          <div>
-            <label>Tipologia di prodotto</label>
-            <select class="w-full input" name="productTypeId">
-              {{ range .ProductTypes }}
-              <option value="{{ .ID }}"{{ if eq .ID $.Product.ProductTypeID }} selected{{ end }}>{{ .Name }}</option>
-              {{ end }}
-            </select>
-          </div>
-          <div>
-            <label>Fornitore</label>
-            <select class="w-full input" name="supplierId">
-              {{ range .Suppliers }}
-              <option value="{{ .ID }}"{{ if eq .ID $.Product.SupplierID }} selected{{ end }}>{{ .Name }}</option>
-              {{ end }}
-            </select>
-          </div>
-          <div>
-            <label>Unità di misura</label>
-            <select class="w-full input" name="unitOfMeasureId">
-              {{ range .UnitsOfMeasure }}
-              <option value="{{ .ID }}"{{ if eq .ID $.Product.UnitOfMeasureID }} selected{{ end }}>{{ .Symbol }}</option>
-              {{ end }}
-            </select>
-          </div>
+          {{ template "input" .NameInput }}
+          {{ template "select" .ProductTypeSelect }}
+          {{ template "select" .SupplierSelect }}
+          {{ template "select" .UnitOfMeasureSelect }}
 
           <div class="flex gap-4 pt-4">
             {{ if not .IsNew }}

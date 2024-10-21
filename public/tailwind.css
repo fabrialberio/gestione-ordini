@@ -1136,3 +1136,9 @@ table>tbody>tr>td {
 .focus\:ring-offset-2:focus {
   --tw-ring-offset-width: 2px;
 }
+
+@media (min-width: 640px) {
+  .sm\:ml-64 {
+    margin-left: 16rem;
+  }
+}

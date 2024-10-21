@@ -14,6 +14,12 @@ const (
 	keyOrderAmount      = "amount"
 	keyOrderRequestedAt = "requestedAt"
 
+	keyProductID              = "id"
+	keyProductProductTypeID   = "productTypeId"
+	keyProductSupplierID      = "supplierId"
+	keyProductUnitOfMeasureID = "unitOfMeasureId"
+	keyProductName            = "name"
+
 	destCook             = "/cook"
 	destAdminUsers       = "/admin/users"
 	destAdminProducts    = "/admin/products"
