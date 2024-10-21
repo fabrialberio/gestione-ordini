@@ -1104,7 +1104,7 @@ table>tbody>tr>td {
 
 @media (min-width: 640px) {
   .content {
-    padding-left: 0px;
+    padding-left: 16rem;
   }
 }
 
@@ -1135,10 +1135,4 @@ table>tbody>tr>td {
 
 .focus\:ring-offset-2:focus {
   --tw-ring-offset-width: 2px;
-}
-
-@media (min-width: 640px) {
-  .sm\:pl-64 {
-    padding-left: 16rem;
-  }
 }

@@ -63,7 +63,7 @@ table>tbody>tr>td {
 }
 
 .content {
-    @apply sm:pl-0
+    @apply sm:pl-64
 }
 
 .content.collapsed {
