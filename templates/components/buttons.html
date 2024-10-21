@@ -13,3 +13,20 @@
   Indietro
 </a>
 {{ end }}
+
+{{ define "formSubmitButtons" }}
+<div class="flex gap-4 pt-4">
+  {{ if not . }}
+  <button class="w-24 btn-lg" type="submit" name="delete">
+    Elimina
+  </button>
+  {{ end }}
+  <button class="ml-auto w-24 btn-lg suggested" type="submit">
+    {{ if . }}
+    Crea
+    {{ else }}
+    Salva
+    {{ end }}
+  </button>
+</div>
+{{ end }}

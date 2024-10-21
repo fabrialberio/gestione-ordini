@@ -34,20 +34,8 @@
             <input class="w-full input" type="password" name="password" value="passwordfinta" disabled>
             {{ end }}
           </div>
-          <div class="flex gap-4 pt-4">
-            {{ if not .IsNew }}
-            <button class="w-24 btn-lg" type="submit" name="delete">
-              Elimina
-            </button>
-            {{ end }}
-            <button class="ml-auto w-24 btn-lg suggested" type="submit">
-              {{ if .IsNew }}
-              Crea
-              {{ else }}
-              Salva
-              {{ end }}
-            </button>
-          </div>
+
+          {{ template "formSubmitButtons" .IsNew }}
         </form>
       </div>
     </main>
