@@ -106,14 +106,13 @@ func GetAdminUser(w http.ResponseWriter, r *http.Request) {
 	data.SurnameInput = components.Input{"Cognome", keyUserSurname, "text", data.User.Surname}
 	data.UsernameInput = components.Input{"Username", keyUserUsername, "text", data.User.Username}
 
-	data.RoleSelect = components.Select{"Ruolo", keyUserRoleID, data.User.RoleID, []components.SelectOption{}}
-
 	roles, err := appContext.FromRequest(r).DB.FindAllRoles()
 	if err != nil {
 		HandleError(w, r, err)
 		return
 	}
 
+	data.RoleSelect = components.Select{"Ruolo", keyUserRoleID, data.User.RoleID, []components.SelectOption{}}
 	for _, r := range roles {
 		data.RoleSelect.Options = append(data.RoleSelect.Options, components.SelectOption{int(r.ID), r.Name})
 	}
