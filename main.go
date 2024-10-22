@@ -33,13 +33,14 @@ func main() {
 
 	chefMux := http.NewServeMux()
 	chefMux.HandleFunc("GET "+handlers.DestChef, handlers.GetChef)
-	chefMux.HandleFunc("GET "+handlers.DestOrdersList, handlers.GetOrdersList)
-	chefMux.HandleFunc("GET "+handlers.DestOrders+"{id}", handlers.GetOrder)
-	chefMux.HandleFunc("POST "+handlers.DestOrders, handlers.PostOrder)
+	chefMux.HandleFunc("GET "+handlers.DestChefOrdersList, handlers.GetChefOrdersList)
+	chefMux.HandleFunc("GET "+handlers.DestChefOrders+"{id}", handlers.GetChefOrder)
+	chefMux.HandleFunc("POST "+handlers.DestChefOrders, handlers.PostChefOrder)
 
 	consoleMux := http.NewServeMux()
 	consoleMux.HandleFunc("GET "+handlers.DestConsole, handlers.GetConsole)
 	consoleMux.HandleFunc("GET "+handlers.DestAllOrders, handlers.GetAllOrders)
+	consoleMux.HandleFunc("GET "+handlers.DestAllOrdersTable, handlers.GetAllOrdersTable)
 	consoleMux.HandleFunc("GET "+handlers.DestProducts, handlers.GetProducts)
 	consoleMux.HandleFunc("GET "+handlers.DestProducts+"{id}", handlers.GetProduct)
 	consoleMux.HandleFunc("POST "+handlers.DestProducts, handlers.PostProduct)

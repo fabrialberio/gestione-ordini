@@ -136,16 +136,16 @@ func PostChefOrder(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, DestChef, http.StatusSeeOther)
 }
 
-func GetOrdersTable(w http.ResponseWriter, r *http.Request) {
+func GetAllOrdersTable(w http.ResponseWriter, r *http.Request) {
 	var err error
 	var data components.OrdersTable
 
 	data.Headings = []components.TableHeading{
-		{Name: "id"},
+		{Name: "ID"},
 		{Name: "Prodotto"},
 		{Name: "Utente"},
 		{Name: "Quantità"},
-		{Name: "Richiesto il"},
+		{Name: "Richiesto per"},
 	}
 
 	data.Orders, err = appContext.FromRequest(r).DB.FindAllOrders()
@@ -154,5 +154,5 @@ func GetOrdersTable(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	appContext.FromRequest(r).Templ.ExecuteTemplate(w, "ordersTable.html", data)
+	appContext.FromRequest(r).Templ.ExecuteTemplate(w, "allOrdersTable.html", data)
 }
