@@ -1,52 +1,16 @@
 package handlers
 
 import (
+	"errors"
 	"gestione-ordini/pkg/appContext"
 	"gestione-ordini/pkg/auth"
 	"gestione-ordini/pkg/database"
-	"html"
 	"net/http"
 )
 
-func GetIndex(w http.ResponseWriter, r *http.Request) {
-	if r.URL.Path != "/" {
-		http.Redirect(w, r, "/", http.StatusSeeOther)
-	}
-
-	var data struct {
-		ErrorMsg string
-	}
-
-	err := appContext.FromRequest(r).AuthenticationErr
-	if err == auth.ErrNoCookie {
-		data.ErrorMsg = html.EscapeString(r.URL.Query().Get("errormsg"))
-	} else if err != nil {
-		data.ErrorMsg = "Sessione scaduta"
-		auth.UnsetAuthenticatedUser(w)
-	} else {
-	}
-
-	appContext.FromRequest(r).Templ.ExecuteTemplate(w, "login.html", data)
-}
-
-func PostLogin(w http.ResponseWriter, r *http.Request) {
-	username := r.FormValue("username")
-	password := r.FormValue("password")
-
-	user, _ := appContext.FromRequest(r).DB.FindUserWithUsername(username)
-	if user == nil {
-		http.Redirect(w, r, "/", http.StatusSeeOther)
-		return
-	}
-
-	err := auth.SetAuthenticatedUser(w, user, password)
-	if err != nil {
-		http.Redirect(w, r, "/?errormsg=Password errata", http.StatusSeeOther)
-		return
-	}
-
+func loginRedirect(w http.ResponseWriter, r *http.Request, roleId int) {
 	var dest string
-	switch user.RoleID {
+	switch roleId {
 	case database.RoleIDCook:
 		dest = "/cook"
 	case database.RoleIDManager:
@@ -58,7 +22,64 @@ func PostLogin(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, dest, http.StatusSeeOther)
 }
 
-func PostLogout(w http.ResponseWriter, r *http.Request) {
+func logoutRedirect(w http.ResponseWriter, r *http.Request, errorMsg bool) {
+	var dest string
+	if errorMsg {
+		dest = "/?errormsg"
+	} else {
+		dest = "/"
+	}
+
 	auth.UnsetAuthenticatedUser(w)
-	http.Redirect(w, r, "/", http.StatusSeeOther)
+	http.Redirect(w, r, dest, http.StatusSeeOther)
+}
+
+func GetIndex(w http.ResponseWriter, r *http.Request) {
+	if r.URL.Path != "/" {
+		http.Redirect(w, r, "/", http.StatusSeeOther)
+	}
+
+	var data struct {
+		ErrorMsg string
+	}
+
+	user := appContext.FromRequest(r).AuthenticatedUser
+	if user != nil {
+		loginRedirect(w, r, user.RoleID)
+		return
+	}
+
+	err := appContext.FromRequest(r).AuthenticationErr
+	if errors.Is(err, auth.ErrNoCookie) {
+		if r.URL.Query().Has("errormsg") {
+			data.ErrorMsg = "Utente o password errati"
+		}
+	} else if err != nil {
+		data.ErrorMsg = "Sessione scaduta"
+	}
+
+	appContext.FromRequest(r).Templ.ExecuteTemplate(w, "login.html", data)
+}
+
+func PostLogin(w http.ResponseWriter, r *http.Request) {
+	username := r.FormValue("username")
+	password := r.FormValue("password")
+
+	user, err := appContext.FromRequest(r).DB.FindUserWithUsername(username)
+	if err != nil {
+		logoutRedirect(w, r, true)
+		return
+	}
+
+	err = auth.SetAuthenticatedUser(w, user, password)
+	if err != nil {
+		logoutRedirect(w, r, true)
+		return
+	}
+
+	loginRedirect(w, r, user.RoleID)
+}
+
+func PostLogout(w http.ResponseWriter, r *http.Request) {
+	logoutRedirect(w, r, false)
 }
