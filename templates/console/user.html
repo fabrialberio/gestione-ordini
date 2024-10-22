@@ -29,7 +29,7 @@
           <div>
             <label>Password</label>
             {{ if .IsNew }}
-            <input class="w-full input" type="text" name="user.password">
+            <input class="w-full input" type="text" name="user.password" required>
             {{ else }}
             <input class="w-full input" type="password" name="user.password" value="passwordfinta" disabled>
             {{ end }}
