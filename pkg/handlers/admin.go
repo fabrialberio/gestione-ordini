@@ -9,7 +9,8 @@ import (
 func adminSidebar(selected int) []components.SidebarDest {
 	sidebar := []components.SidebarDest{
 		{destAdminUsers, "fa-users", "Utenti", false},
-		{destAdminProducts, "fa-box-open", "Prodotti", false},
+		{destAdminProducts, "fa-box", "Prodotti", false},
+		{destAdminSuppliers, "fa-store", "Fornitori", false},
 	}
 	sidebar[selected].Selected = true
 
@@ -54,4 +55,24 @@ func PostAdminProduct(w http.ResponseWriter, r *http.Request) {
 	postProduct(w, r)
 
 	http.Redirect(w, r, destAdminProducts, http.StatusSeeOther)
+}
+
+func GetAdminSuppliers(w http.ResponseWriter, r *http.Request) {
+	data := struct {
+		Sidebar []components.SidebarDest
+	}{
+		Sidebar: adminSidebar(2),
+	}
+
+	appContext.FromRequest(r).Templ.ExecuteTemplate(w, "adminSuppliers.html", data)
+}
+
+func GetAdminSuppliersTable(w http.ResponseWriter, r *http.Request) {
+	getSuppliersTable(w, r, destAdminSuppliersTable, destAdminSuppliers)
+}
+
+func PostAdminSupplier(w http.ResponseWriter, r *http.Request) {
+	postSupplier(w, r)
+
+	http.Redirect(w, r, destAdminSuppliers, http.StatusSeeOther)
 }

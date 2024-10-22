@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+  {{ template "head.html" }} 
+  <body class="bg-surface min-h-screen">
+    <header class="mx-auto w-full max-w-screen-xl">
+      <div class="flex p-4">
+        {{ template "backButton" }}
+      </div>
+    </header>
+
+    <main class="flex justify-center items-center">
+      <div class="space-y-4 px-6 w-full max-w-xl">
+        <h2 class="text-h2">
+        {{ if .IsNew }}
+          Nuovo fornitore
+        {{ else }}
+          Modifica fornitore
+        {{ end }}
+        </h2>
+        <form class="space-y-4" method="post" action="/admin/suppliers">
+          <input type="hidden" name="supplier.id" value="{{ .Supplier.ID }}">
+          <input type="hidden" name="isNew" value="{{ .IsNew }}">
+          
+          <!-- TODO -->
+
+          {{ template "formSubmitButtons" .IsNew }}
+        </form>
+      </div>
+    </main>
+  </body>
+</html>

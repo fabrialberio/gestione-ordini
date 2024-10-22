@@ -20,11 +20,15 @@ const (
 	keyProductUnitOfMeasureID = "product.unitOfMeasureId"
 	keyProductName            = "product.name"
 
+	keySupplierID = "supplier.id"
+
 	destCook                 = "/cook"
 	destAdminUsers           = "/admin/users"
+	destAdminUsersTable      = "/admin/usersTable"
 	destAdminProducts        = "/admin/products"
 	destAdminProductsTable   = "/admin/productsTable"
-	destAdminUsersTable      = "/admin/usersTable"
+	destAdminSuppliers       = "/admin/suppliers"
+	destAdminSuppliersTable  = "/admin/suppliersTable"
 	destManagerAllOrders     = "/manager/allOrders"
 	destManagerProducts      = "/manager/products"
 	destManagerProductsTable = "/manager/productsTable"

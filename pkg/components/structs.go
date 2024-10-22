@@ -47,6 +47,12 @@ type UsersTable struct {
 	Users    []database.User
 }
 
+type SuppliersTable struct {
+	Table
+	SuppliersURL string
+	Suppliers    []database.Supplier
+}
+
 type TableHeading struct {
 	Index int
 	Name  string

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+  {{ template "head.html" }}
+  <body class="bg-surface">
+    {{ template "sidebar" .Sidebar }}
+
+    <div class="content">
+      <header class="mx-auto max-w-screen-xl">
+        <div class="flex p-4">
+          {{ template "sidebarButton" }}
+          {{ template "logoutButton" }}
+        </div>
+      </header>
+      
+      <main class="flex justify-center items-center">
+        <div class="space-y-4 px-6 w-full max-w-screen-md">
+          <div class="flex items-center">
+            <h2 class="text-h2">
+              Fornitori
+            </h2>
+            <a class="ml-auto btn-md suggested" href="/admin/suppliers/new">
+              <i class="fa-add fas"></i>
+              Aggiungi
+            </a>
+          </div>
+      
+          <div hx-get="/admin/suppliersTable" hx-trigger="load" hx-target="this">
+          </div>
+        </div>
+      </main>
+    </div>
+  </body>
+</html>
+  
