@@ -21,6 +21,10 @@ func GetManager(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, destManagerAllOrders, http.StatusSeeOther)
 }
 
+func GetManagerProductsTable(w http.ResponseWriter, r *http.Request) {
+	getProductsTable(w, r, destManagerProductsTable)
+}
+
 func GetManagerProducts(w http.ResponseWriter, r *http.Request) {
 	data := struct {
 		Sidebar []components.SidebarDest

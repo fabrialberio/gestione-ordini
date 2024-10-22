@@ -76,7 +76,7 @@ func (db *GormDB) FindAllProducts(orderBy int, orderDesc bool) ([]Product, error
 	case OrderProductByID:
 		orderByString = "id"
 	case OrderProductByProductType:
-		orderByString = "id_prodotto"
+		orderByString = "id_tipologia"
 	case OrderProductBySupplier:
 		orderByString = "id_fornitore"
 	case OrderProductByUnitOfMeasure:

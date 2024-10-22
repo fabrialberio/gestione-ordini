@@ -8,19 +8,23 @@ import (
 	"strconv"
 )
 
-func GetProductsTable(w http.ResponseWriter, r *http.Request) {
+func getProductsTable(w http.ResponseWriter, r *http.Request, url string) {
 	var err error
 	data := struct {
 		TableHead components.TableHead
 		Products  []database.Product
 	}{
 		TableHead: components.TableHead{
-			URL: destManagerProductsTable,
+			URL: url,
 		},
 	}
 
 	data.TableHead.Headings = []components.TableHeading{
-		{1, ""},
+		{database.OrderProductByID, "ID"},
+		{database.OrderProductByName, "Nome"},
+		{database.OrderProductByProductType, "Tipologia"},
+		{database.OrderProductBySupplier, "Fornitore"},
+		{database.OrderProductByUnitOfMeasure, "Unità"},
 	}
 
 	data.TableHead.OrderBy, err = strconv.Atoi(r.URL.Query().Get("orderBy"))
@@ -29,7 +33,7 @@ func GetProductsTable(w http.ResponseWriter, r *http.Request) {
 	}
 	data.TableHead.OrderDesc = r.URL.Query().Get("orderDesc") == "true"
 
-	data.Products, err = appContext.FromRequest(r).DB.FindAllProducts()
+	data.Products, err = appContext.FromRequest(r).DB.FindAllProducts(data.TableHead.OrderBy, data.TableHead.OrderDesc)
 	if err != nil {
 		HandleError(w, r, err)
 		return

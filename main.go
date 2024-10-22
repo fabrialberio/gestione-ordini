@@ -44,7 +44,7 @@ func main() {
 	adminMux.HandleFunc("GET /users/{id}", handlers.GetUser)
 	adminMux.HandleFunc("POST /users", handlers.PostAdminUser)
 	adminMux.HandleFunc("GET /products", handlers.GetAdminProducts)
-	adminMux.HandleFunc("GET /productsTable", handlers.GetProductsTable)
+	adminMux.HandleFunc("GET /productsTable", handlers.GetAdminProductsTable)
 	adminMux.HandleFunc("GET /products/{id}", handlers.GetProduct)
 	adminMux.HandleFunc("POST /products", handlers.PostAdminProduct)
 
@@ -52,7 +52,7 @@ func main() {
 	managerMux.HandleFunc("GET /", handlers.GetManager)
 	managerMux.HandleFunc("GET /allOrders", handlers.GetManagerAllOrders)
 	managerMux.HandleFunc("GET /products", handlers.GetManagerProducts)
-	managerMux.HandleFunc("GET /productsTable", handlers.GetProductsTable)
+	managerMux.HandleFunc("GET /productsTable", handlers.GetManagerProductsTable)
 	managerMux.HandleFunc("GET /products/{id}", handlers.GetProduct)
 	managerMux.HandleFunc("POST /products", handlers.PostManagerProduct)
 

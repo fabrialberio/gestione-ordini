@@ -36,6 +36,10 @@ func PostAdminUser(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, destAdminUsers, http.StatusSeeOther)
 }
 
+func GetAdminProductsTable(w http.ResponseWriter, r *http.Request) {
+	getProductsTable(w, r, destAdminProductsTable)
+}
+
 func GetAdminProducts(w http.ResponseWriter, r *http.Request) {
 	data := struct {
 		Sidebar []components.SidebarDest

@@ -67,7 +67,7 @@ func GetCookOrder(w http.ResponseWriter, r *http.Request) {
 	data.AmountInput = components.Input{"Quantità", keyOrderAmount, "number", strconv.Itoa(data.Order.Amount)}
 	data.RequestedAtInput = components.Input{"Richiesto per", keyOrderRequestedAt, "date", data.Order.RequestedAt.Format(dateFormat)}
 
-	products, err := appContext.FromRequest(r).DB.FindAllProducts()
+	products, err := appContext.FromRequest(r).DB.FindAllProducts(database.OrderProductByID, true)
 	if err != nil {
 		HandleError(w, r, err)
 		return
