@@ -17,7 +17,7 @@
           Modifica fornitore
         {{ end }}
         </h2>
-        <form class="space-y-4" method="post" action="/admin/suppliers">
+        <form class="space-y-4" method="post" action="{{ .PostURL }}">
           <input type="hidden" name="supplier.id" value="{{ .Supplier.ID }}">
           <input type="hidden" name="isNew" value="{{ .IsNew }}">
           

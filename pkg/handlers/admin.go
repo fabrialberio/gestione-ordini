@@ -17,10 +17,6 @@ func adminSidebar(selected int) []components.SidebarDest {
 	return sidebar
 }
 
-func GetAdmin(w http.ResponseWriter, r *http.Request) {
-	http.Redirect(w, r, DestAdminUsers, http.StatusSeeOther)
-}
-
 func GetAdminUsers(w http.ResponseWriter, r *http.Request) {
 	data := struct {
 		Sidebar []components.SidebarDest
@@ -37,10 +33,6 @@ func PostAdminUser(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, DestAdminUsers, http.StatusSeeOther)
 }
 
-func GetAdminProductsTable(w http.ResponseWriter, r *http.Request) {
-	getProductsTable(w, r, DestAdminProductsTable, DestAdminProducts)
-}
-
 func GetAdminProducts(w http.ResponseWriter, r *http.Request) {
 	data := struct {
 		Sidebar []components.SidebarDest
@@ -49,12 +41,6 @@ func GetAdminProducts(w http.ResponseWriter, r *http.Request) {
 	}
 
 	appContext.FromRequest(r).Templ.ExecuteTemplate(w, "adminProducts.html", data)
-}
-
-func PostAdminProduct(w http.ResponseWriter, r *http.Request) {
-	postProduct(w, r)
-
-	http.Redirect(w, r, DestAdminProducts, http.StatusSeeOther)
 }
 
 func GetAdminSuppliers(w http.ResponseWriter, r *http.Request) {

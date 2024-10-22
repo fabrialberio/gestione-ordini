@@ -17,7 +17,7 @@
           Modifica utente
           {{ end }}
         </h2>
-        <form class="space-y-4" method="post" action="/admin/users">
+        <form class="space-y-4" method="post" action="{{ .PostURL }}">
           <input type="hidden" name="user.id" value="{{ .User.ID }}">
           <input type="hidden" name="isNew" value="{{ .IsNew }}">
           

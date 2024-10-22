@@ -17,14 +17,6 @@ func managerSidebar(selected int) []components.SidebarDest {
 	return sidebar
 }
 
-func GetManager(w http.ResponseWriter, r *http.Request) {
-	http.Redirect(w, r, DestManagerAllOrders, http.StatusSeeOther)
-}
-
-func GetManagerProductsTable(w http.ResponseWriter, r *http.Request) {
-	getProductsTable(w, r, DestManagerProductsTable, DestManagerProducts)
-}
-
 func GetManagerProducts(w http.ResponseWriter, r *http.Request) {
 	data := struct {
 		Sidebar []components.SidebarDest
@@ -46,10 +38,4 @@ func GetManagerAllOrders(w http.ResponseWriter, r *http.Request) {
 	}
 
 	appContext.FromRequest(r).Templ.ExecuteTemplate(w, "managerAllOrders.html", data)
-}
-
-func PostManagerProduct(w http.ResponseWriter, r *http.Request) {
-	postProduct(w, r)
-
-	http.Redirect(w, r, DestManagerProducts, http.StatusSeeOther)
 }

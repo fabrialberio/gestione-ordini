@@ -41,46 +41,48 @@ func GetUsersTable(w http.ResponseWriter, r *http.Request) {
 	appContext.FromRequest(r).Templ.ExecuteTemplate(w, "usersTable.html", data)
 }
 
-func GetUser(w http.ResponseWriter, r *http.Request) {
-	var data struct {
-		User          database.User
-		NameInput     components.Input
-		SurnameInput  components.Input
-		UsernameInput components.Input
-		RoleSelect    components.Select
-		IsNew         bool
-	}
+func GetUser(postUrl string) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		var data struct {
+			User          database.User
+			NameInput     components.Input
+			SurnameInput  components.Input
+			UsernameInput components.Input
+			RoleSelect    components.Select
+			IsNew         bool
+		}
 
-	id, err := strconv.Atoi(r.PathValue("id"))
-	if err != nil {
-		data.IsNew = true
-		data.User = database.User{}
-	} else {
-		user, err := appContext.FromRequest(r).DB.FindUser(id)
+		id, err := strconv.Atoi(r.PathValue("id"))
+		if err != nil {
+			data.IsNew = true
+			data.User = database.User{}
+		} else {
+			user, err := appContext.FromRequest(r).DB.FindUser(id)
+			if err != nil {
+				HandleError(w, r, err)
+				return
+			}
+
+			data.User = user
+		}
+
+		data.NameInput = components.Input{"Nome", keyUserName, "text", data.User.Name}
+		data.SurnameInput = components.Input{"Cognome", keyUserSurname, "text", data.User.Surname}
+		data.UsernameInput = components.Input{"Username", keyUserUsername, "text", data.User.Username}
+
+		roles, err := appContext.FromRequest(r).DB.FindAllRoles()
 		if err != nil {
 			HandleError(w, r, err)
 			return
 		}
 
-		data.User = user
+		data.RoleSelect = components.Select{"Ruolo", keyUserRoleID, data.User.RoleID, []components.SelectOption{}}
+		for _, r := range roles {
+			data.RoleSelect.Options = append(data.RoleSelect.Options, components.SelectOption{int(r.ID), r.Name})
+		}
+
+		appContext.FromRequest(r).Templ.ExecuteTemplate(w, "user.html", data)
 	}
-
-	data.NameInput = components.Input{"Nome", keyUserName, "text", data.User.Name}
-	data.SurnameInput = components.Input{"Cognome", keyUserSurname, "text", data.User.Surname}
-	data.UsernameInput = components.Input{"Username", keyUserUsername, "text", data.User.Username}
-
-	roles, err := appContext.FromRequest(r).DB.FindAllRoles()
-	if err != nil {
-		HandleError(w, r, err)
-		return
-	}
-
-	data.RoleSelect = components.Select{"Ruolo", keyUserRoleID, data.User.RoleID, []components.SelectOption{}}
-	for _, r := range roles {
-		data.RoleSelect.Options = append(data.RoleSelect.Options, components.SelectOption{int(r.ID), r.Name})
-	}
-
-	appContext.FromRequest(r).Templ.ExecuteTemplate(w, "user.html", data)
 }
 
 func postUser(w http.ResponseWriter, r *http.Request) {

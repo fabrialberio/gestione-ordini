@@ -6,7 +6,10 @@ func getSuppliersTable(w http.ResponseWriter, r *http.Request, tableUrl string, 
 
 }
 
-func GetSupplier(w http.ResponseWriter, r *http.Request) {
+func GetSupplier(postUrl string) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+
+	}
 
 }
 
