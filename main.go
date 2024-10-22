@@ -68,7 +68,7 @@ func main() {
 
 	server := http.Server{
 		Addr:    ":8080",
-		Handler: middleware.WithLogging(middleware.WithContext(appCtx, mux)),
+		Handler: middleware.WithLogging(middleware.WithContext(&appCtx, mux)),
 	}
 
 	log.Println("Server started on port 8080.")

@@ -18,10 +18,10 @@ type ctxKey string
 
 const appContextKey ctxKey = "app.context"
 
-func FromRequest(r *http.Request) AppContext {
-	return r.Context().Value(appContextKey).(AppContext)
+func FromRequest(r *http.Request) *AppContext {
+	return r.Context().Value(appContextKey).(*AppContext)
 }
 
-func WithContext(ctx context.Context, reqCtx AppContext) context.Context {
+func WithContext(ctx context.Context, reqCtx *AppContext) context.Context {
 	return context.WithValue(ctx, appContextKey, reqCtx)
 }

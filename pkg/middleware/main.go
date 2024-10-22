@@ -28,7 +28,7 @@ func WithLogging(next http.Handler) http.Handler {
 	})
 }
 
-func WithContext(reqCtx appContext.AppContext, next http.Handler) http.Handler {
+func WithContext(reqCtx *appContext.AppContext, next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		user, err := auth.GetAuthenticatedUser(r)
 		reqCtx.AuthenticatedUser = user
