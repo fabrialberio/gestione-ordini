@@ -10,7 +10,7 @@ import (
 
 type appContext struct {
 	db                *database.GormDB
-	templ             *template.Template
+	tmpl              *template.Template
 	authenticatedUser *database.User
 	authenticationErr error
 }
@@ -23,8 +23,8 @@ func fromRequest(r *http.Request) *appContext {
 	return r.Context().Value(appContextKey).(*appContext)
 }
 
-func New(db *database.GormDB, templ *template.Template, authenticatedUser *database.User, authenticationErr error) appContext {
-	return appContext{db: db, templ: templ, authenticatedUser: authenticatedUser, authenticationErr: authenticationErr}
+func New(db *database.GormDB, tmpl *template.Template, authenticatedUser *database.User, authenticationErr error) appContext {
+	return appContext{db: db, tmpl: tmpl, authenticatedUser: authenticatedUser, authenticationErr: authenticationErr}
 }
 
 func NewContext(ctx context.Context, appContext appContext) context.Context {
@@ -33,7 +33,7 @@ func NewContext(ctx context.Context, appContext appContext) context.Context {
 
 func ExecuteTemplate(w http.ResponseWriter, r *http.Request, tmpl string, data interface{}) {
 	appCtx := fromRequest(r)
-	err := appCtx.templ.ExecuteTemplate(w, tmpl, data)
+	err := appCtx.tmpl.ExecuteTemplate(w, tmpl, data)
 	if err != nil {
 		log.Println(err)
 	}
