@@ -8,9 +8,9 @@ import (
 
 func adminSidebar(selected int) []components.SidebarDest {
 	sidebar := []components.SidebarDest{
-		{destAdminUsers, "fa-users", "Utenti", false},
-		{destAdminProducts, "fa-box", "Prodotti", false},
-		{destAdminSuppliers, "fa-store", "Fornitori", false},
+		{DestAdminUsers, "fa-users", "Utenti", false},
+		{DestAdminProducts, "fa-box", "Prodotti", false},
+		{DestAdminSuppliers, "fa-store", "Fornitori", false},
 	}
 	sidebar[selected].Selected = true
 
@@ -18,7 +18,7 @@ func adminSidebar(selected int) []components.SidebarDest {
 }
 
 func GetAdmin(w http.ResponseWriter, r *http.Request) {
-	http.Redirect(w, r, destAdminUsers, http.StatusSeeOther)
+	http.Redirect(w, r, DestAdminUsers, http.StatusSeeOther)
 }
 
 func GetAdminUsers(w http.ResponseWriter, r *http.Request) {
@@ -34,11 +34,11 @@ func GetAdminUsers(w http.ResponseWriter, r *http.Request) {
 func PostAdminUser(w http.ResponseWriter, r *http.Request) {
 	postUser(w, r)
 
-	http.Redirect(w, r, destAdminUsers, http.StatusSeeOther)
+	http.Redirect(w, r, DestAdminUsers, http.StatusSeeOther)
 }
 
 func GetAdminProductsTable(w http.ResponseWriter, r *http.Request) {
-	getProductsTable(w, r, destAdminProductsTable, destAdminProducts)
+	getProductsTable(w, r, DestAdminProductsTable, DestAdminProducts)
 }
 
 func GetAdminProducts(w http.ResponseWriter, r *http.Request) {
@@ -54,7 +54,7 @@ func GetAdminProducts(w http.ResponseWriter, r *http.Request) {
 func PostAdminProduct(w http.ResponseWriter, r *http.Request) {
 	postProduct(w, r)
 
-	http.Redirect(w, r, destAdminProducts, http.StatusSeeOther)
+	http.Redirect(w, r, DestAdminProducts, http.StatusSeeOther)
 }
 
 func GetAdminSuppliers(w http.ResponseWriter, r *http.Request) {
@@ -68,11 +68,11 @@ func GetAdminSuppliers(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetAdminSuppliersTable(w http.ResponseWriter, r *http.Request) {
-	getSuppliersTable(w, r, destAdminSuppliersTable, destAdminSuppliers)
+	getSuppliersTable(w, r, DestAdminSuppliersTable, DestAdminSuppliers)
 }
 
 func PostAdminSupplier(w http.ResponseWriter, r *http.Request) {
 	postSupplier(w, r)
 
-	http.Redirect(w, r, destAdminSuppliers, http.StatusSeeOther)
+	http.Redirect(w, r, DestAdminSuppliers, http.StatusSeeOther)
 }

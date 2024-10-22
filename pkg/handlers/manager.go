@@ -9,8 +9,8 @@ import (
 
 func managerSidebar(selected int) []components.SidebarDest {
 	sidebar := []components.SidebarDest{
-		{destManagerAllOrders, "fa-users", "Ordini", false},
-		{destManagerProducts, "fa-box-open", "Prodotti", false},
+		{DestManagerAllOrders, "fa-users", "Ordini", false},
+		{DestManagerProducts, "fa-box-open", "Prodotti", false},
 	}
 	sidebar[selected].Selected = true
 
@@ -18,11 +18,11 @@ func managerSidebar(selected int) []components.SidebarDest {
 }
 
 func GetManager(w http.ResponseWriter, r *http.Request) {
-	http.Redirect(w, r, destManagerAllOrders, http.StatusSeeOther)
+	http.Redirect(w, r, DestManagerAllOrders, http.StatusSeeOther)
 }
 
 func GetManagerProductsTable(w http.ResponseWriter, r *http.Request) {
-	getProductsTable(w, r, destManagerProductsTable, destManagerProducts)
+	getProductsTable(w, r, DestManagerProductsTable, DestManagerProducts)
 }
 
 func GetManagerProducts(w http.ResponseWriter, r *http.Request) {
@@ -51,5 +51,5 @@ func GetManagerAllOrders(w http.ResponseWriter, r *http.Request) {
 func PostManagerProduct(w http.ResponseWriter, r *http.Request) {
 	postProduct(w, r)
 
-	http.Redirect(w, r, destManagerProducts, http.StatusSeeOther)
+	http.Redirect(w, r, DestManagerProducts, http.StatusSeeOther)
 }

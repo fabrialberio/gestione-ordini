@@ -137,5 +137,5 @@ func PostCookOrder(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	http.Redirect(w, r, destCook, http.StatusSeeOther)
+	http.Redirect(w, r, DestCook, http.StatusSeeOther)
 }

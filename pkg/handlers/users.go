@@ -13,9 +13,9 @@ func GetUsersTable(w http.ResponseWriter, r *http.Request) {
 	var err error
 	data := components.UsersTable{
 		Table: components.Table{
-			TableURL: destAdminUsersTable,
+			TableURL: DestAdminUsersTable,
 		},
-		UsersURL: destAdminUsers,
+		UsersURL: DestAdminUsers,
 	}
 
 	data.Table.Headings = []components.TableHeading{
