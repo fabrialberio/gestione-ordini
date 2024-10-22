@@ -10,13 +10,10 @@ import (
 
 func loginRedirect(w http.ResponseWriter, r *http.Request, roleId int) {
 	var dest string
-	switch roleId {
-	case database.RoleIDCook:
-		dest = "/cook"
-	case database.RoleIDManager:
-		dest = "/manager"
-	case database.RoleIDAdministrator:
-		dest = "/admin"
+	if roleId == database.RoleIDChef {
+		dest = DestChef
+	} else {
+		dest = DestConsole
 	}
 
 	http.Redirect(w, r, dest, http.StatusSeeOther)

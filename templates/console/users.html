@@ -16,15 +16,15 @@
         <div class="space-y-4 px-6 w-full max-w-screen-md">
           <div class="flex items-center">
             <h2 class="text-h2">
-              Fornitori
+              Utenti
             </h2>
-            <a class="ml-auto btn-md suggested" href="/admin/suppliers/new">
+            <a class="ml-auto btn-md suggested" href="/console/users/new">
               <i class="fa-add fas"></i>
               Aggiungi
             </a>
           </div>
       
-          <div hx-get="/admin/suppliersTable" hx-trigger="load" hx-target="this">
+          <div hx-get="/console/usersTable" hx-trigger="load" hx-target="this">
           </div>
         </div>
       </main>

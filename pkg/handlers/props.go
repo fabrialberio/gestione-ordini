@@ -22,18 +22,20 @@ const (
 
 	keySupplierID = "supplier.id"
 
-	DestCook                 = "/cook/"
-	DestCookOrders           = "/cook/orders/"
-	DestCookOrdersList       = "/cook/ordersList"
-	DestAdmin                = "/admin/"
-	DestAdminUsers           = "/admin/users/"
-	DestAdminUsersTable      = "/admin/usersTable"
-	DestAdminProducts        = "/admin/products/"
-	DestAdminProductsTable   = "/admin/productsTable"
-	DestAdminSuppliers       = "/admin/suppliers/"
-	DestAdminSuppliersTable  = "/admin/suppliersTable"
-	DestManager              = "/manager/"
-	DestManagerAllOrders     = "/manager/allOrders/"
-	DestManagerProducts      = "/manager/products/"
-	DestManagerProductsTable = "/manager/productsTable"
+	// chef
+	DestChef       = "/chef/"
+	DestOrders     = "/chef/orders/"
+	DestOrdersList = "/chef/ordersList"
+
+	// admin and manager
+	DestConsole        = "/console/"
+	DestAllOrders      = "/console/allOrders/"
+	DestProducts       = "/console/products/"
+	DestProductsTable  = "/console/productsTable"
+	DestSuppliers      = "/console/suppliers/"
+	DestSuppliersTable = "/console/suppliersTable"
+
+	// admin
+	DestUsers      = "/console/users/"
+	DestUsersTable = "/console/usersTable"
 )

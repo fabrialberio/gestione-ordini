@@ -13,11 +13,7 @@ import (
 
 const dateFormat = "2006-01-02"
 
-func GetCook(w http.ResponseWriter, r *http.Request) {
-	appContext.FromRequest(r).Templ.ExecuteTemplate(w, "cook.html", nil)
-}
-
-func GetCookOrdersList(w http.ResponseWriter, r *http.Request) {
+func GetOrdersList(w http.ResponseWriter, r *http.Request) {
 	var data struct {
 		Orders []database.Order
 	}
@@ -34,10 +30,10 @@ func GetCookOrdersList(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	appContext.FromRequest(r).Templ.ExecuteTemplate(w, "cookOrdersList.html", data)
+	appContext.FromRequest(r).Templ.ExecuteTemplate(w, "chefOrdersList.html", data)
 }
 
-func GetCookOrder(w http.ResponseWriter, r *http.Request) {
+func GetOrder(w http.ResponseWriter, r *http.Request) {
 	var data struct {
 		Order            database.Order
 		AmountInput      components.Input
@@ -85,10 +81,10 @@ func GetCookOrder(w http.ResponseWriter, r *http.Request) {
 	}
 	data.UserID = user.ID
 
-	appContext.FromRequest(r).Templ.ExecuteTemplate(w, "cookOrder.html", data)
+	appContext.FromRequest(r).Templ.ExecuteTemplate(w, "chefOrder.html", data)
 }
 
-func PostCookOrder(w http.ResponseWriter, r *http.Request) {
+func PostOrder(w http.ResponseWriter, r *http.Request) {
 	isNew := r.FormValue("isNew") == "true"
 	delete := r.Form.Has("delete")
 
@@ -137,5 +133,5 @@ func PostCookOrder(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	http.Redirect(w, r, DestCook, http.StatusSeeOther)
+	http.Redirect(w, r, DestChef, http.StatusSeeOther)
 }

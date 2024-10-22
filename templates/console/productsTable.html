@@ -3,11 +3,11 @@
       {{ template "tableHead" . }}
 
       <tbody class="bg-white">
-        {{ range .Suppliers }}
+        {{ range .Products }}
         <tr class="border-outline border-t">
           <td>{{ .ID }}</td>
           <td class="w-8">
-            <a class="w-8 h-8 btn-sm" href="{{ $.SuppliersURL }}/{{ .ID }}">
+            <a class="w-8 h-8 btn-sm" href="/console/products/{{ .ID }}">
               <i class="fa-pen fas"></i>
             </a>
           </td>

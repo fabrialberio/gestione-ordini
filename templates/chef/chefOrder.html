@@ -12,17 +12,22 @@
       <div class="space-y-4 px-6 w-full max-w-xl">
         <h2 class="text-h2">
         {{ if .IsNew }}
-          Nuovo fornitore
+          Nuovo ordine
         {{ else }}
-          Modifica fornitore
+          Modifica ordine
         {{ end }}
         </h2>
-        <form class="space-y-4" method="post" action="{{ .PostURL }}">
-          <input type="hidden" name="supplier.id" value="{{ .Supplier.ID }}">
+        <form class="space-y-4" method="post" action="/chef/orders">
+          <input type="hidden" name="order.id" value="{{ .Order.ID }}">
           <input type="hidden" name="isNew" value="{{ .IsNew }}">
+          <input type="hidden" name="user.Id" value="{{ .UserID }}">
           
-          <!-- TODO -->
+          <!-- TODO: Aggiungere unità di misura -->
 
+          {{ template "select" .ProductSelect }}
+          {{ template "input" .AmountInput }}
+          {{ template "input" .RequestedAtInput }}
+          
           {{ template "formSubmitButtons" .IsNew }}
         </form>
       </div>

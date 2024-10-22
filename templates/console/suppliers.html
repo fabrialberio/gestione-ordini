@@ -5,29 +5,30 @@
     {{ template "sidebar" .Sidebar }}
 
     <div class="content">
-      <header class="mx-auto w-full max-w-screen-xl">
+      <header class="mx-auto max-w-screen-xl">
         <div class="flex p-4">
           {{ template "sidebarButton" }}
           {{ template "logoutButton" }}
         </div>
       </header>
-
+      
       <main class="flex justify-center items-center">
-        <div class="space-y-4 px-6 w-full max-w-xl">
+        <div class="space-y-4 px-6 w-full max-w-screen-md">
           <div class="flex items-center">
             <h2 class="text-h2">
-              Prodotti
+              Fornitori
             </h2>
-            <a class="ml-auto btn-md suggested" href="/manager/products/new">
+            <a class="ml-auto btn-md suggested" href="/console/suppliers/new">
               <i class="fa-add fas"></i>
               Aggiungi
             </a>
           </div>
-          
-          <div hx-get="/manager/productsTable" hx-trigger="load" hx-target="this">
+      
+          <div hx-get="/console/suppliersTable" hx-trigger="load" hx-target="this">
           </div>
         </div>
       </main>
     </div>
   </body>
 </html>
+  

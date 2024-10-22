@@ -37,20 +37,17 @@ type Table struct {
 
 type ProductsTable struct {
 	Table
-	ProductsURL string
-	Products    []database.Product
+	Products []database.Product
 }
 
 type UsersTable struct {
 	Table
-	UsersURL string
-	Users    []database.User
+	Users []database.User
 }
 
 type SuppliersTable struct {
 	Table
-	SuppliersURL string
-	Suppliers    []database.Supplier
+	Suppliers []database.Supplier
 }
 
 type TableHeading struct {
