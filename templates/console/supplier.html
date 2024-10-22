@@ -21,7 +21,8 @@
           <input type="hidden" name="supplier.id" value="{{ .Supplier.ID }}">
           <input type="hidden" name="isNew" value="{{ .IsNew }}">
           
-          <!-- TODO -->
+          {{ template "input" .NameInput }}
+          {{ template "input" .EmailInput }}
 
           {{ template "formSubmitButtons" .IsNew }}
         </form>

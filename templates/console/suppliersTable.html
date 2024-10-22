@@ -6,6 +6,8 @@
         {{ range .Suppliers }}
         <tr class="border-outline border-t">
           <td>{{ .ID }}</td>
+          <td>{{ .Name }}</td>
+          <td>{{ .Email }}</td>
           <td class="w-8">
             <a class="w-8 h-8 btn-sm" href="/console/suppliers/{{ .ID }}">
               <i class="fa-pen fas"></i>

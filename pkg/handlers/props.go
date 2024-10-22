@@ -20,7 +20,9 @@ const (
 	keyProductUnitOfMeasureID = "product.unitOfMeasureId"
 	keyProductName            = "product.name"
 
-	keySupplierID = "supplier.id"
+	keySupplierID    = "supplier.id"
+	keySupplierEmail = "supplier.email"
+	keySupplierName  = "supplier.name"
 
 	// chef
 	DestChef       = "/chef/"

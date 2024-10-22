@@ -76,7 +76,7 @@ func GetProduct(w http.ResponseWriter, r *http.Request) {
 		data.ProductTypeSelect.Options = append(data.ProductTypeSelect.Options, components.SelectOption{p.ID, p.Name})
 	}
 
-	suppliers, err := appContext.FromRequest(r).DB.FindAllSuppliers()
+	suppliers, err := appContext.FromRequest(r).DB.FindAllSuppliers(database.OrderSupplierByID, true)
 	if err != nil {
 		HandleError(w, r, err)
 		return
@@ -84,7 +84,7 @@ func GetProduct(w http.ResponseWriter, r *http.Request) {
 
 	data.SupplierSelect = components.Select{"Fornitore", keyProductSupplierID, data.Product.SupplierID, []components.SelectOption{}}
 	for _, s := range suppliers {
-		data.SupplierSelect.Options = append(data.SupplierSelect.Options, components.SelectOption{s.ID, "Nome del fornitore"})
+		data.SupplierSelect.Options = append(data.SupplierSelect.Options, components.SelectOption{s.ID, s.Name})
 	}
 
 	unitsOfMeasure, err := appContext.FromRequest(r).DB.FindAllUnitsOfMeasure()
@@ -105,10 +105,10 @@ func PostProduct(w http.ResponseWriter, r *http.Request) {
 	isNew := r.FormValue("isNew") == "true"
 	delete := r.Form.Has("delete")
 
-	productTypeId, _ := strconv.Atoi(r.FormValue("productTypeId"))
-	supplierId, _ := strconv.Atoi(r.FormValue("supplierId"))
-	unitOfMeasureId, _ := strconv.Atoi(r.FormValue("unitOfMeasureId"))
-	name := r.FormValue("requestedAt")
+	productTypeId, _ := strconv.Atoi(r.FormValue(keyProductProductTypeID))
+	supplierId, _ := strconv.Atoi(r.FormValue(keyProductSupplierID))
+	unitOfMeasureId, _ := strconv.Atoi(r.FormValue(keyProductUnitOfMeasureID))
+	name := r.FormValue(keyProductName)
 
 	if isNew {
 		err := appContext.FromRequest(r).DB.CreateProduct(database.Product{
@@ -122,7 +122,7 @@ func PostProduct(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 	} else {
-		id, err := strconv.Atoi(r.FormValue(keyOrderProductID))
+		id, err := strconv.Atoi(r.FormValue(keyProductID))
 		if err != nil {
 			HandleError(w, r, err)
 			return
