@@ -22,7 +22,7 @@ func GetManager(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetManagerProductsTable(w http.ResponseWriter, r *http.Request) {
-	getProductsTable(w, r, destManagerProductsTable)
+	getProductsTable(w, r, destManagerProductsTable, destManagerProducts)
 }
 
 func GetManagerProducts(w http.ResponseWriter, r *http.Request) {

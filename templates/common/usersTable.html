@@ -1,6 +1,6 @@
 <div id="table" class="border-collapse border-outline border rounded-lg overflow-x-auto">
   <table class="w-full table-auto">
-    {{ template "tableHead" .TableHead }}
+    {{ template "tableHead" . }}
 
     <tbody class="bg-white">
       {{ range .Users }}
@@ -11,7 +11,7 @@
         <td>{{ .Name }}</td>
         <td>{{ .Surname }}</td>
         <td class="w-8">
-          <a class="w-8 h-8 btn-sm" href="/admin/users/{{ .ID }}">
+          <a class="w-8 h-8 btn-sm" href="{{ $.UsersURL }}/{{ .ID }}">
             <i class="fa-pen fas"></i>
           </a>
         </td>

@@ -8,18 +8,16 @@ import (
 	"strconv"
 )
 
-func getProductsTable(w http.ResponseWriter, r *http.Request, url string) {
+func getProductsTable(w http.ResponseWriter, r *http.Request, tableUrl string, productsUrl string) {
 	var err error
-	data := struct {
-		TableHead components.TableHead
-		Products  []database.Product
-	}{
-		TableHead: components.TableHead{
-			URL: url,
+	data := components.ProductsTable{
+		Table: components.Table{
+			TableURL: tableUrl,
 		},
+		ProductsURL: productsUrl,
 	}
 
-	data.TableHead.Headings = []components.TableHeading{
+	data.Table.Headings = []components.TableHeading{
 		{database.OrderProductByID, "ID"},
 		{database.OrderProductByName, "Nome"},
 		{database.OrderProductByProductType, "Tipologia"},
@@ -27,13 +25,13 @@ func getProductsTable(w http.ResponseWriter, r *http.Request, url string) {
 		{database.OrderProductByUnitOfMeasure, "Unità"},
 	}
 
-	data.TableHead.OrderBy, err = strconv.Atoi(r.URL.Query().Get("orderBy"))
+	data.Table.OrderBy, err = strconv.Atoi(r.URL.Query().Get("orderBy"))
 	if err != nil {
-		data.TableHead.OrderBy = database.OrderUserByID
+		data.Table.OrderBy = database.OrderProductByID
 	}
-	data.TableHead.OrderDesc = r.URL.Query().Get("orderDesc") == "true"
+	data.Table.OrderDesc = r.URL.Query().Get("orderDesc") == "true"
 
-	data.Products, err = appContext.FromRequest(r).DB.FindAllProducts(data.TableHead.OrderBy, data.TableHead.OrderDesc)
+	data.Products, err = appContext.FromRequest(r).DB.FindAllProducts(data.Table.OrderBy, data.Table.OrderDesc)
 	if err != nil {
 		HandleError(w, r, err)
 		return

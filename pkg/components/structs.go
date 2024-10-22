@@ -1,5 +1,7 @@
 package components
 
+import "gestione-ordini/pkg/database"
+
 type SidebarDest struct {
 	DestURL     string
 	FasIconName string
@@ -26,11 +28,23 @@ type SelectOption struct {
 	Text  string
 }
 
-type TableHead struct {
-	URL       string
+type Table struct {
+	TableURL  string
 	OrderBy   int
 	OrderDesc bool
 	Headings  []TableHeading
+}
+
+type ProductsTable struct {
+	Table
+	ProductsURL string
+	Products    []database.Product
+}
+
+type UsersTable struct {
+	Table
+	UsersURL string
+	Users    []database.User
 }
 
 type TableHeading struct {

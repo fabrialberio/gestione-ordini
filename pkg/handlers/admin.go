@@ -37,7 +37,7 @@ func PostAdminUser(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetAdminProductsTable(w http.ResponseWriter, r *http.Request) {
-	getProductsTable(w, r, destAdminProductsTable)
+	getProductsTable(w, r, destAdminProductsTable, destAdminProducts)
 }
 
 func GetAdminProducts(w http.ResponseWriter, r *http.Request) {

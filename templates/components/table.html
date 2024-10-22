@@ -2,7 +2,7 @@
 <thead>
   <tr>
      {{ range .Headings }}
-     <th class="selectable" hx-get="{{ $.URL }}?orderBy={{ .Index }}&orderDesc={{ if eq .Index $.OrderBy }}{{ not $.OrderDesc }}{{ else }}false{{ end }}" hx-target="#table" hx-swap="outerHTML">
+     <th class="selectable" hx-get="{{ $.TableURL }}?orderBy={{ .Index }}&orderDesc={{ if eq .Index $.OrderBy }}{{ not $.OrderDesc }}{{ else }}false{{ end }}" hx-target="#table" hx-swap="outerHTML">
        <div class="inline-flex items-center gap-1">
          {{ .Name }}
          <i class="{{ if $.OrderDesc }}fa-sort-up{{ else }}fa-sort{{ end }} fas{{ if ne $.OrderBy .Index }} opacity-0{{ end }}"></i>

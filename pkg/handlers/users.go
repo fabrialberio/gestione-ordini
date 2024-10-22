@@ -11,14 +11,14 @@ import (
 
 func GetUsersTable(w http.ResponseWriter, r *http.Request) {
 	var err error
-	data := struct {
-		TableHead components.TableHead
-		Users     []database.User
-	}{
-		TableHead: components.TableHead{URL: destAdminUsersTable},
+	data := components.UsersTable{
+		Table: components.Table{
+			TableURL: destAdminUsersTable,
+		},
+		UsersURL: destAdminUsers,
 	}
 
-	data.TableHead.Headings = []components.TableHeading{
+	data.Table.Headings = []components.TableHeading{
 		{database.OrderUserByID, "ID"},
 		{database.OrderUserByRole, "Ruolo"},
 		{database.OrderUserByUsername, "Username"},
@@ -26,13 +26,13 @@ func GetUsersTable(w http.ResponseWriter, r *http.Request) {
 		{database.OrderUserBySurname, "Cognome"},
 	}
 
-	data.TableHead.OrderBy, err = strconv.Atoi(r.URL.Query().Get("orderBy"))
+	data.Table.OrderBy, err = strconv.Atoi(r.URL.Query().Get("orderBy"))
 	if err != nil {
-		data.TableHead.OrderBy = database.OrderUserByID
+		data.Table.OrderBy = database.OrderUserByID
 	}
-	data.TableHead.OrderDesc = r.URL.Query().Get("orderDesc") == "true"
+	data.Table.OrderDesc = r.URL.Query().Get("orderDesc") == "true"
 
-	data.Users, err = appContext.FromRequest(r).DB.FindAllUsers(data.TableHead.OrderBy, data.TableHead.OrderDesc)
+	data.Users, err = appContext.FromRequest(r).DB.FindAllUsers(data.Table.OrderBy, data.Table.OrderDesc)
 	if err != nil {
 		HandleError(w, r, err)
 		return
