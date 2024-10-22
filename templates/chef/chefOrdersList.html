@@ -1,8 +1,15 @@
 <div id="ordersList" class="border-collapse border-outline border rounded-lg overflow-x-auto">
   {{ if .Orders }}
   {{ range .Orders }}
-  <dl class="flex items-center">
+  <dl class="items-center">
+    <dt>ID</dt>
     <dd>{{ .ID }}</dd>
+    <dt>Nome prodotto</dt>
+    <dd>{{ .Product.Name }}</dd>
+    <dt>ID utente</dt>
+    <dd>{{ .UserID }}</dd>
+    <dt>Quantità</dt>
+    <dd>{{ .Amount }}</dd>
   </dl>
   {{ end }}
   {{ else }}

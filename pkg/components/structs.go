@@ -50,6 +50,11 @@ type SuppliersTable struct {
 	Suppliers []database.Supplier
 }
 
+type OrdersTable struct {
+	Headings []TableHeading
+	Orders   []database.Order
+}
+
 type TableHeading struct {
 	Index int
 	Name  string

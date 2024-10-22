@@ -11,6 +11,7 @@ type Order struct {
 	ProductID   int       `gorm:"column:id_prodotto"`
 	Product     Product   `gorm:"foreignKey:ProductID"`
 	UserID      int       `gorm:"column:id_utente"`
+	User        User      `gorm:"foreignKey:UserID"`
 	Amount      int       `gorm:"column:quantita"`
 	RequestedAt time.Time `gorm:"column:richiesto_il"`
 }
@@ -22,6 +23,13 @@ func (db *GormDB) FindOrder(id int) (Order, error) {
 
 	err := db.conn.Take(&order, id).Error
 	return order, err
+}
+
+func (db *GormDB) FindAllOrders() ([]Order, error) {
+	var orders []Order
+
+	err := db.conn.Preload(clause.Associations).Find(&orders).Error
+	return orders, err
 }
 
 func (db *GormDB) FindAllOrdersWithUserID(userId int) ([]Order, error) {

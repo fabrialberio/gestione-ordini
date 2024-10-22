@@ -13,7 +13,7 @@ import (
 
 const dateFormat = "2006-01-02"
 
-func GetOrdersList(w http.ResponseWriter, r *http.Request) {
+func GetChefOrdersList(w http.ResponseWriter, r *http.Request) {
 	var data struct {
 		Orders []database.Order
 	}
@@ -33,7 +33,7 @@ func GetOrdersList(w http.ResponseWriter, r *http.Request) {
 	appContext.FromRequest(r).Templ.ExecuteTemplate(w, "chefOrdersList.html", data)
 }
 
-func GetOrder(w http.ResponseWriter, r *http.Request) {
+func GetChefOrder(w http.ResponseWriter, r *http.Request) {
 	var data struct {
 		Order            database.Order
 		AmountInput      components.Input
@@ -84,12 +84,12 @@ func GetOrder(w http.ResponseWriter, r *http.Request) {
 	appContext.FromRequest(r).Templ.ExecuteTemplate(w, "chefOrder.html", data)
 }
 
-func PostOrder(w http.ResponseWriter, r *http.Request) {
+func PostChefOrder(w http.ResponseWriter, r *http.Request) {
 	isNew := r.FormValue("isNew") == "true"
 	delete := r.Form.Has("delete")
+	userId := appContext.FromRequest(r).AuthenticatedUser.ID
 
 	productId, _ := strconv.Atoi(r.FormValue(keyOrderProductID))
-	userId, _ := strconv.Atoi(r.FormValue(keyUserID))
 	amount, _ := strconv.Atoi(r.FormValue(keyOrderAmount))
 	requestedAt, _ := time.Parse(dateFormat, r.FormValue(keyOrderRequestedAt))
 
@@ -134,4 +134,25 @@ func PostOrder(w http.ResponseWriter, r *http.Request) {
 	}
 
 	http.Redirect(w, r, DestChef, http.StatusSeeOther)
+}
+
+func GetOrdersTable(w http.ResponseWriter, r *http.Request) {
+	var err error
+	var data components.OrdersTable
+
+	data.Headings = []components.TableHeading{
+		{Name: "id"},
+		{Name: "Prodotto"},
+		{Name: "Utente"},
+		{Name: "Quantità"},
+		{Name: "Richiesto il"},
+	}
+
+	data.Orders, err = appContext.FromRequest(r).DB.FindAllOrders()
+	if err != nil {
+		HandleError(w, r, err)
+		return
+	}
+
+	appContext.FromRequest(r).Templ.ExecuteTemplate(w, "ordersTable.html", data)
 }
