@@ -8,5 +8,5 @@ import (
 
 func HandleError(w http.ResponseWriter, r *http.Request, err error) {
 	log.Printf("%s %s %s Error: %v", r.RemoteAddr, r.Method, r.URL, err)
-	appContext.FromRequest(r).Templ.ExecuteTemplate(w, "error.html", err.Error())
+	appContext.ExecuteTemplate(w, r, "error.html", err.Error())
 }

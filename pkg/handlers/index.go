@@ -40,29 +40,26 @@ func GetIndex(w http.ResponseWriter, r *http.Request) {
 		ErrorMsg string
 	}
 
-	user := appContext.FromRequest(r).AuthenticatedUser
-	if user != nil {
-		loginRedirect(w, r, user.RoleID)
-		return
-	}
-
-	err := appContext.FromRequest(r).AuthenticationErr
+	user, err := appContext.AuthenticatedUser(r)
 	if errors.Is(err, auth.ErrNoCookie) {
 		if r.URL.Query().Has("errormsg") {
 			data.ErrorMsg = "Utente o password errati"
 		}
 	} else if err != nil {
 		data.ErrorMsg = "Sessione scaduta"
+	} else {
+		loginRedirect(w, r, user.RoleID)
+		return
 	}
 
-	appContext.FromRequest(r).Templ.ExecuteTemplate(w, "login.html", data)
+	appContext.ExecuteTemplate(w, r, "login.html", data)
 }
 
 func PostLogin(w http.ResponseWriter, r *http.Request) {
 	username := r.FormValue("username")
 	password := r.FormValue("password")
 
-	user, err := appContext.FromRequest(r).DB.FindUserWithUsername(username)
+	user, err := appContext.Database(r).FindUserWithUsername(username)
 	if err != nil {
 		logoutRedirect(w, r, true)
 		return

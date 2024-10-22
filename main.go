@@ -3,7 +3,6 @@ package main
 import (
 	"embed"
 	"fmt"
-	"gestione-ordini/pkg/appContext"
 	"gestione-ordini/pkg/auth"
 	"gestione-ordini/pkg/database"
 	"gestione-ordini/pkg/handlers"
@@ -19,17 +18,12 @@ import (
 var publicFS embed.FS
 
 func main() {
-	templ := template.Must(template.ParseGlob("templates/*.html"))
-	template.Must(templ.ParseGlob("templates/**/*.html"))
+	tmpl := template.Must(template.ParseGlob("templates/*.html"))
+	template.Must(tmpl.ParseGlob("templates/**/*.html"))
 
 	db := createDatabase()
 	defer db.Close()
 	addAdminUserIfNotExists(db)
-
-	appCtx := appContext.AppContext{
-		DB:    db,
-		Templ: templ,
-	}
 
 	chefMux := http.NewServeMux()
 	chefMux.HandleFunc("GET "+handlers.DestChef, handlers.GetChef)
@@ -65,7 +59,7 @@ func main() {
 
 	server := http.Server{
 		Addr:    ":8080",
-		Handler: middleware.WithLogging(middleware.WithContext(&appCtx, mux)),
+		Handler: middleware.WithLogging(middleware.WithContext(db, tmpl, mux)),
 	}
 
 	log.Println("Server started on port 8080.")

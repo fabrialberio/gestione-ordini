@@ -14,7 +14,8 @@ func sidebarDestinations(r *http.Request, selected int) []components.SidebarDest
 		{DestSuppliers, "fa-truck", "Fornitori", false},
 	}
 
-	if appContext.FromRequest(r).AuthenticatedUser.RoleID == database.RoleIDAdministrator {
+	user, _ := appContext.AuthenticatedUser(r)
+	if user.RoleID == database.RoleIDAdministrator {
 		sidebar = append(sidebar, components.SidebarDest{DestUsers, "fa-users", "Utenti", false})
 	}
 
@@ -34,7 +35,7 @@ func GetAllOrders(w http.ResponseWriter, r *http.Request) {
 		Sidebar: sidebarDestinations(r, 0),
 	}
 
-	appContext.FromRequest(r).Templ.ExecuteTemplate(w, "allOrders.html", data)
+	appContext.ExecuteTemplate(w, r, "allOrders.html", data)
 }
 
 func GetProducts(w http.ResponseWriter, r *http.Request) {
@@ -44,7 +45,7 @@ func GetProducts(w http.ResponseWriter, r *http.Request) {
 		Sidebar: sidebarDestinations(r, 1),
 	}
 
-	appContext.FromRequest(r).Templ.ExecuteTemplate(w, "products.html", data)
+	appContext.ExecuteTemplate(w, r, "products.html", data)
 }
 
 func GetSuppliers(w http.ResponseWriter, r *http.Request) {
@@ -54,7 +55,7 @@ func GetSuppliers(w http.ResponseWriter, r *http.Request) {
 		Sidebar: sidebarDestinations(r, 2),
 	}
 
-	appContext.FromRequest(r).Templ.ExecuteTemplate(w, "suppliers.html", data)
+	appContext.ExecuteTemplate(w, r, "suppliers.html", data)
 }
 
 func GetUsers(w http.ResponseWriter, r *http.Request) {
@@ -64,5 +65,5 @@ func GetUsers(w http.ResponseWriter, r *http.Request) {
 		Sidebar: sidebarDestinations(r, 3),
 	}
 
-	appContext.FromRequest(r).Templ.ExecuteTemplate(w, "users.html", data)
+	appContext.ExecuteTemplate(w, r, "users.html", data)
 }

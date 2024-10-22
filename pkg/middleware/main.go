@@ -3,7 +3,9 @@ package middleware
 import (
 	appContext "gestione-ordini/pkg/appContext"
 	"gestione-ordini/pkg/auth"
+	"gestione-ordini/pkg/database"
 	"gestione-ordini/pkg/handlers"
+	"html/template"
 	"log"
 	"net/http"
 )
@@ -28,14 +30,12 @@ func WithLogging(next http.Handler) http.Handler {
 	})
 }
 
-func WithContext(reqCtx *appContext.AppContext, next http.Handler) http.Handler {
+func WithContext(db *database.GormDB, templ *template.Template, next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		user, err := auth.GetAuthenticatedUser(r)
-		reqCtx.AuthenticatedUser = user
-		reqCtx.AuthenticationErr = err
 
 		ctx := r.Context()
-		ctx = appContext.WithContext(ctx, reqCtx)
+		ctx = appContext.NewContext(ctx, appContext.New(db, templ, user, err))
 		r = r.WithContext(ctx)
 
 		next.ServeHTTP(w, r)
@@ -44,7 +44,7 @@ func WithContext(reqCtx *appContext.AppContext, next http.Handler) http.Handler 
 
 func WithRole(roleId int, next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		user := appContext.FromRequest(r).AuthenticatedUser
+		user, _ := appContext.AuthenticatedUser(r)
 		if user == nil {
 			handlers.HandleError(w, r, auth.ErrNoCookie)
 			return

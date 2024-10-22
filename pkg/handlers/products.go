@@ -30,13 +30,13 @@ func GetProductsTable(w http.ResponseWriter, r *http.Request) {
 	}
 	data.Table.OrderDesc = r.URL.Query().Get("orderDesc") == "true"
 
-	data.Products, err = appContext.FromRequest(r).DB.FindAllProducts(data.Table.OrderBy, data.Table.OrderDesc)
+	data.Products, err = appContext.Database(r).FindAllProducts(data.Table.OrderBy, data.Table.OrderDesc)
 	if err != nil {
 		HandleError(w, r, err)
 		return
 	}
 
-	appContext.FromRequest(r).Templ.ExecuteTemplate(w, "productsTable.html", data)
+	appContext.ExecuteTemplate(w, r, "productsTable.html", data)
 }
 
 func GetProduct(w http.ResponseWriter, r *http.Request) {
@@ -54,7 +54,7 @@ func GetProduct(w http.ResponseWriter, r *http.Request) {
 		data.IsNew = true
 		data.Product = database.Product{}
 	} else {
-		product, err := appContext.FromRequest(r).DB.FindProduct(id)
+		product, err := appContext.Database(r).FindProduct(id)
 		if err != nil {
 			HandleError(w, r, err)
 			return
@@ -65,7 +65,7 @@ func GetProduct(w http.ResponseWriter, r *http.Request) {
 
 	data.NameInput = components.Input{"Nome", keyProductName, "text", data.Product.Name}
 
-	productTypes, err := appContext.FromRequest(r).DB.FindAllProductTypes()
+	productTypes, err := appContext.Database(r).FindAllProductTypes()
 	if err != nil {
 		HandleError(w, r, err)
 		return
@@ -76,7 +76,7 @@ func GetProduct(w http.ResponseWriter, r *http.Request) {
 		data.ProductTypeSelect.Options = append(data.ProductTypeSelect.Options, components.SelectOption{p.ID, p.Name})
 	}
 
-	suppliers, err := appContext.FromRequest(r).DB.FindAllSuppliers(database.OrderSupplierByID, true)
+	suppliers, err := appContext.Database(r).FindAllSuppliers(database.OrderSupplierByID, true)
 	if err != nil {
 		HandleError(w, r, err)
 		return
@@ -87,7 +87,7 @@ func GetProduct(w http.ResponseWriter, r *http.Request) {
 		data.SupplierSelect.Options = append(data.SupplierSelect.Options, components.SelectOption{s.ID, s.Name})
 	}
 
-	unitsOfMeasure, err := appContext.FromRequest(r).DB.FindAllUnitsOfMeasure()
+	unitsOfMeasure, err := appContext.Database(r).FindAllUnitsOfMeasure()
 	if err != nil {
 		HandleError(w, r, err)
 		return
@@ -98,7 +98,7 @@ func GetProduct(w http.ResponseWriter, r *http.Request) {
 		data.UnitOfMeasureSelect.Options = append(data.UnitOfMeasureSelect.Options, components.SelectOption{u.ID, u.Symbol})
 	}
 
-	appContext.FromRequest(r).Templ.ExecuteTemplate(w, "product.html", data)
+	appContext.ExecuteTemplate(w, r, "product.html", data)
 }
 
 func PostProduct(w http.ResponseWriter, r *http.Request) {
@@ -111,7 +111,7 @@ func PostProduct(w http.ResponseWriter, r *http.Request) {
 	name := r.FormValue(keyProductName)
 
 	if isNew {
-		err := appContext.FromRequest(r).DB.CreateProduct(database.Product{
+		err := appContext.Database(r).CreateProduct(database.Product{
 			ProductTypeID:   productTypeId,
 			SupplierID:      supplierId,
 			UnitOfMeasureID: unitOfMeasureId,
@@ -129,13 +129,13 @@ func PostProduct(w http.ResponseWriter, r *http.Request) {
 		}
 
 		if delete {
-			err = appContext.FromRequest(r).DB.DeleteProduct(id)
+			err = appContext.Database(r).DeleteProduct(id)
 			if err != nil {
 				HandleError(w, r, err)
 				return
 			}
 		} else {
-			err = appContext.FromRequest(r).DB.UpdateProduct(database.Product{
+			err = appContext.Database(r).UpdateProduct(database.Product{
 				ID:              id,
 				ProductTypeID:   productTypeId,
 				SupplierID:      supplierId,

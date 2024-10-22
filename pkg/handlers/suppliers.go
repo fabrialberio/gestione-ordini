@@ -28,13 +28,13 @@ func GetSuppliersTable(w http.ResponseWriter, r *http.Request) {
 	}
 	data.Table.OrderDesc = r.URL.Query().Get("orderDesc") == "true"
 
-	data.Suppliers, err = appContext.FromRequest(r).DB.FindAllSuppliers(data.Table.OrderBy, data.Table.OrderDesc)
+	data.Suppliers, err = appContext.Database(r).FindAllSuppliers(data.Table.OrderBy, data.Table.OrderDesc)
 	if err != nil {
 		HandleError(w, r, err)
 		return
 	}
 
-	appContext.FromRequest(r).Templ.ExecuteTemplate(w, "suppliersTable.html", data)
+	appContext.ExecuteTemplate(w, r, "suppliersTable.html", data)
 }
 
 func GetSupplier(w http.ResponseWriter, r *http.Request) {
@@ -50,7 +50,7 @@ func GetSupplier(w http.ResponseWriter, r *http.Request) {
 		data.IsNew = true
 		data.Supplier = database.Supplier{}
 	} else {
-		supplier, err := appContext.FromRequest(r).DB.FindSupplier(id)
+		supplier, err := appContext.Database(r).FindSupplier(id)
 		if err != nil {
 			HandleError(w, r, err)
 			return
@@ -61,7 +61,7 @@ func GetSupplier(w http.ResponseWriter, r *http.Request) {
 	data.NameInput = components.Input{"Nome", keySupplierName, "text", data.Supplier.Name}
 	data.EmailInput = components.Input{"Email", keySupplierEmail, "text", data.Supplier.Email}
 
-	appContext.FromRequest(r).Templ.ExecuteTemplate(w, "supplier.html", data)
+	appContext.ExecuteTemplate(w, r, "supplier.html", data)
 }
 
 func PostSupplier(w http.ResponseWriter, r *http.Request) {
@@ -72,7 +72,7 @@ func PostSupplier(w http.ResponseWriter, r *http.Request) {
 	name := r.FormValue(keySupplierName)
 
 	if isNew {
-		err := appContext.FromRequest(r).DB.CreateSupplier(database.Supplier{
+		err := appContext.Database(r).CreateSupplier(database.Supplier{
 			Email: email,
 			Name:  name,
 		})
@@ -88,13 +88,13 @@ func PostSupplier(w http.ResponseWriter, r *http.Request) {
 		}
 
 		if delete {
-			err := appContext.FromRequest(r).DB.DeleteSupplier(id)
+			err := appContext.Database(r).DeleteSupplier(id)
 			if err != nil {
 				HandleError(w, r, err)
 				return
 			}
 		} else {
-			err := appContext.FromRequest(r).DB.UpdateSupplier(database.Supplier{
+			err := appContext.Database(r).UpdateSupplier(database.Supplier{
 				ID:    id,
 				Email: email,
 				Name:  name,

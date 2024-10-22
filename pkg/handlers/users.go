@@ -31,13 +31,13 @@ func GetUsersTable(w http.ResponseWriter, r *http.Request) {
 	}
 	data.Table.OrderDesc = r.URL.Query().Get("orderDesc") == "true"
 
-	data.Users, err = appContext.FromRequest(r).DB.FindAllUsers(data.Table.OrderBy, data.Table.OrderDesc)
+	data.Users, err = appContext.Database(r).FindAllUsers(data.Table.OrderBy, data.Table.OrderDesc)
 	if err != nil {
 		HandleError(w, r, err)
 		return
 	}
 
-	appContext.FromRequest(r).Templ.ExecuteTemplate(w, "usersTable.html", data)
+	appContext.ExecuteTemplate(w, r, "usersTable.html", data)
 }
 
 func GetUser(w http.ResponseWriter, r *http.Request) {
@@ -55,7 +55,7 @@ func GetUser(w http.ResponseWriter, r *http.Request) {
 		data.IsNew = true
 		data.User = database.User{}
 	} else {
-		user, err := appContext.FromRequest(r).DB.FindUser(id)
+		user, err := appContext.Database(r).FindUser(id)
 		if err != nil {
 			HandleError(w, r, err)
 			return
@@ -68,7 +68,7 @@ func GetUser(w http.ResponseWriter, r *http.Request) {
 	data.SurnameInput = components.Input{"Cognome", keyUserSurname, "text", data.User.Surname}
 	data.UsernameInput = components.Input{"Username", keyUserUsername, "text", data.User.Username}
 
-	roles, err := appContext.FromRequest(r).DB.FindAllRoles()
+	roles, err := appContext.Database(r).FindAllRoles()
 	if err != nil {
 		HandleError(w, r, err)
 		return
@@ -79,7 +79,7 @@ func GetUser(w http.ResponseWriter, r *http.Request) {
 		data.RoleSelect.Options = append(data.RoleSelect.Options, components.SelectOption{int(r.ID), r.Name})
 	}
 
-	appContext.FromRequest(r).Templ.ExecuteTemplate(w, "user.html", data)
+	appContext.ExecuteTemplate(w, r, "user.html", data)
 }
 
 func PostUser(w http.ResponseWriter, r *http.Request) {
@@ -103,7 +103,7 @@ func PostUser(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		err = appContext.FromRequest(r).DB.CreateUser(database.User{
+		err = appContext.Database(r).CreateUser(database.User{
 			RoleID:       roleId,
 			Username:     username,
 			PasswordHash: passwordHash,
@@ -122,13 +122,13 @@ func PostUser(w http.ResponseWriter, r *http.Request) {
 		}
 
 		if delete {
-			err := appContext.FromRequest(r).DB.DeleteUser(id)
+			err := appContext.Database(r).DeleteUser(id)
 			if err != nil {
 				HandleError(w, r, err)
 				return
 			}
 		} else {
-			err = appContext.FromRequest(r).DB.UpdateUser(database.User{
+			err = appContext.Database(r).UpdateUser(database.User{
 				ID:       id,
 				RoleID:   roleId,
 				Username: username,

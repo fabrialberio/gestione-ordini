@@ -24,13 +24,13 @@ func GetChefOrdersList(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	data.Orders, err = appContext.FromRequest(r).DB.FindAllOrdersWithUserID(user.ID)
+	data.Orders, err = appContext.Database(r).FindAllOrdersWithUserID(user.ID)
 	if err != nil {
 		HandleError(w, r, err)
 		return
 	}
 
-	appContext.FromRequest(r).Templ.ExecuteTemplate(w, "chefOrdersList.html", data)
+	appContext.ExecuteTemplate(w, r, "chefOrdersList.html", data)
 }
 
 func GetChefOrder(w http.ResponseWriter, r *http.Request) {
@@ -51,7 +51,7 @@ func GetChefOrder(w http.ResponseWriter, r *http.Request) {
 			RequestedAt: time.Now(),
 		}
 	} else {
-		order, err := appContext.FromRequest(r).DB.FindOrder(id)
+		order, err := appContext.Database(r).FindOrder(id)
 		if err != nil {
 			HandleError(w, r, err)
 			return
@@ -63,7 +63,7 @@ func GetChefOrder(w http.ResponseWriter, r *http.Request) {
 	data.AmountInput = components.Input{"Quantità", keyOrderAmount, "number", strconv.Itoa(data.Order.Amount)}
 	data.RequestedAtInput = components.Input{"Richiesto per", keyOrderRequestedAt, "date", data.Order.RequestedAt.Format(dateFormat)}
 
-	products, err := appContext.FromRequest(r).DB.FindAllProducts(database.OrderProductByID, true)
+	products, err := appContext.Database(r).FindAllProducts(database.OrderProductByID, true)
 	if err != nil {
 		HandleError(w, r, err)
 		return
@@ -81,13 +81,13 @@ func GetChefOrder(w http.ResponseWriter, r *http.Request) {
 	}
 	data.UserID = user.ID
 
-	appContext.FromRequest(r).Templ.ExecuteTemplate(w, "chefOrder.html", data)
+	appContext.ExecuteTemplate(w, r, "chefOrder.html", data)
 }
 
 func PostChefOrder(w http.ResponseWriter, r *http.Request) {
 	isNew := r.FormValue("isNew") == "true"
 	delete := r.Form.Has("delete")
-	userId := appContext.FromRequest(r).AuthenticatedUser.ID
+	user, _ := appContext.AuthenticatedUser(r)
 
 	productId, _ := strconv.Atoi(r.FormValue(keyOrderProductID))
 	amount, _ := strconv.Atoi(r.FormValue(keyOrderAmount))
@@ -96,9 +96,9 @@ func PostChefOrder(w http.ResponseWriter, r *http.Request) {
 	log.Println(requestedAt)
 
 	if isNew {
-		err := appContext.FromRequest(r).DB.CreateOrder(database.Order{
+		err := appContext.Database(r).CreateOrder(database.Order{
 			ProductID:   productId,
-			UserID:      userId,
+			UserID:      user.ID,
 			Amount:      amount,
 			RequestedAt: requestedAt,
 		})
@@ -114,16 +114,16 @@ func PostChefOrder(w http.ResponseWriter, r *http.Request) {
 		}
 
 		if delete {
-			err = appContext.FromRequest(r).DB.DeleteOrder(id)
+			err = appContext.Database(r).DeleteOrder(id)
 			if err != nil {
 				HandleError(w, r, err)
 				return
 			}
 		} else {
-			err = appContext.FromRequest(r).DB.UpdateOrder(database.Order{
+			err = appContext.Database(r).UpdateOrder(database.Order{
 				ID:        id,
 				ProductID: productId,
-				UserID:    userId,
+				UserID:    user.ID,
 				Amount:    amount,
 			})
 			if err != nil {
@@ -148,11 +148,11 @@ func GetAllOrdersTable(w http.ResponseWriter, r *http.Request) {
 		{Name: "Richiesto per"},
 	}
 
-	data.Orders, err = appContext.FromRequest(r).DB.FindAllOrders()
+	data.Orders, err = appContext.Database(r).FindAllOrders()
 	if err != nil {
 		HandleError(w, r, err)
 		return
 	}
 
-	appContext.FromRequest(r).Templ.ExecuteTemplate(w, "allOrdersTable.html", data)
+	appContext.ExecuteTemplate(w, r, "allOrdersTable.html", data)
 }

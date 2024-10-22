@@ -6,5 +6,5 @@ import (
 )
 
 func GetChef(w http.ResponseWriter, r *http.Request) {
-	appContext.FromRequest(r).Templ.ExecuteTemplate(w, "chef.html", nil)
+	appContext.ExecuteTemplate(w, r, "chef.html", nil)
 }
