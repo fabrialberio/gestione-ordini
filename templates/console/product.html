@@ -17,7 +17,7 @@
           Modifica prodotto
         {{ end }}
         </h2>
-        <form class="space-y-4" method="post" action="/console/products">
+        <form class="space-y-4" method="post" action="/console/products/">
           <input type="hidden" name="product.id" value="{{ .Product.ID }}">
           <input type="hidden" name="isNew" value="{{ .IsNew }}">
           
