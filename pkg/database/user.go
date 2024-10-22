@@ -28,7 +28,7 @@ type Role struct {
 func (Role) TableName() string { return "ruoli" }
 
 const (
-	RoleIDCook int = iota + 1
+	RoleIDChef int = iota + 1
 	RoleIDManager
 	RoleIDAdministrator
 )
