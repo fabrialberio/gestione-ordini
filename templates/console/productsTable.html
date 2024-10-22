@@ -6,6 +6,10 @@
         {{ range .Products }}
         <tr class="border-outline border-t">
           <td>{{ .ID }}</td>
+          <td>{{ .Name }}</td>
+          <td>{{ .ProductType.Name }}</td>
+          <td>{{ .Supplier.Name }}</td>
+          <td>{{ .UnitOfMeasure.Symbol }}</td>
           <td class="w-8">
             <a class="w-8 h-8 btn-sm" href="/console/products/{{ .ID }}">
               <i class="fa-pen fas"></i>
