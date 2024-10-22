@@ -13,12 +13,6 @@ type ProductType struct {
 
 func (ProductType) TableName() string { return "tipologie_prodotto" }
 
-type Supplier struct {
-	ID int `gorm:"column:id;primaryKey"`
-}
-
-func (Supplier) TableName() string { return "fornitori" }
-
 type UnitOfMeasure struct {
 	ID     int    `gorm:"column:id;primaryKey"`
 	Symbol string `gorm:"column:simbolo;size:10"`
@@ -52,13 +46,6 @@ func (db *GormDB) FindAllProductTypes() ([]ProductType, error) {
 
 	err := db.conn.Preload(clause.Associations).Find(&productTypes).Error
 	return productTypes, err
-}
-
-func (db *GormDB) FindAllSuppliers() ([]Supplier, error) {
-	var suppliers []Supplier
-
-	err := db.conn.Preload(clause.Associations).Find(&suppliers).Error
-	return suppliers, err
 }
 
 func (db *GormDB) FindAllUnitsOfMeasure() ([]UnitOfMeasure, error) {

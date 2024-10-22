@@ -45,7 +45,9 @@ CREATE TABLE tipologie_prodotto (
 );
 
 CREATE TABLE fornitori (
-    id BIGINT PRIMARY KEY AUTO_INCREMENT
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    email VARCHAR(255) UNIQUE,
+    nome VARCHAR(255)
 );
 
 CREATE TABLE unita_di_misura (
