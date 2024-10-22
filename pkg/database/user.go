@@ -34,12 +34,14 @@ const (
 )
 
 const (
-	PermIDViewProducts int = iota + 1
-	PermIDViewAllOrders
-	PermIDEditProducts
-	PermIDEditOwnOrder
-	PermIDEditAllOrders
-	PermIDEditUsers
+	PermIDOrders int = iota + 1
+	PermIDOwnOrder
+	PermIDProductTypes
+	PermIDSuppliers
+	PermIDUnitsOfMeasure
+	PermIDProducts
+	PermIDUsers
+	PermIDOwnUser
 )
 
 const (
