@@ -1,6 +1,10 @@
 package database
 
-import "gorm.io/gorm/clause"
+import (
+	"fmt"
+
+	"gorm.io/gorm/clause"
+)
 
 type Supplier struct {
 	ID    int    `gorm:"column:id;primaryKey"`
@@ -10,10 +14,31 @@ type Supplier struct {
 
 func (Supplier) TableName() string { return "fornitori" }
 
-func (db *GormDB) FindAllSuppliers() ([]Supplier, error) {
+const (
+	OrderSupplierByID = iota
+	OrderSupplierByEmail
+	OrderSupplierByName
+)
+
+func (db *GormDB) FindAllSuppliers(orderBy int, orderDesc bool) ([]Supplier, error) {
+	var orderByString string
 	var suppliers []Supplier
 
-	err := db.conn.Preload(clause.Associations).Find(&suppliers).Error
+	switch orderBy {
+	case OrderSupplierByID:
+		orderByString = "id"
+	case OrderSupplierByEmail:
+		orderByString = "email"
+	case OrderSupplierByName:
+		orderByString = "nome"
+	default:
+		return nil, fmt.Errorf("invalid orderBy value: %d", orderBy)
+	}
+
+	err := db.conn.Preload(clause.Associations).Order(clause.OrderByColumn{
+		Column: clause.Column{Name: orderByString},
+		Desc:   orderDesc,
+	}).Find(&suppliers).Error
 	return suppliers, err
 }
 
