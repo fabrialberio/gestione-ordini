@@ -5,7 +5,6 @@ import (
 	"gestione-ordini/pkg/auth"
 	"gestione-ordini/pkg/components"
 	"gestione-ordini/pkg/database"
-	"log"
 	"net/http"
 	"strconv"
 	"time"
@@ -92,8 +91,6 @@ func PostChefOrder(w http.ResponseWriter, r *http.Request) {
 	productId, _ := strconv.Atoi(r.FormValue(keyOrderProductID))
 	amount, _ := strconv.Atoi(r.FormValue(keyOrderAmount))
 	requestedAt, _ := time.Parse(dateFormat, r.FormValue(keyOrderRequestedAt))
-
-	log.Println(requestedAt)
 
 	if isNew {
 		err := appContext.Database(r).CreateOrder(database.Order{
