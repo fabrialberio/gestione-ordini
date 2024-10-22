@@ -42,6 +42,13 @@ func (db *GormDB) FindAllSuppliers(orderBy int, orderDesc bool) ([]Supplier, err
 	return suppliers, err
 }
 
+func (db *GormDB) FindSupplier(id int) (Supplier, error) {
+	var supplier Supplier
+
+	err := db.conn.Preload(clause.Associations).First(&supplier, id).Error
+	return supplier, err
+}
+
 func (db *GormDB) CreateSupplier(s Supplier) error {
 	return db.conn.Create(&s).Error
 }
