@@ -28,7 +28,7 @@
       <ul class="space-y-1">
         {{ range . }}
         <li>
-          <a href="{{ .DestURL }}" class="{{ if .Selected }}bg-scrim bg-opacity-5 {{ end }}inline-flex items-center gap-2 px-4 rounded-full focus-ring focus:ring-offset-2 w-full h-12 font-bold selectable">
+          <a {{ if not .Selected }}href="{{ .DestURL }}"{{ end }} class="{{ if .Selected }}bg-scrim bg-opacity-5 {{ end }}inline-flex items-center gap-2 px-4 rounded-full focus-ring focus:ring-offset-2 w-full h-12 font-bold selectable">
             <i class="{{ .FasIconName }} fas"></i>
             {{ .Label }}
           </a>
