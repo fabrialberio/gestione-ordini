@@ -33,12 +33,18 @@ INSERT INTO ruolo_permesso (id_ruolo, id_permesso) VALUES
     (3, 7);
 
 INSERT INTO tipologie_prodotto (nome) VALUES
+    ("Insaccati"),
+    ("Bibite"),
     ("Carne"),
-    ("Pesce"),
+    ("Verdure"),
+    ("Dolce"),
+    ("Formaggi"),
     ("Frutta"),
-    ("Verdura"),
-    ("Cereali"),
-    ("Latticini");
+    ("Pasta"),
+    ("Pesce"),
+    ("Spezie"),
+    ("Farina"),
+    ("Varie");
 
 INSERT INTO unita_di_misura (simbolo) VALUES
     ("pz"),
