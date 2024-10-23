@@ -19,8 +19,8 @@ type ctxKey string
 
 const appContextKey ctxKey = "app.context"
 
-func fromRequest(r *http.Request) *appContext {
-	return r.Context().Value(appContextKey).(*appContext)
+func fromRequest(r *http.Request) appContext {
+	return r.Context().Value(appContextKey).(appContext)
 }
 
 func New(db *database.GormDB, tmpl *template.Template, authenticatedUser *database.User, authenticationErr error) appContext {
