@@ -34,12 +34,11 @@ func GetChefOrdersList(w http.ResponseWriter, r *http.Request) {
 
 func GetChefOrder(w http.ResponseWriter, r *http.Request) {
 	var data struct {
-		Order            database.Order
-		AmountInput      components.Input
-		RequestedAtInput components.Input
-		ProductSelect    components.Select
-		UserID           int
-		IsNew            bool
+		Order              database.Order
+		ProductAmountInput components.ProductAmountInput
+		RequestedAtInput   components.Input
+		UserID             int
+		IsNew              bool
 	}
 
 	id, err := strconv.Atoi(r.PathValue("id"))
@@ -59,7 +58,6 @@ func GetChefOrder(w http.ResponseWriter, r *http.Request) {
 		data.Order = order
 	}
 
-	data.AmountInput = components.Input{"Quantità", keyOrderAmount, "number", strconv.Itoa(data.Order.Amount)}
 	data.RequestedAtInput = components.Input{"Richiesto per", keyOrderRequestedAt, "date", data.Order.RequestedAt.Format(dateFormat)}
 
 	products, err := appContext.Database(r).FindAllProducts(database.OrderProductByID, true)
@@ -68,10 +66,7 @@ func GetChefOrder(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	data.ProductSelect = components.Select{"Prodotto", keyOrderProductID, data.Order.ProductID, []components.SelectOption{}}
-	for _, p := range products {
-		data.ProductSelect.Options = append(data.ProductSelect.Options, components.SelectOption{p.ID, p.Name})
-	}
+	data.ProductAmountInput = components.ProductAmountInput{keyOrderProductID, products, data.Order.ProductID, keyOrderAmount, data.Order.Amount}
 
 	user, err := auth.GetAuthenticatedUser(r)
 	if err != nil {
@@ -118,10 +113,11 @@ func PostChefOrder(w http.ResponseWriter, r *http.Request) {
 			}
 		} else {
 			err = appContext.Database(r).UpdateOrder(database.Order{
-				ID:        id,
-				ProductID: productId,
-				UserID:    user.ID,
-				Amount:    amount,
+				ID:          id,
+				ProductID:   productId,
+				UserID:      user.ID,
+				Amount:      amount,
+				RequestedAt: requestedAt,
 			})
 			if err != nil {
 				HandleError(w, r, err)

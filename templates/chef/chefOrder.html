@@ -21,10 +21,7 @@
           <input type="hidden" name="order.id" value="{{ .Order.ID }}">
           <input type="hidden" name="isNew" value="{{ .IsNew }}">
           
-          <!-- TODO: Aggiungere unità di misura -->
-
-          {{ template "select" .ProductSelect }}
-          {{ template "input" .AmountInput }}
+          {{ template "productAmountInput" .ProductAmountInput }}
           {{ template "input" .RequestedAtInput }}
           
           {{ template "formSubmitButtons" .IsNew }}

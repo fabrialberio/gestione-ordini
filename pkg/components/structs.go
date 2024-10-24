@@ -16,6 +16,14 @@ type Input struct {
 	DefaultValue string
 }
 
+type ProductAmountInput struct {
+	ProductSelectName       string
+	Products                []database.Product
+	SelectedProduct         int
+	AmountInputName         string
+	AmountInputDefaultValue int
+}
+
 type Select struct {
 	Label    string
 	Name     string

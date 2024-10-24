@@ -15,3 +15,32 @@
   </select>
 </div>
 {{ end }}
+
+{{ define "productAmountInput" }}
+<script>
+  function setUnitOfMeasure() {
+    select = document.querySelector("#productSelect")
+    unit = select.options[select.selectedIndex].getAttribute("data-unitOfMeasure")
+
+    document.querySelector("#unitOfMeasure").innerHTML = " ("+unit+")"
+  }
+
+  document.addEventListener("DOMContentLoaded", function() {
+    setUnitOfMeasure()
+  });
+</script>
+<div>
+  <label>Prodotto</label>
+  <select id="productSelect" class="w-full input" name="{{ .ProductSelectName }}" required onchange="setUnitOfMeasure()">
+    {{ range .Products }}
+    <option data-unitOfMeasure="{{ .UnitOfMeasure.Symbol }}" value="{{ .ID }}"{{ if eq .ID $.SelectedProduct }} selected{{ end }}>{{ .Name }}</option>
+    {{ end }}
+  </select>
+</div>
+<div>
+  <label>
+    Quantità<span id="unitOfMeasure"></span>
+  </label>
+  <input class="w-full input" type="number" min="1" name="{{ .AmountInputName }}" value="{{ .AmountInputDefaultValue }}" required>
+</div>
+{{ end }}
