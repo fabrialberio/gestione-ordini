@@ -1,5 +1,5 @@
 {{ define "sidebarButton" }}
-<button class="btn-lg" onclick="toggleSidebar()">
+<button id="sidebarButton" class="btn-lg" onclick="toggleSidebar()">
   <i class="fa-bars fas"></i>
 </button>
 {{ end }}
@@ -10,6 +10,7 @@
     document.querySelector(".sidebar").classList.toggle("collapsed");
     document.querySelector(".scrim").classList.toggle("collapsed");
     document.querySelector(".content").classList.toggle("collapsed");
+    document.querySelector("#hideButton").toggleAttribute("hidden");
   }
 
   document.addEventListener("DOMContentLoaded", function() {
@@ -36,6 +37,11 @@
         {{ end }}
       </ul>
     </div>
+  </div>
+  <div id="hideButton" class="top-0 left-0 z-400 fixed pl-64">
+    <button class="sm:hidden m-4 btn-lg" onclick="toggleSidebar()">
+      <i class="fa-close fas"></i>
+    </button>
   </div>
 </aside>
 {{ end }}
