@@ -55,7 +55,7 @@ func main() {
 
 	mux.HandleFunc("/", handlers.GetIndex)
 	mux.HandleFunc("POST /login", handlers.PostLogin)
-	mux.HandleFunc("POST /logout", handlers.PostLogout)
+	mux.HandleFunc("GET /logout", handlers.GetLogout)
 
 	server := http.Server{
 		Addr:    ":8080",

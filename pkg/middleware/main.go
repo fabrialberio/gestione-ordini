@@ -44,8 +44,8 @@ func WithContext(db *database.GormDB, templ *template.Template, next http.Handle
 
 func WithRole(roleId int, next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		user, _ := appContext.AuthenticatedUser(r)
-		if user == nil {
+		user, err := appContext.AuthenticatedUser(r)
+		if err != nil {
 			handlers.HandleError(w, r, auth.ErrNoCookie)
 			return
 		}

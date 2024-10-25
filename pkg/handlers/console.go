@@ -15,7 +15,7 @@ func sidebarDestinations(r *http.Request, selected int) []components.SidebarDest
 	}
 
 	user, _ := appContext.AuthenticatedUser(r)
-	if user.RoleID == database.RoleIDAdministrator {
+	if user != nil && user.RoleID == database.RoleIDAdministrator {
 		sidebar = append(sidebar, components.SidebarDest{DestUsers, "fa-users", "Utenti", false})
 	}
 

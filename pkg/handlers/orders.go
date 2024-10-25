@@ -81,7 +81,11 @@ func GetChefOrder(w http.ResponseWriter, r *http.Request) {
 func PostChefOrder(w http.ResponseWriter, r *http.Request) {
 	isNew := r.FormValue("isNew") == "true"
 	delete := r.Form.Has("delete")
-	user, _ := appContext.AuthenticatedUser(r)
+	user, err := appContext.AuthenticatedUser(r)
+	if err != nil {
+		HandleError(w, r, err)
+		return
+	}
 
 	productId, _ := strconv.Atoi(r.FormValue(keyOrderProductID))
 	amount, _ := strconv.Atoi(r.FormValue(keyOrderAmount))
