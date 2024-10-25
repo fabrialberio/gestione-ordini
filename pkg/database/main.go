@@ -16,21 +16,10 @@ type GormDB struct {
 }
 
 func New(dsn string) (*GormDB, error) {
-	db, err := gorm.Open(mysql.New(mysql.Config{
-		DSN:               dsn + "?parseTime=true",
-		DefaultStringSize: 255,
-	}), &gorm.Config{})
+	db, err := gorm.Open(mysql.Open(dsn+"?parseTime=true"), &gorm.Config{})
 	if err != nil {
 		return nil, fmt.Errorf("error opening database: %v", err)
 	}
-
-	db.AutoMigrate(&ProductType{})
-	db.AutoMigrate(&Supplier{})
-	db.AutoMigrate(&UnitOfMeasure{})
-	db.AutoMigrate(&Product{})
-	db.AutoMigrate(&Order{})
-	db.AutoMigrate(&User{})
-	db.AutoMigrate(&Role{})
 
 	return &GormDB{db}, nil
 }
