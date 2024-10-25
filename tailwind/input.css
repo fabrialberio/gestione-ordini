@@ -46,14 +46,9 @@
     @apply bg-primary text-on-primary;
 }
 
-table>thead>tr>th {
-    @apply p-2 text-left
+td {
+    @apply py-1 first:pl-2 last:pr-2
 }
-
-table>tbody>tr>td {
-    @apply px-2 py-1
-}
-
 .sidebar {
     @apply top-0 left-0 z-40 fixed h-full transition-transform translate-x-0
 }

@@ -3,10 +3,8 @@
     <thead>
       <tr>
         {{ range .Headings }}
-        <th>
-          <div class="inline-flex items-center gap-1">
-            {{ .Name }}
-          </div>
+        <th class="px-2 py-2 first:pl-2 text-left">
+          {{ .Name }}
         </th>
         {{ end }}
         <th class="sr-only">Azioni</th>
