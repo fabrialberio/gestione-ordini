@@ -54,10 +54,16 @@
       {{ range .Orders }}
       <tr class="border-outline border-t">
         <td>{{ .ID }}</td>
-        <td>{{ .Product.Name }}</td>
-        <td>{{ .User.Username }}</td>
+        <td>
+          <a class="line-clamp-1 link" href="/console/products/{{ .Product.ID }}">{{ .Product.Name }}</a>
+        </td>
+        <td>
+          <a class="link" href="/console/users/{{ .User.ID }}">{{ .User.Username }}</a>
+        </td>
         <td>{{ .Amount }}</td>
-        <td>{{ .RequestedAt }}</td>
+        <td>
+          <div class="line-clamp-1">{{ .RequestedAt }}</div>
+        </td>
       </tr>
       {{ end }}
     </tbody>
@@ -71,12 +77,16 @@
     {{ template "tableHead" . }}
 
     <tbody class="bg-white">
-      {{ range .Products }}
+      {{ range .Products }} 
       <tr class="border-outline border-t">
         <td>{{ .ID }}</td>
-        <td>{{ .Name }}</td>
+        <td>
+          <div class="line-clamp-1">{{ .Name }}</div>
+        </td>
         <td>{{ .ProductType.Name }}</td>
-        <td>{{ .Supplier.Name }}</td>
+        <td>
+          <a class="link" href="/console/suppliers/{{ .Supplier.ID }}">{{ .Supplier.Name }}</a>
+        </td>
         <td>{{ .UnitOfMeasure.Symbol }}</td>
         <td class="w-8">
           <a class="w-8 h-8 btn-sm" href="/console/products/{{ .ID }}">

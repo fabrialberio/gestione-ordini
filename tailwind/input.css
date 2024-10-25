@@ -49,6 +49,7 @@
 td {
     @apply py-1 first:pl-2 last:pr-2
 }
+
 .sidebar {
     @apply top-0 left-0 z-40 fixed h-full transition-transform translate-x-0
 }
@@ -71,4 +72,8 @@ td {
 
 .scrim.collapsed {
     @apply hidden
+}
+
+.link {
+    @apply underline
 }
