@@ -37,7 +37,7 @@ func GetUsersTable(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	appContext.ExecuteTemplate(w, r, "usersTable.html", data)
+	appContext.ExecuteTemplate(w, r, "usersTable", data)
 }
 
 func GetUser(w http.ResponseWriter, r *http.Request) {

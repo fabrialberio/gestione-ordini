@@ -1,0 +1,116 @@
+{{ define "tableHead" }}
+<thead>
+  <tr>
+     {{ range .Headings }}
+     <th class="px-1 py-2 first:pl-2 text-left selectable" hx-get="{{ $.TableURL }}?orderBy={{ .Index }}&orderDesc={{ if eq .Index $.OrderBy }}{{ not $.OrderDesc }}{{ else }}false{{ end }}" hx-target="#table" hx-swap="outerHTML">
+        <div class="inline-flex items-center gap-1">
+          {{ .Name }}
+          <i class="{{ if $.OrderDesc }}fa-sort-up{{ else }}fa-sort{{ end }} fas{{ if ne $.OrderBy .Index }} opacity-0{{ end }}"></i>
+        </div>
+      </th>
+     {{ end }}
+     <th class="sr-only">Azioni</th>
+   </tr>
+ </thead>
+{{ end }}
+
+{{ define "suppliersTable" }}
+<div id="table" class="border-collapse border-outline border rounded-lg overflow-x-auto">
+  <table class="w-full">
+    {{ template "tableHead" . }}
+
+    <tbody class="bg-white">
+      {{ range .Suppliers }}
+      <tr class="border-outline border-t">
+        <td>{{ .ID }}</td>
+        <td>{{ .Name }}</td>
+        <td>{{ .Email }}</td>
+        <td class="w-8">
+          <a class="w-8 h-8 btn-sm" href="/console/suppliers/{{ .ID }}">
+            <i class="fa-pen fas"></i>
+          </a>
+        </td>
+      </tr>
+      {{ end }}
+    </tbody>
+  </table>
+</div>
+{{ end }}
+
+{{ define "allOrdersTable" }}
+<div id="table" class="border-collapse border-outline border rounded-lg overflow-x-auto">
+  <table class="w-full table-auto">
+    <thead>
+      <tr>
+        {{ range .Headings }}
+        <th class="px-2 py-2 first:pl-2 text-left">
+          {{ .Name }}
+        </th>
+        {{ end }}
+        <th class="sr-only">Azioni</th>
+      </tr>
+    </thead>
+    <tbody class="bg-white">
+      {{ range .Orders }}
+      <tr class="border-outline border-t">
+        <td>{{ .ID }}</td>
+        <td>{{ .Product.Name }}</td>
+        <td>{{ .User.Username }}</td>
+        <td>{{ .Amount }}</td>
+        <td>{{ .RequestedAt }}</td>
+      </tr>
+      {{ end }}
+    </tbody>
+  </table>
+</div>
+{{ end }}
+
+{{ define "productsTable" }}
+<div id="table" class="border-collapse border-outline border rounded-lg overflow-x-auto">
+  <table class="w-full table-auto">
+    {{ template "tableHead" . }}
+
+    <tbody class="bg-white">
+      {{ range .Products }}
+      <tr class="border-outline border-t">
+        <td>{{ .ID }}</td>
+        <td>{{ .Name }}</td>
+        <td>{{ .ProductType.Name }}</td>
+        <td>{{ .Supplier.Name }}</td>
+        <td>{{ .UnitOfMeasure.Symbol }}</td>
+        <td class="w-8">
+          <a class="w-8 h-8 btn-sm" href="/console/products/{{ .ID }}">
+            <i class="fa-pen fas"></i>
+          </a>
+        </td>
+      </tr>
+      {{ end }}
+    </tbody>
+  </table>
+</div>
+{{ end }}
+
+{{ define "usersTable" }}
+<div id="table" class="border-collapse border-outline border rounded-lg overflow-x-auto">
+  <table class="w-full table-auto">
+    {{ template "tableHead" . }}
+
+    <tbody class="bg-white">
+      {{ range .Users }}
+      <tr class="border-outline border-t">
+        <td>{{ .ID }}</td>
+        <td class="max-w-14 text-ellipsis overflow-clip">{{ .Role.Name }}</td>
+        <td>{{ .Username }}</td>
+        <td>{{ .Name }}</td>
+        <td>{{ .Surname }}</td>
+        <td class="w-8">
+          <a class="w-8 h-8 btn-sm" href="/console/users/{{ .ID }}">
+            <i class="fa-pen fas"></i>
+          </a>
+        </td>
+      </tr>
+      {{ end }}
+    </tbody>
+  </table>
+</div>
+{{ end }}

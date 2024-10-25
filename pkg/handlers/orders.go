@@ -147,5 +147,5 @@ func GetAllOrdersTable(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	appContext.ExecuteTemplate(w, r, "allOrdersTable.html", data)
+	appContext.ExecuteTemplate(w, r, "allOrdersTable", data)
 }

@@ -34,7 +34,7 @@ func GetSuppliersTable(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	appContext.ExecuteTemplate(w, r, "suppliersTable.html", data)
+	appContext.ExecuteTemplate(w, r, "suppliersTable", data)
 }
 
 func GetSupplier(w http.ResponseWriter, r *http.Request) {

@@ -36,7 +36,7 @@ func GetProductsTable(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	appContext.ExecuteTemplate(w, r, "productsTable.html", data)
+	appContext.ExecuteTemplate(w, r, "productsTable", data)
 }
 
 func GetProduct(w http.ResponseWriter, r *http.Request) {
