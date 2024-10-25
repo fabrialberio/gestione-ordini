@@ -72,7 +72,7 @@
 {{ end }}
 
 {{ define "productsTable" }}
-<div id="table" class="border-collapse border-outline border rounded-lg overflow-x-auto">
+<div id="table" class="border-collapse border-outline shadow-lg border rounded-lg overflow-x-auto">
   <table class="w-full table-auto">
     {{ template "tableHead" . }}
 
@@ -81,7 +81,7 @@
       <tr class="border-outline border-t">
         <td>{{ .ID }}</td>
         <td>
-          <div class="line-clamp-1">{{ .Name }}</div>
+          <div class="line-clamp-2">{{ .Name }}</div>
         </td>
         <td>{{ .ProductType.Name }}</td>
         <td>
