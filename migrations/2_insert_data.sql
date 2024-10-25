@@ -51,9 +51,9 @@ INSERT INTO unita_di_misura (simbolo) VALUES
     ("Kg"),
     ("Lt");
 
-INSERT INTO fornitori (id, email, nome) VALUES
-    (1, 'info@botegadalpan.it', 'Botegadalpan'),
-    (2, 'zorteam@email.it', 'Maurizio Z.'),
-    (3, 'info@ortofrutticola.com', 'Ortofrutticola Srl'),
-    (4, 'enrico@felicetti.it', 'Pastificio felicetti'),
-    (5, 'finardidario@tiscali.it', 'Pasticceria Finardi Dario');
+INSERT INTO fornitori (mail, nome) VALUES
+    ('info@botegadalpan.it', 'Botegadalpan'),
+    ('zorteam@email.it', 'Maurizio Z.'),
+    ('info@ortofrutticola.com', 'Ortofrutticola Srl'),
+    ('enrico@felicetti.it', 'Pastificio felicetti'),
+    ('finardidario@tiscali.it', 'Pasticceria Finardi Dario');
