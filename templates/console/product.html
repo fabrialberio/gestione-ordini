@@ -1,34 +1,30 @@
 <!DOCTYPE html>
 <html>
   {{ template "head.html" }} 
-  <body class="bg-surface min-h-screen">
-    <header class="mx-auto w-full max-w-screen-xl">
-      <div class="flex p-4">
-        {{ template "backButton" }}
-      </div>
+  <body>
+    <header>
+      {{ template "backButton" }}
     </header>
 
-    <main class="flex justify-center items-center">
-      <div class="space-y-4 px-6 w-full max-w-xl">
-        <h2 class="text-h2">
-        {{ if .IsNew }}
-          Nuovo prodotto
-        {{ else }}
-          Modifica prodotto
-        {{ end }}
-        </h2>
-        <form class="space-y-4" method="post" action="/console/products/">
-          <input type="hidden" name="product.id" value="{{ .Product.ID }}">
-          <input type="hidden" name="isNew" value="{{ .IsNew }}">
-          
-          {{ template "input" .NameInput }}
-          {{ template "select" .ProductTypeSelect }}
-          {{ template "select" .SupplierSelect }}
-          {{ template "select" .UnitOfMeasureSelect }}
-          
-          {{ template "formSubmitButtons" .IsNew }}
-        </form>
-      </div>
+    <main>
+      <h2>
+      {{ if .IsNew }}
+        Nuovo prodotto
+      {{ else }}
+        Modifica prodotto
+      {{ end }}
+      </h2>
+      <form class="space-y-4" method="post" action="/console/products/">
+        <input type="hidden" name="product.id" value="{{ .Product.ID }}">
+        <input type="hidden" name="isNew" value="{{ .IsNew }}">
+        
+        {{ template "input" .NameInput }}
+        {{ template "select" .ProductTypeSelect }}
+        {{ template "select" .SupplierSelect }}
+        {{ template "select" .UnitOfMeasureSelect }}
+        
+        {{ template "formSubmitButtons" .IsNew }}
+      </form>
     </main>
   </body>
 </html>

@@ -1,28 +1,25 @@
 <!DOCTYPE html>
 <html>
   {{ template "head.html" }}
-  <body class="bg-surface">
+  <body>
     {{ template "sidebar" .Sidebar }}
 
     <div class="content">
-      <header class="mx-auto w-full max-w-screen-xl">
-        <div class="flex p-4">
-          {{ template "sidebarButton" }}
-          {{ template "logoutButton" }}
-        </div>
+      <header>
+        {{ template "sidebarButton" }}
+        {{ template "logoutButton" }}
       </header>
-      <main class="flex justify-center items-center">
-        <div class="space-y-4 px-6 pb-24 w-full max-w-screen-md">
-          <div class="flex items-center">
-            <h2 class="text-h2">
-              Tutti gli ordini
-            </h2>
-          </div>
-      
-          <div hx-get="/console/allOrdersTable" hx-trigger="load" hx-target="this">
-          </div>
+
+      <main class="max-w-screen-md">
+        <div class="flex items-center">
+          <h2>
+            Tutti gli ordini
+          </h2>
         </div>
-      </main>
-    </div>
+    
+        <div hx-get="/console/allOrdersTable" hx-trigger="load" hx-target="this">
+        </div>
+      </div>
+    </main>
   </body>
 </html>

@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-.text-h2 {
+h2 {
     @apply text-3xl font-extrabold text-on-surface;
 }
 
@@ -76,4 +76,16 @@ td {
 
 .link {
     @apply underline
+}
+
+header {
+    @apply flex mx-auto p-4 max-w-screen-xl
+}
+
+body {
+    @apply bg-surface
+}
+
+main {
+    @apply space-y-4 mx-auto mb-24 px-6 w-full max-w-lg
 }

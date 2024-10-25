@@ -1,43 +1,39 @@
 <!DOCTYPE html>
 <html>
   {{ template "head.html" }} 
-  <body class="bg-surface min-h-screen">
-    <header class="mx-auto w-full max-w-screen-xl">
-      <div class="flex p-4">
+  <body>
+    <header>
         {{ template "backButton" }}
-      </div>
     </header>
 
-    <main class="flex justify-center items-center">
-      <div class="space-y-4 px-6 w-full max-w-xl">
-        <h2 class="text-h2">
+    <main>
+      <h2>
+        {{ if .IsNew }}
+        Nuovo utente
+        {{ else }}
+        Modifica utente
+        {{ end }}
+      </h2>
+      <form class="space-y-4" method="post" action="/console/users/">
+        <input type="hidden" name="user.id" value="{{ .User.ID }}">
+        <input type="hidden" name="isNew" value="{{ .IsNew }}">
+        
+        {{ template "input" .NameInput }}
+        {{ template "input" .SurnameInput }}
+        {{ template "select" .RoleSelect }}
+        {{ template "input" .UsernameInput }}
+        
+        <div>
+          <label>Password</label>
           {{ if .IsNew }}
-          Nuovo utente
+          <input class="w-full input" type="text" name="user.password" required>
           {{ else }}
-          Modifica utente
+          <input class="w-full input" type="password" name="user.password" value="passwordfinta" disabled>
           {{ end }}
-        </h2>
-        <form class="space-y-4" method="post" action="/console/users/">
-          <input type="hidden" name="user.id" value="{{ .User.ID }}">
-          <input type="hidden" name="isNew" value="{{ .IsNew }}">
-          
-          {{ template "input" .NameInput }}
-          {{ template "input" .SurnameInput }}
-          {{ template "select" .RoleSelect }}
-          {{ template "input" .UsernameInput }}
-          
-          <div>
-            <label>Password</label>
-            {{ if .IsNew }}
-            <input class="w-full input" type="text" name="user.password" required>
-            {{ else }}
-            <input class="w-full input" type="password" name="user.password" value="passwordfinta" disabled>
-            {{ end }}
-          </div>
+        </div>
 
-          {{ template "formSubmitButtons" .IsNew }}
-        </form>
-      </div>
+        {{ template "formSubmitButtons" .IsNew }}
+      </form>
     </main>
   </body>
 </html>

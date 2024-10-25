@@ -1,39 +1,35 @@
 <!DOCTYPE html>
 <html>
   {{ template "head.html" }}
-  <body class="bg-surface">
-    <header class="mx-auto w-full max-w-screen-xl">
-      <div class="flex p-4">
-        {{ template "logoutButton" }}
-      </div>
+  <body>
+    <header>
+      {{ template "logoutButton" }}
     </header>
 
-    <main class="flex justify-center items-center">
-      <div class="space-y-4 px-6 pb-24 w-full max-w-xl">
-        <h2 class="text-h2">
-          Nuovo ordine
-        </h2>
-        
-        <form class="space-y-4 border-outline px-4 bp-4 border rounded-lg" method="post" action="/chef/orders/">
-          <input type="hidden" name="order.id" value="{{ .Order.ID }}">
-          <input type="hidden" name="isNew" value="true">
-          
-          {{ template "productAmountInput" .ProductAmountInput }}
-          {{ template "input" .RequestedAtInput }}
-          
-          <div class="flex">
-            <button class="ml-auto btn-lg suggested">
-              Aggiungi
-            </button>
-          </div>
-        </form>
-
-        <h2 class="text-h2">
-          I tuoi ordini
-        </h2>
+    <main>
+      <h2>
+        Nuovo ordine
+      </h2>
       
-        <div hx-get="/chef/ordersList" hx-trigger="load" hx-target="this">
+      <form class="space-y-4 border-outline px-4 bp-4 border rounded-lg" method="post" action="/chef/orders/">
+        <input type="hidden" name="order.id" value="{{ .Order.ID }}">
+        <input type="hidden" name="isNew" value="true">
+        
+        {{ template "productAmountInput" .ProductAmountInput }}
+        {{ template "input" .RequestedAtInput }}
+        
+        <div class="flex">
+          <button class="ml-auto btn-lg suggested">
+            Aggiungi
+          </button>
         </div>
+      </form>
+
+      <h2>
+        I tuoi ordini
+      </h2>
+    
+      <div hx-get="/chef/ordersList" hx-trigger="load" hx-target="this">
       </div>
     </main>
   </body>

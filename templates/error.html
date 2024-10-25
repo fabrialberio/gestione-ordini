@@ -1,22 +1,18 @@
 <!DOCTYPE html>
 <html>
   {{ template "head.html" }}
-  <body class="bg-surface min-h-screen">
-    <header class="mx-auto w-full max-w-screen-xl">
-      <div class="flex p-4">
-        {{ template "backButton" }}
-        {{ template "logoutButton" }}
-      </div>
+  <body>
+    <header>
+      {{ template "backButton" }}
+      {{ template "logoutButton" }}
     </header>
     
-    <main class="flex justify-center px-6">
-      <div class="space-y-4 w-full max-w-xl">
-        <h2 class="text-h2">
-          Errore interno
-        </h2>
-        <div class="border-outline bg-white p-2 border rounded-lg font-mono text-sm">
-          {{ . }}
-        </div>
+    <main>
+      <h2>
+        Errore interno
+      </h2>
+      <div class="border-outline bg-white p-2 border rounded-lg font-mono text-sm">
+        {{ . }}
       </div>
     </main>
   </body>
