@@ -2,7 +2,7 @@
 <thead>
   <tr>
      {{ range .Headings }}
-     <th class="px-1 py-2 first:pl-2 text-left selectable" hx-get="{{ $.TableURL }}?orderBy={{ .Index }}&orderDesc={{ if eq .Index $.OrderBy }}{{ not $.OrderDesc }}{{ else }}false{{ end }}" hx-target="#table" hx-swap="outerHTML">
+     <th class="selectable" hx-get="{{ $.TableURL }}?orderBy={{ .Index }}&orderDesc={{ if eq .Index $.OrderBy }}{{ not $.OrderDesc }}{{ else }}false{{ end }}" hx-target=".dataTable" hx-swap="outerHTML">
         <div class="inline-flex items-center gap-1">
           {{ .Name }}
           <i class="{{ if $.OrderDesc }}fa-sort-up{{ else }}fa-sort{{ end }} fas{{ if ne $.OrderBy .Index }} opacity-0{{ end }}"></i>
@@ -15,17 +15,17 @@
 {{ end }}
 
 {{ define "suppliersTable" }}
-<div id="table" class="border-collapse border-outline border rounded-lg overflow-x-auto">
-  <table class="w-full">
+<div class="dataTable">
+  <table>
     {{ template "tableHead" . }}
 
-    <tbody class="bg-white">
+    <tbody>
       {{ range .Suppliers }}
-      <tr class="border-outline border-t">
+      <tr>
         <td>{{ .ID }}</td>
         <td>{{ .Name }}</td>
         <td>{{ .Email }}</td>
-        <td class="w-8">
+        <td class="w-8"> 
           <a class="w-8 h-8 btn-sm" href="/console/suppliers/{{ .ID }}">
             <i class="fa-pen fas"></i>
           </a>
@@ -38,21 +38,21 @@
 {{ end }}
 
 {{ define "allOrdersTable" }}
-<div id="table" class="border-collapse border-outline border rounded-lg overflow-x-auto">
-  <table class="w-full table-auto">
+<div class="dataTable">
+  <table>
     <thead>
       <tr>
         {{ range .Headings }}
-        <th class="px-2 py-2 first:pl-2 text-left">
+        <th>
           {{ .Name }}
         </th>
         {{ end }}
         <th class="sr-only">Azioni</th>
       </tr>
     </thead>
-    <tbody class="bg-white">
+    <tbody>
       {{ range .Orders }}
-      <tr class="border-outline border-t">
+      <tr>
         <td>{{ .ID }}</td>
         <td>
           <a class="line-clamp-1 link" href="/console/products/{{ .Product.ID }}">{{ .Product.Name }}</a>
@@ -72,13 +72,13 @@
 {{ end }}
 
 {{ define "productsTable" }}
-<div id="table" class="border-collapse border-outline shadow-lg border rounded-lg overflow-x-auto">
-  <table class="w-full table-auto">
+<div class="dataTable">
+  <table>
     {{ template "tableHead" . }}
 
-    <tbody class="bg-white">
+    <tbody>
       {{ range .Products }} 
-      <tr class="border-outline border-t">
+      <tr>
         <td>{{ .ID }}</td>
         <td>
           <div class="line-clamp-2">{{ .Name }}</div>
@@ -101,13 +101,13 @@
 {{ end }}
 
 {{ define "usersTable" }}
-<div id="table" class="border-collapse border-outline border rounded-lg overflow-x-auto">
-  <table class="w-full table-auto">
+<div class="dataTable">
+  <table>
     {{ template "tableHead" . }}
 
-    <tbody class="bg-white">
+    <tbody>
       {{ range .Users }}
-      <tr class="border-outline border-t">
+      <tr>
         <td>{{ .ID }}</td>
         <td class="max-w-14 text-ellipsis overflow-clip">{{ .Role.Name }}</td>
         <td>{{ .Username }}</td>

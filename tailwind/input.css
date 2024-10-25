@@ -6,6 +6,42 @@ h2 {
     @apply text-3xl font-extrabold text-on-surface;
 }
 
+header {
+    @apply flex mx-auto p-4 max-w-screen-xl
+}
+
+body {
+    @apply bg-surface
+}
+
+main {
+    @apply space-y-4 mx-auto mb-24 px-6 w-full max-w-lg
+}
+
+.dataTable {
+    @apply border-collapse border-outline border rounded-lg overflow-x-auto
+}
+
+.dataTable table {
+    @apply w-full
+}
+
+.dataTable tbody {
+    @apply bg-white
+}
+
+.dataTable tbody tr {
+    @apply border-outline border-t
+}
+
+.dataTable td {
+    @apply py-1 px-1 first:pl-2 last:pr-2
+}
+
+.dataTable th {
+    @apply px-1 py-2 first:pl-2 text-left
+}
+
 .text-destructive {
     @apply text-error;
 }
@@ -46,10 +82,6 @@ h2 {
     @apply bg-primary text-on-primary;
 }
 
-td {
-    @apply py-1 px-1 first:pl-2 last:pr-2
-}
-
 .sidebar {
     @apply top-0 left-0 z-40 fixed h-full transition-transform translate-x-0
 }
@@ -76,16 +108,4 @@ td {
 
 .link {
     @apply underline
-}
-
-header {
-    @apply flex mx-auto p-4 max-w-screen-xl
-}
-
-body {
-    @apply bg-surface
-}
-
-main {
-    @apply space-y-4 mx-auto mb-24 px-6 w-full max-w-lg
 }
