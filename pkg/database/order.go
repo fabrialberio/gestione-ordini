@@ -1,34 +1,55 @@
 package database
 
 import (
+	"strconv"
 	"time"
 
 	"gorm.io/gorm/clause"
 )
 
 type Order struct {
-	ID          int       `gorm:"column:id;primaryKey"`
-	ProductID   int       `gorm:"column:id_prodotto"`
-	Product     Product   `gorm:"foreignKey:ProductID"`
-	UserID      int       `gorm:"column:id_utente"`
-	User        User      `gorm:"foreignKey:UserID"`
-	Amount      int       `gorm:"column:quantita"`
-	RequestedAt time.Time `gorm:"column:richiesto_il"`
+	ID               int       `gorm:"column:id;primaryKey"`
+	ProductID        int       `gorm:"column:id_prodotto"`
+	Product          Product   `gorm:"foreignKey:ProductID"`
+	UserID           int       `gorm:"column:id_utente"`
+	User             User      `gorm:"foreignKey:UserID"`
+	Amount           int       `gorm:"column:quantita"`
+	ExpiresAt        time.Time `gorm:"column:richiesto_il"`
+	ExpirationString string    `gorm:"-:all"`
 }
 
 func (Order) TableName() string { return "ordini" }
+
+func calculateExpirationString(order Order) Order {
+	expiresInHours := time.Until(order.ExpiresAt).Hours()
+
+	if expiresInHours < 0 {
+		order.ExpirationString = "scaduto"
+	} else if expiresInHours/24 < 1 {
+		order.ExpirationString = "oggi"
+	} else if expiresInHours/24 < 2 {
+		order.ExpirationString = "domani"
+	} else {
+		order.ExpirationString = strconv.Itoa(int(expiresInHours/24)) + " giorni"
+	}
+
+	return order
+}
 
 func (db *GormDB) FindOrder(id int) (Order, error) {
 	var order Order
 
 	err := db.conn.Take(&order, id).Error
-	return order, err
+	return calculateExpirationString(order), err
 }
 
 func (db *GormDB) FindAllOrders() ([]Order, error) {
 	var orders []Order
 
 	err := db.conn.Preload(clause.Associations).Find(&orders).Error
+	for i, o := range orders {
+		orders[i] = calculateExpirationString(o)
+	}
 	return orders, err
 }
 

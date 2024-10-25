@@ -61,9 +61,7 @@
           <a class="link" href="/console/users/{{ .User.ID }}">{{ .User.Username }}</a>
         </td>
         <td>{{ .Amount }}</td>
-        <td>
-          <div class="line-clamp-1">{{ .RequestedAt }}</div>
-        </td>
+        <td>{{ .ExpirationString }}</td>
       </tr>
       {{ end }}
     </tbody>

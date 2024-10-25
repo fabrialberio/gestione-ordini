@@ -36,7 +36,7 @@ func GetChefOrder(w http.ResponseWriter, r *http.Request) {
 	var data struct {
 		Order              database.Order
 		ProductAmountInput components.ProductAmountInput
-		RequestedAtInput   components.Input
+		ExpiresAtInput     components.Input
 		UserID             int
 		IsNew              bool
 	}
@@ -45,8 +45,8 @@ func GetChefOrder(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		data.IsNew = true
 		data.Order = database.Order{
-			Amount:      1,
-			RequestedAt: time.Now(),
+			Amount:    1,
+			ExpiresAt: time.Now(),
 		}
 	} else {
 		order, err := appContext.Database(r).FindOrder(id)
@@ -58,7 +58,7 @@ func GetChefOrder(w http.ResponseWriter, r *http.Request) {
 		data.Order = order
 	}
 
-	data.RequestedAtInput = components.Input{"Richiesto per", keyOrderRequestedAt, "date", data.Order.RequestedAt.Format(dateFormat)}
+	data.ExpiresAtInput = components.Input{"Scadenza", keyOrderRequestedAt, "date", data.Order.ExpiresAt.Format(dateFormat)}
 
 	products, err := appContext.Database(r).FindAllProducts(database.OrderProductByID, true)
 	if err != nil {
@@ -93,10 +93,10 @@ func PostChefOrder(w http.ResponseWriter, r *http.Request) {
 
 	if isNew {
 		err := appContext.Database(r).CreateOrder(database.Order{
-			ProductID:   productId,
-			UserID:      user.ID,
-			Amount:      amount,
-			RequestedAt: requestedAt,
+			ProductID: productId,
+			UserID:    user.ID,
+			Amount:    amount,
+			ExpiresAt: requestedAt,
 		})
 		if err != nil {
 			HandleError(w, r, err)
@@ -117,11 +117,11 @@ func PostChefOrder(w http.ResponseWriter, r *http.Request) {
 			}
 		} else {
 			err = appContext.Database(r).UpdateOrder(database.Order{
-				ID:          id,
-				ProductID:   productId,
-				UserID:      user.ID,
-				Amount:      amount,
-				RequestedAt: requestedAt,
+				ID:        id,
+				ProductID: productId,
+				UserID:    user.ID,
+				Amount:    amount,
+				ExpiresAt: requestedAt,
 			})
 			if err != nil {
 				HandleError(w, r, err)
@@ -142,7 +142,7 @@ func GetAllOrdersTable(w http.ResponseWriter, r *http.Request) {
 		{Name: "Prodotto"},
 		{Name: "Utente"},
 		{Name: "Quantità"},
-		{Name: "Richiesto per"},
+		{Name: "Scadenza"},
 	}
 
 	data.Orders, err = appContext.Database(r).FindAllOrders()

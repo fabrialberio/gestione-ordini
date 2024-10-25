@@ -13,15 +13,15 @@ func GetChef(w http.ResponseWriter, r *http.Request) {
 	data := struct {
 		Order              database.Order
 		ProductAmountInput components.ProductAmountInput
-		RequestedAtInput   components.Input
+		ExpiresAtInput     components.Input
 	}{
 		Order: database.Order{
-			Amount:      1,
-			RequestedAt: time.Now(),
+			Amount:    1,
+			ExpiresAt: time.Now(),
 		},
 	}
 
-	data.RequestedAtInput = components.Input{"Richiesto per", keyOrderRequestedAt, "date", data.Order.RequestedAt.Format(dateFormat)}
+	data.ExpiresAtInput = components.Input{"Scadenza", keyOrderRequestedAt, "date", data.Order.ExpiresAt.Format(dateFormat)}
 
 	products, err := appContext.Database(r).FindAllProducts(database.OrderProductByID, true)
 	if err != nil {
