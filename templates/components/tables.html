@@ -60,7 +60,7 @@
         <td>
           <a class="link" href="/console/users/{{ .User.ID }}">{{ .User.Username }}</a>
         </td>
-        <td>{{ .Amount }}</td>
+        <td>{{ .Amount }} {{ .Product.UnitOfMeasure.Symbol }}</td>
         <td>{{ .ExpirationString }}</td>
       </tr>
       {{ end }}
