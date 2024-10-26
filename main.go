@@ -6,7 +6,7 @@ import (
 	"gestione-ordini/pkg/auth"
 	"gestione-ordini/pkg/database"
 	"gestione-ordini/pkg/handlers"
-	"gestione-ordini/pkg/middleware"
+	mw "gestione-ordini/pkg/middleware"
 	"html/template"
 	"log"
 	"net/http"
@@ -25,49 +25,12 @@ func main() {
 	defer db.Close()
 	addAdminUserIfNotExists(db)
 
-	chefMux := http.NewServeMux()
-	chefMux.HandleFunc("GET "+handlers.DestChef, handlers.GetChef)
-	chefMux.HandleFunc("GET "+handlers.DestChefOrdersList, handlers.GetChefOrdersList)
-	chefMux.HandleFunc("GET "+handlers.DestChefOrders+"{id}", handlers.GetChefOrder)
-	chefMux.HandleFunc("POST "+handlers.DestChefOrders, handlers.PostChefOrder)
-
-	consoleMux := http.NewServeMux()
-	consoleMux.HandleFunc("GET "+handlers.DestConsole, handlers.GetConsole)
-	consoleMux.HandleFunc("GET "+handlers.DestAllOrders, handlers.GetAllOrders)
-	consoleMux.HandleFunc("GET "+handlers.DestAllOrdersTable, handlers.GetAllOrdersTable)
-	consoleMux.HandleFunc("GET "+handlers.DestProducts, handlers.GetProducts)
-	consoleMux.HandleFunc("GET "+handlers.DestProducts+"{id}", handlers.GetProduct)
-	consoleMux.HandleFunc("POST "+handlers.DestProducts, handlers.PostProduct)
-	consoleMux.HandleFunc("GET "+handlers.DestProductsTable, handlers.GetProductsTable)
-	consoleMux.HandleFunc("GET "+handlers.DestSuppliers, handlers.GetSuppliers)
-	consoleMux.HandleFunc("GET "+handlers.DestSuppliers+"{id}", handlers.GetSupplier)
-	consoleMux.HandleFunc("POST "+handlers.DestSuppliers, handlers.PostSupplier)
-	consoleMux.HandleFunc("GET "+handlers.DestSuppliersTable, handlers.GetSuppliersTable)
-	consoleMux.HandleFunc("GET "+handlers.DestUsers, handlers.GetUsers)
-	consoleMux.HandleFunc("GET "+handlers.DestUsers+"{id}", handlers.GetUser)
-	consoleMux.HandleFunc("POST "+handlers.DestUsers, handlers.PostUser)
-	consoleMux.HandleFunc("GET "+handlers.DestUsersTable, handlers.GetUsersTable)
-
 	mux := http.NewServeMux()
-	mux.Handle("GET /public/", http.FileServerFS(publicFS))
-	mux.Handle(handlers.DestChef, middleware.WithUserCheck(
-		func(u *database.User) bool { return u.RoleID == database.RoleIDChef },
-		chefMux,
-	))
-	mux.Handle(handlers.DestConsole, middleware.WithUserCheck(
-		func(u *database.User) bool {
-			return u.RoleID == database.RoleIDManager || u.RoleID == database.RoleIDAdministrator
-		},
-		consoleMux,
-	))
-
-	mux.HandleFunc("/", handlers.GetIndex)
-	mux.HandleFunc("POST /login", handlers.PostLogin)
-	mux.HandleFunc("GET /logout", handlers.GetLogout)
+	setupRoutes(mux)
 
 	server := http.Server{
 		Addr:    ":8080",
-		Handler: middleware.WithLogging(middleware.WithContext(db, tmpl, mux)),
+		Handler: mw.WithLogging(mw.WithContext(db, tmpl, mux)),
 	}
 
 	log.Println("Server started on port 8080.")
@@ -120,4 +83,44 @@ func addAdminUserIfNotExists(db *database.GormDB) {
 	} else if err != nil {
 		log.Fatalf("Error getting admin user: %v", err)
 	}
+}
+
+func setupRoutes(mux *http.ServeMux) {
+	chefMux := http.NewServeMux()
+	chefMux.HandleFunc("GET "+handlers.DestChef, handlers.GetChef)
+	chefMux.HandleFunc("GET "+handlers.DestChefOrdersList, handlers.GetChefOrdersList)
+	chefMux.HandleFunc("GET "+handlers.DestChefOrders+"{id}", handlers.GetChefOrder)
+	chefMux.HandleFunc("POST "+handlers.DestChefOrders, handlers.PostChefOrder)
+
+	consoleMux := http.NewServeMux()
+	consoleMux.HandleFunc("GET "+handlers.DestConsole, handlers.GetConsole)
+	consoleMux.HandleFunc("GET "+handlers.DestAllOrders, handlers.GetAllOrders)
+	consoleMux.HandleFunc("GET "+handlers.DestAllOrdersTable, handlers.GetAllOrdersTable)
+	consoleMux.HandleFunc("GET "+handlers.DestProducts, handlers.GetProducts)
+	consoleMux.HandleFunc("GET "+handlers.DestProducts+"{id}", handlers.GetProduct)
+	consoleMux.HandleFunc("POST "+handlers.DestProducts, handlers.PostProduct)
+	consoleMux.HandleFunc("GET "+handlers.DestProductsTable, handlers.GetProductsTable)
+	consoleMux.HandleFunc("GET "+handlers.DestSuppliers, handlers.GetSuppliers)
+	consoleMux.HandleFunc("GET "+handlers.DestSuppliers+"{id}", handlers.GetSupplier)
+	consoleMux.HandleFunc("POST "+handlers.DestSuppliers, handlers.PostSupplier)
+	consoleMux.HandleFunc("GET "+handlers.DestSuppliersTable, handlers.GetSuppliersTable)
+	consoleMux.HandleFunc("GET "+handlers.DestUsers, handlers.GetUsers)
+	consoleMux.HandleFunc("GET "+handlers.DestUsers+"{id}", handlers.GetUser)
+	consoleMux.HandleFunc("POST "+handlers.DestUsers, handlers.PostUser)
+	consoleMux.HandleFunc("GET "+handlers.DestUsersTable, handlers.GetUsersTable)
+
+	mux.HandleFunc("/", handlers.GetIndex)
+	mux.HandleFunc("POST /login", handlers.PostLogin)
+	mux.HandleFunc("GET /logout", handlers.GetLogout)
+	mux.Handle("GET /public/", http.FileServerFS(publicFS))
+	mux.Handle(handlers.DestChef, mw.WithUserCheck(
+		func(u *database.User) bool { return u.RoleID == database.RoleIDChef },
+		chefMux,
+	))
+	mux.Handle(handlers.DestConsole, mw.WithUserCheck(
+		func(u *database.User) bool {
+			return u.RoleID == database.RoleIDManager || u.RoleID == database.RoleIDAdministrator
+		},
+		consoleMux,
+	))
 }
