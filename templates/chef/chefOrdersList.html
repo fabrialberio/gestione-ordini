@@ -1,17 +1,22 @@
-<div id="ordersList" class="border-collapse border-outline border rounded-lg overflow-x-auto">
+<div id="ordersList" class="border-outline bg-white border rounded-lg">
   {{ if .Orders }}
-  {{ range .Orders }}
-  <dl class="items-center">
-    <dt>ID</dt>
-    <dd>{{ .ID }}</dd>
-    <dt>Nome prodotto</dt>
-    <dd>{{ .Product.Name }}</dd>
-    <dt>ID utente</dt>
-    <dd>{{ .UserID }}</dd>
-    <dt>Quantità</dt>
-    <dd>{{ .Amount }}</dd>
-  </dl>
-  {{ end }}
+  <ol class="divide-y divide-outline">
+    {{ range .Orders }}
+    <li class="p-2">
+      <div class="flex">
+        <div>
+          <div>{{ .Product.Name }}, {{ .Amount }} {{ .Product.UnitOfMeasure.Symbol }}</div>
+          <div class="text-on-surface-dim">Scadenza: {{ .ExpirationString }}</div>
+        </div>
+        <div class="flex items-center ml-auto">
+          <a class="btn-md" href="/chef/orders/{{ .ID }}">
+            <i class="fa-pen fas"></i>
+          </a>
+        </div>
+      </div>
+    </li>
+    {{ end }}
+  </ol>
   {{ else }}
   <p class="flex justify-center p-4">
     Ancora nessun ordine.

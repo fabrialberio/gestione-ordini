@@ -23,15 +23,11 @@ main {
 }
 
 .dataTable table {
-    @apply w-full
+    @apply w-full divide-outline divide-y
 }
 
 .dataTable tbody {
-    @apply bg-white
-}
-
-.dataTable tbody tr {
-    @apply border-outline border-t
+    @apply bg-white divide-outline divide-y
 }
 
 .dataTable td {
