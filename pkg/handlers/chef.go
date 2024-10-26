@@ -9,7 +9,6 @@ import (
 )
 
 func GetChef(w http.ResponseWriter, r *http.Request) {
-
 	data := struct {
 		Order              database.Order
 		ProductAmountInput components.ProductAmountInput
