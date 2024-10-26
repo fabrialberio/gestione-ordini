@@ -42,7 +42,9 @@ func WithContext(db *database.GormDB, templ *template.Template, next http.Handle
 	})
 }
 
-func WithRole(roleId int, next http.Handler) http.Handler {
+type UserCheckerFunc func(user *database.User) bool
+
+func WithUserCheck(checker UserCheckerFunc, next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		user, err := appContext.AuthenticatedUser(r)
 		if err != nil {
@@ -50,7 +52,7 @@ func WithRole(roleId int, next http.Handler) http.Handler {
 			return
 		}
 
-		if user.RoleID != roleId {
+		if !checker(user) {
 			handlers.HandleError(w, r, auth.ErrInvalidRole)
 			return
 		}

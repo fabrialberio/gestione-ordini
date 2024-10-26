@@ -50,8 +50,16 @@ func main() {
 
 	mux := http.NewServeMux()
 	mux.Handle("GET /public/", http.FileServerFS(publicFS))
-	mux.Handle(handlers.DestChef, chefMux) // TODO: reimplement authentication
-	mux.Handle(handlers.DestConsole, consoleMux)
+	mux.Handle(handlers.DestChef, middleware.WithUserCheck(
+		func(u *database.User) bool { return u.RoleID == database.RoleIDChef },
+		chefMux,
+	))
+	mux.Handle(handlers.DestConsole, middleware.WithUserCheck(
+		func(u *database.User) bool {
+			return u.RoleID == database.RoleIDManager || u.RoleID == database.RoleIDAdministrator
+		},
+		consoleMux,
+	))
 
 	mux.HandleFunc("/", handlers.GetIndex)
 	mux.HandleFunc("POST /login", handlers.PostLogin)
