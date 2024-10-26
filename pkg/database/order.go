@@ -3,16 +3,14 @@ package database
 import (
 	"strconv"
 	"time"
-
-	"gorm.io/gorm/clause"
 )
 
 type Order struct {
 	ID               int       `gorm:"column:id;primaryKey"`
 	ProductID        int       `gorm:"column:id_prodotto"`
-	Product          Product   `gorm:"foreignKey:ProductID"`
+	Product          Product   `gorm:"-:all"`
 	UserID           int       `gorm:"column:id_utente"`
-	User             User      `gorm:"foreignKey:UserID"`
+	User             User      `gorm:"-:all"`
 	Amount           int       `gorm:"column:quantita"`
 	ExpiresAt        time.Time `gorm:"column:richiesto_il"`
 	ExpirationString string    `gorm:"-:all"`
@@ -20,7 +18,10 @@ type Order struct {
 
 func (Order) TableName() string { return "ordini" }
 
-func calculateExpirationString(order Order) Order {
+func (db *GormDB) completeOrder(order Order) Order {
+	order.Product, _ = db.FindProduct(order.ProductID)
+	order.User, _ = db.FindUser(order.UserID)
+
 	expiresInHours := time.Until(order.ExpiresAt).Hours()
 
 	if expiresInHours < 0 {
@@ -40,15 +41,15 @@ func (db *GormDB) FindOrder(id int) (Order, error) {
 	var order Order
 
 	err := db.conn.Take(&order, id).Error
-	return calculateExpirationString(order), err
+	return db.completeOrder(order), err
 }
 
 func (db *GormDB) FindAllOrders() ([]Order, error) {
 	var orders []Order
 
-	err := db.conn.Preload(clause.Associations).Find(&orders).Error
+	err := db.conn.Find(&orders).Error
 	for i, o := range orders {
-		orders[i] = calculateExpirationString(o)
+		orders[i] = db.completeOrder(o)
 	}
 	return orders, err
 }
@@ -56,7 +57,10 @@ func (db *GormDB) FindAllOrders() ([]Order, error) {
 func (db *GormDB) FindAllOrdersWithUserID(userId int) ([]Order, error) {
 	var orders []Order
 
-	err := db.conn.Preload(clause.Associations).Find(&orders).Where("id_utente = ?", userId).Error
+	err := db.conn.Find(&orders).Where("id_utente = ?", userId).Error
+	for i, o := range orders {
+		orders[i] = db.completeOrder(o)
+	}
 	return orders, err
 }
 
