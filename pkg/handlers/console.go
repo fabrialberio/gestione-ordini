@@ -5,6 +5,7 @@ import (
 	"gestione-ordini/pkg/components"
 	"gestione-ordini/pkg/database"
 	"net/http"
+	"time"
 )
 
 func sidebarDestinations(r *http.Request, selected int) []components.SidebarDest {
@@ -28,19 +29,40 @@ func GetConsole(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, DestAllOrders, http.StatusSeeOther)
 }
 
+type supplierOrders struct {
+	Supplier   database.Supplier
+	OrdersList components.OrdersList
+}
+
 func GetAllOrders(w http.ResponseWriter, r *http.Request) {
-	var err error
 	data := struct {
-		Sidebar    []components.SidebarDest
-		OrdersList components.OrdersList
+		Sidebar            []components.SidebarDest
+		ExpiredOrdersList  components.OrdersList
+		SupplierOrders     map[database.Supplier]components.OrdersList
+		NextWeekOrdersList components.OrdersList
 	}{
-		Sidebar: sidebarDestinations(r, 0),
+		Sidebar:        sidebarDestinations(r, 0),
+		SupplierOrders: map[database.Supplier]components.OrdersList{},
 	}
 
-	data.OrdersList.Orders, err = appContext.Database(r).FindAllOrders()
+	orders, err := appContext.Database(r).FindAllOrders()
 	if err != nil {
 		HandleError(w, r, err)
 		return
+	}
+
+	oneWeek := time.Hour * 24 * 7
+
+	for _, o := range orders {
+		if time.Until(o.ExpiresAt) < 0 {
+			data.ExpiredOrdersList.Orders = append(data.ExpiredOrdersList.Orders, o)
+		} else if time.Until(o.ExpiresAt) > oneWeek {
+			data.NextWeekOrdersList.Orders = append(data.NextWeekOrdersList.Orders, o)
+		} else {
+			orders := data.SupplierOrders[o.Product.Supplier].Orders
+			orders = append(orders, o)
+			data.SupplierOrders[o.Product.Supplier] = components.OrdersList{Orders: orders}
+		}
 	}
 
 	appContext.ExecuteTemplate(w, r, "allOrders.html", data)
