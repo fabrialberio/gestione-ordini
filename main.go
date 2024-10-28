@@ -88,7 +88,6 @@ func addAdminUserIfNotExists(db *database.GormDB) {
 func setupRoutes(mux *http.ServeMux) {
 	chefMux := http.NewServeMux()
 	chefMux.HandleFunc("GET "+handlers.DestChef, handlers.GetChef)
-	chefMux.HandleFunc("GET "+handlers.DestChefOrdersList, handlers.GetChefOrdersList)
 	chefMux.HandleFunc("GET "+handlers.DestChefOrders+"{id}", handlers.GetChefOrder)
 	chefMux.HandleFunc("POST "+handlers.DestChefOrders, handlers.PostChefOrder)
 

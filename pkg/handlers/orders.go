@@ -12,26 +12,6 @@ import (
 
 const dateFormat = "2006-01-02"
 
-func GetChefOrdersList(w http.ResponseWriter, r *http.Request) {
-	var data struct {
-		Orders []database.Order
-	}
-
-	user, err := auth.GetAuthenticatedUser(r)
-	if err != nil {
-		HandleError(w, r, err)
-		return
-	}
-
-	data.Orders, err = appContext.Database(r).FindAllOrdersWithUserID(user.ID)
-	if err != nil {
-		HandleError(w, r, err)
-		return
-	}
-
-	appContext.ExecuteTemplate(w, r, "chefOrdersList.html", data)
-}
-
 func GetChefOrder(w http.ResponseWriter, r *http.Request) {
 	var data struct {
 		Order              database.Order

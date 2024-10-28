@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"gestione-ordini/pkg/appContext"
+	"gestione-ordini/pkg/auth"
 	"gestione-ordini/pkg/components"
 	"gestione-ordini/pkg/database"
 	"net/http"
@@ -9,18 +10,18 @@ import (
 )
 
 func GetChef(w http.ResponseWriter, r *http.Request) {
-	data := struct {
-		Order              database.Order
+	var data struct {
 		ProductAmountInput components.ProductAmountInput
 		ExpiresAtInput     components.Input
-	}{
-		Order: database.Order{
-			Amount:    1,
-			ExpiresAt: time.Now(),
-		},
+		Orders             []database.Order
 	}
 
-	data.ExpiresAtInput = components.Input{"Scadenza", keyOrderRequestedAt, "date", data.Order.ExpiresAt.Format(dateFormat)}
+	defaultOrder := database.Order{
+		Amount:    1,
+		ExpiresAt: time.Now(),
+	}
+
+	data.ExpiresAtInput = components.Input{"Scadenza", keyOrderRequestedAt, "date", defaultOrder.ExpiresAt.Format(dateFormat)}
 
 	products, err := appContext.Database(r).FindAllProducts(database.OrderProductByID, true)
 	if err != nil {
@@ -28,7 +29,19 @@ func GetChef(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	data.ProductAmountInput = components.ProductAmountInput{keyOrderProductID, products, data.Order.ProductID, keyOrderAmount, data.Order.Amount}
+	data.ProductAmountInput = components.ProductAmountInput{keyOrderProductID, products, defaultOrder.ProductID, keyOrderAmount, defaultOrder.Amount}
+
+	user, err := auth.GetAuthenticatedUser(r)
+	if err != nil {
+		HandleError(w, r, err)
+		return
+	}
+
+	data.Orders, err = appContext.Database(r).FindAllOrdersWithUserID(user.ID)
+	if err != nil {
+		HandleError(w, r, err)
+		return
+	}
 
 	appContext.ExecuteTemplate(w, r, "chef.html", data)
 }

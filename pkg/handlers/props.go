@@ -25,9 +25,8 @@ const (
 	keySupplierName  = "supplier.name"
 
 	// chef
-	DestChef           = "/chef/"
-	DestChefOrders     = "/chef/orders/"
-	DestChefOrdersList = "/chef/ordersList"
+	DestChef       = "/chef/"
+	DestChefOrders = "/chef/orders/"
 
 	// admin and manager
 	DestConsole        = "/console/"

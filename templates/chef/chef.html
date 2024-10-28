@@ -12,7 +12,6 @@
       </h2>
       
       <form class="space-y-4 border-outline px-4 bp-4 border rounded-lg" method="post" action="/chef/orders/">
-        <input type="hidden" name="order.id" value="{{ .Order.ID }}">
         <input type="hidden" name="isNew" value="true">
         
         {{ template "productAmountInput" .ProductAmountInput }}
@@ -28,9 +27,32 @@
       <h2>
         I tuoi ordini
       </h2>
-    
-      <div hx-get="/chef/ordersList" hx-trigger="load" hx-target="this">
-      </div>
+      
+      <div class="border-outline bg-white border rounded-lg">
+        {{ if .Orders }}
+        <ol class="divide-y divide-outline">
+          {{ range .Orders }}
+          <li class="p-2">
+            <div class="flex">
+              <div>
+                <div>{{ .Product.Name }}, {{ .Amount }} {{ .Product.UnitOfMeasure.Symbol }}</div>
+                <div class="text-on-surface-dim">Scadenza: {{ .ExpirationString }}</div>
+              </div>
+              <div class="flex items-center ml-auto">
+                <a class="btn-md" href="/chef/orders/{{ .ID }}">
+                  <i class="fa-pen fas"></i>
+                </a>
+              </div>
+            </div>
+          </li>
+          {{ end }}
+        </ol>
+        {{ else }}
+        <p class="flex justify-center p-4">
+          Ancora nessun ordine.
+        </p>
+        {{ end }}
+      </div>      
     </main>
   </body>
 </html>
