@@ -37,38 +37,6 @@
 </div>
 {{ end }}
 
-{{ define "allOrdersTable" }}
-<div class="dataTable">
-  <table>
-    <thead>
-      <tr>
-        {{ range .Headings }}
-        <th>
-          {{ .Name }}
-        </th>
-        {{ end }}
-        <th class="sr-only">Azioni</th>
-      </tr>
-    </thead>
-    <tbody>
-      {{ range .Orders }}
-      <tr>
-        <td>{{ .ID }}</td>
-        <td>
-          <a class="line-clamp-1 link" href="/console/products/{{ .Product.ID }}">{{ .Product.Name }}</a>
-        </td>
-        <td>
-          <a class="link" href="/console/users/{{ .User.ID }}">{{ .User.Username }}</a>
-        </td>
-        <td>{{ .Amount }} {{ .Product.UnitOfMeasure.Symbol }}</td>
-        <td>{{ .ExpirationString }}</td>
-      </tr>
-      {{ end }}
-    </tbody>
-  </table>
-</div>
-{{ end }}
-
 {{ define "productsTable" }}
 <div class="dataTable">
   <table>
@@ -125,19 +93,21 @@
 
 {{ define "ordersList" }}
 <div class="border-outline bg-white border rounded-lg">
-  {{ if . }}
+  {{ if .Orders }}
   <ol class="divide-y divide-outline">
-    {{ range . }}
+    {{ range .Orders }}
     <li class="flex p-2">
       <div>
         <div>{{ .Product.Name }}, {{ .Amount }} {{ .Product.UnitOfMeasure.Symbol }}</div>
         <div class="text-on-surface-dim">Scadenza: {{ .ExpirationString }}</div>
       </div>
+      {{ if $.OrderURL }}
       <div class="flex items-center ml-auto">
-        <a class="btn-md" href="/chef/orders/{{ .ID }}">
+        <a class="btn-md" href="{{ $.OrderURL }}{{ .ID }}">
           <i class="fa-pen fas"></i>
         </a>
       </div>
+      {{ end }}
     </li>
     {{ end }}
   </ol>

@@ -31,7 +31,6 @@ const (
 	// admin and manager
 	DestConsole        = "/console/"
 	DestAllOrders      = "/console/allOrders/"
-	DestAllOrdersTable = "/console/allOrdersTable"
 	DestProducts       = "/console/products/"
 	DestProductsTable  = "/console/productsTable"
 	DestSuppliers      = "/console/suppliers/"

@@ -10,15 +10,14 @@
         {{ template "logoutButton" }}
       </header>
 
-      <main class="max-w-screen-md">
+      <main>
         <div class="flex items-center">
           <h2>
             Tutti gli ordini
           </h2>
         </div>
     
-        <div hx-get="/console/allOrdersTable" hx-trigger="load" hx-target="this">
-        </div>
+        {{ template "ordersList" .OrdersList }}
       </div>
     </main>
   </body>

@@ -112,24 +112,3 @@ func PostChefOrder(w http.ResponseWriter, r *http.Request) {
 
 	http.Redirect(w, r, DestChef, http.StatusSeeOther)
 }
-
-func GetAllOrdersTable(w http.ResponseWriter, r *http.Request) {
-	var err error
-	var data components.OrdersTable
-
-	data.Headings = []components.TableHeading{
-		{Name: "ID"},
-		{Name: "Prodotto"},
-		{Name: "Utente"},
-		{Name: "Quantità"},
-		{Name: "Scadenza"},
-	}
-
-	data.Orders, err = appContext.Database(r).FindAllOrders()
-	if err != nil {
-		HandleError(w, r, err)
-		return
-	}
-
-	appContext.ExecuteTemplate(w, r, "allOrdersTable", data)
-}

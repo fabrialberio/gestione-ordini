@@ -58,8 +58,8 @@ type SuppliersTable struct {
 	Suppliers []database.Supplier
 }
 
-type OrdersTable struct {
-	Headings []TableHeading
+type OrdersList struct {
+	OrderURL string
 	Orders   []database.Order
 }
 

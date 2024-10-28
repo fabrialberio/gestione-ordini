@@ -29,10 +29,18 @@ func GetConsole(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetAllOrders(w http.ResponseWriter, r *http.Request) {
+	var err error
 	data := struct {
-		Sidebar []components.SidebarDest
+		Sidebar    []components.SidebarDest
+		OrdersList components.OrdersList
 	}{
 		Sidebar: sidebarDestinations(r, 0),
+	}
+
+	data.OrdersList.Orders, err = appContext.Database(r).FindAllOrders()
+	if err != nil {
+		HandleError(w, r, err)
+		return
 	}
 
 	appContext.ExecuteTemplate(w, r, "allOrders.html", data)
