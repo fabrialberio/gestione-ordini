@@ -38,10 +38,6 @@ main {
     @apply px-1 py-2 first:pl-2 text-left
 }
 
-.text-destructive {
-    @apply text-error;
-}
-
 .focus-ring:focus {
     @apply outline-none ring-2 ring-primary z-10;
 }
