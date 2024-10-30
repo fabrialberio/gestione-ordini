@@ -6,7 +6,7 @@
       {{ template "logoutButton" }}
     </header>
 
-    <main>
+    <main class="max-w-screen-md">
       <h2>
         Nuovo ordine
       </h2>
@@ -16,19 +16,19 @@
         
         {{ template "productAmountInput" .ProductAmountInput }}
         {{ template "input" .ExpiresAtInput }}
-        
+          
         <div class="flex">
           <button class="ml-auto btn-lg suggested">
             Aggiungi
           </button>
         </div>
       </form>
-
+      
       <h2>
         I tuoi ordini
       </h2>
-
-      {{ template "ordersList" .OrdersList }}
+      
+      {{ template "ordersView" .OrdersView }}
     </main>
   </body>
 </html>

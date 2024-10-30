@@ -13,7 +13,7 @@ func GetChef(w http.ResponseWriter, r *http.Request) {
 	var data struct {
 		ProductAmountInput components.ProductAmountInput
 		ExpiresAtInput     components.Input
-		OrdersList         components.OrdersList
+		OrdersView         components.OrdersView
 	}
 
 	defaultOrder := database.Order{
@@ -37,12 +37,13 @@ func GetChef(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	data.OrdersList = components.OrdersList{OrderURL: DestChefOrders}
-	data.OrdersList.Orders, err = appContext.Database(r).FindAllOrdersWithUserID(user.ID)
+	orders, err := appContext.Database(r).FindAllOrdersWithUserID(user.ID)
 	if err != nil {
 		HandleError(w, r, err)
 		return
 	}
+
+	data.OrdersView = composeOrdersView(time.Now(), DestChefOrders, orders)
 
 	appContext.ExecuteTemplate(w, r, "chef.html", data)
 }

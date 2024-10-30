@@ -58,12 +58,18 @@ type SuppliersTable struct {
 	Suppliers []database.Supplier
 }
 
-type OrdersList struct {
-	OrderURL string
-	Orders   []database.Order
-}
-
 type TableHeading struct {
 	Index int
 	Name  string
+}
+
+type OrdersView struct {
+	OrdersURL string
+	WeekTitle string
+	Days      []OrdersViewDay
+}
+
+type OrdersViewDay struct {
+	Heading string
+	Orders  []database.Order
 }

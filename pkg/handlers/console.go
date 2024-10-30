@@ -29,20 +29,12 @@ func GetConsole(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, DestAllOrders, http.StatusSeeOther)
 }
 
-type supplierOrders struct {
-	Supplier   database.Supplier
-	OrdersList components.OrdersList
-}
-
 func GetAllOrders(w http.ResponseWriter, r *http.Request) {
 	data := struct {
-		Sidebar            []components.SidebarDest
-		ExpiredOrdersList  components.OrdersList
-		SupplierOrders     map[database.Supplier]components.OrdersList
-		NextWeekOrdersList components.OrdersList
+		Sidebar    []components.SidebarDest
+		OrdersView components.OrdersView
 	}{
-		Sidebar:        sidebarDestinations(r, 0),
-		SupplierOrders: map[database.Supplier]components.OrdersList{},
+		Sidebar: sidebarDestinations(r, 0),
 	}
 
 	orders, err := appContext.Database(r).FindAllOrders()
@@ -51,19 +43,7 @@ func GetAllOrders(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	oneWeek := time.Hour * 24 * 7
-
-	for _, o := range orders {
-		if time.Until(o.ExpiresAt) < 0 {
-			data.ExpiredOrdersList.Orders = append(data.ExpiredOrdersList.Orders, o)
-		} else if time.Until(o.ExpiresAt) > oneWeek {
-			data.NextWeekOrdersList.Orders = append(data.NextWeekOrdersList.Orders, o)
-		} else {
-			orders := data.SupplierOrders[o.Product.Supplier].Orders
-			orders = append(orders, o)
-			data.SupplierOrders[o.Product.Supplier] = components.OrdersList{Orders: orders}
-		}
-	}
+	data.OrdersView = composeOrdersView(time.Now(), "", orders)
 
 	appContext.ExecuteTemplate(w, r, "allOrders.html", data)
 }

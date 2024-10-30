@@ -1,27 +1,22 @@
 {{ define "ordersView" }}
-<div class="border-outline border rounded-lg divide-y divide-outline">
-  <div class="flex items-center p-2">
+<div class="border-outline border rounded-lg overflow-hidden">
+  <div class="flex items-center border-outline p-2 border-b">
     {{ .WeekTitle }}
+    <i class="w-8 btn-sm fa-calendar fas"></i>
     <i class="fa-chevron-left ml-auto w-8 btn-sm fas"></i>
     <i class="fa-chevron-right w-8 btn-sm fas"></i>
   </div>
-  <table class="table-fixed bg-white w-full">
-    <thead>
-      <tr class="divide-x divide-outline">
-        {{ range .Days }}
-        <th>
-          {{ .Heading }}
-        </th>
-        {{ end }}
-      </tr>
-    </thead>
-    <tbody>
-      <tr class="divide-x divide-outline">
-        {{ range .Days }}
-        <td class="h-full">
+  <div class="flex flex-row max-sm:flex-col bg-white sm:divide-x max-sm:divide-y divide-outline overflow-x-auto">
+    {{ range .Days }}
+    <div class="flex max-sm:flex-row flex-col basis-1/2">
+      <p class="max-sm:text-right p-2 min-w-20 font-bold text-center">
+        {{ .Heading }}
+      </p>
+      <div class="flex flex-col gap-1 p-1 w-full sm:min-h-12">
+        <td class="align-top h-full">
           {{ range .Orders }}
-          <a href="/chef/orders/{{ .ID }}">
-            <div class="bg-primary bg-opacity-20 m-1 p-1 rounded-md text-sm selectable">
+          <a{{ if $.OrdersURL }} href="{{ $.OrdersURL }}{{ .ID }}"{{ end }}>
+            <div class="bg-primary bg-opacity-20 p-1 rounded-md text-sm{{ if $.OrdersURL }} selectable{{ end }}">
               <p class="line-clamp-2">
                 {{ .Product.Name }}
               </p>
@@ -30,9 +25,9 @@
           </a>
           {{ end }}
         </td>
-        {{ end }}
-      </tr>
-    </tbody>
-  </table>
+      </div>
+    </div>
+    {{ end }}
+  </div>
 </div>
 {{ end }}

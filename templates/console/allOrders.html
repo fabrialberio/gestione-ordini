@@ -10,38 +10,12 @@
         {{ template "logoutButton" }}
       </header>
 
-      <main>
+      <main class="max-w-screen-md">
         <h2>
           Tutti gli ordini
         </h2>
-    
-        {{ if .ExpiredOrdersList.Orders }}
-        <div class="space-y-2">
-          <h3 class="font-bold text-lg">
-            Scaduti
-          </h3>
-          {{ template "ordersList" .ExpiredOrdersList }}
-        </div>
-        {{ end }}
 
-        {{ range $s, $o := .SupplierOrders }}
-        <div class="space-y-2">
-          <h3 class="font-bold text-lg">
-            Ordini per {{ $s.Name }} ({{ $s.Email }})
-          </h3>
-          {{ template "ordersList" $o }}
-        </div>
-        {{ end }}
-
-        {{ if .NextWeekOrdersList.Orders }}
-        <div class="space-y-2">
-          <h3 class="font-bold text-lg">
-            Ordini per settimana prossima
-          </h3>
-          {{ template "ordersList" .NextWeekOrdersList }}
-        </div>
-        {{ end }}
-
+        {{ template "ordersView" .OrdersView }}
       </div>
     </main>
   </body>

@@ -12,7 +12,18 @@ import (
 
 const dateFormat = "2006-01-02"
 
+var weekdayNames = map[time.Weekday]string{
+	time.Monday:    "lun",
+	time.Tuesday:   "mar",
+	time.Wednesday: "mer",
+	time.Thursday:  "gio",
+	time.Friday:    "ven",
+	time.Saturday:  "sab",
+	time.Sunday:    "dom",
+}
+
 func GetChefOrder(w http.ResponseWriter, r *http.Request) {
+	// TODO: Check order is made by current user
 	var data struct {
 		Order              database.Order
 		ProductAmountInput components.ProductAmountInput
@@ -111,4 +122,28 @@ func PostChefOrder(w http.ResponseWriter, r *http.Request) {
 	}
 
 	http.Redirect(w, r, DestChef, http.StatusSeeOther)
+}
+
+func composeOrdersView(start time.Time, ordersUrl string, orders []database.Order) components.OrdersView {
+	ordersByDay := map[string][]database.Order{}
+	data := components.OrdersView{
+		OrdersURL: ordersUrl,
+		WeekTitle: "Settimana del " + start.Format("2/1"),
+	}
+	keyFormat := "2006-01-02"
+
+	for _, o := range orders {
+		ordersByDay[o.ExpiresAt.Format(keyFormat)] = append(ordersByDay[o.ExpiresAt.Format(keyFormat)], o)
+	}
+
+	for i := 0; i < 7; i++ {
+		t := start.Add(time.Hour * 24 * time.Duration(i))
+
+		data.Days = append(data.Days, components.OrdersViewDay{
+			Heading: weekdayNames[t.Weekday()] + " " + t.Format("2"),
+			Orders:  ordersByDay[t.Format(keyFormat)],
+		})
+	}
+
+	return data
 }
