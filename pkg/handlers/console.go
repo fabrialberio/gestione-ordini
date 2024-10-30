@@ -5,7 +5,6 @@ import (
 	"gestione-ordini/pkg/components"
 	"gestione-ordini/pkg/database"
 	"net/http"
-	"time"
 )
 
 func sidebarDestinations(r *http.Request, selected int) []components.SidebarDest {
@@ -31,19 +30,10 @@ func GetConsole(w http.ResponseWriter, r *http.Request) {
 
 func GetAllOrders(w http.ResponseWriter, r *http.Request) {
 	data := struct {
-		Sidebar    []components.SidebarDest
-		OrdersView components.OrdersView
+		Sidebar []components.SidebarDest
 	}{
 		Sidebar: sidebarDestinations(r, 0),
 	}
-
-	orders, err := appContext.Database(r).FindAllOrders()
-	if err != nil {
-		HandleError(w, r, err)
-		return
-	}
-
-	data.OrdersView = composeOrdersView(time.Now(), "", orders)
 
 	appContext.ExecuteTemplate(w, r, "allOrders.html", data)
 }

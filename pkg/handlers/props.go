@@ -25,12 +25,14 @@ const (
 	keySupplierName  = "supplier.name"
 
 	// chef
-	DestChef       = "/chef/"
-	DestChefOrders = "/chef/orders/"
+	DestChef           = "/chef/"
+	DestChefOrders     = "/chef/orders/"
+	DestChefOrdersView = "/chef/ordersView"
 
 	// admin and manager
 	DestConsole        = "/console/"
 	DestAllOrders      = "/console/allOrders/"
+	DestAllOrdersView  = "/console/allOrdersView"
 	DestProducts       = "/console/products/"
 	DestProductsTable  = "/console/productsTable"
 	DestSuppliers      = "/console/suppliers/"

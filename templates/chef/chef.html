@@ -28,7 +28,8 @@
         I tuoi ordini
       </h2>
       
-      {{ template "ordersView" .OrdersView }}
+      <div hx-get="/chef/ordersView" hx-trigger="load" hx-target="this">
+      </div>
     </main>
   </body>
 </html>

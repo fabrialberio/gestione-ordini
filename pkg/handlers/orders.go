@@ -124,12 +124,64 @@ func PostChefOrder(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, DestChef, http.StatusSeeOther)
 }
 
-func composeOrdersView(start time.Time, ordersUrl string, orders []database.Order) components.OrdersView {
-	ordersByDay := map[string][]database.Order{}
-	data := components.OrdersView{
-		OrdersURL: ordersUrl,
-		WeekTitle: "Settimana del " + start.Format("2/1"),
+func GetChefOrdersView(w http.ResponseWriter, r *http.Request) {
+	offset, _ := strconv.Atoi(r.URL.Query().Get("offset"))
+
+	user, err := appContext.AuthenticatedUser(r)
+	if err != nil {
+		HandleError(w, r, err)
+		return
 	}
+
+	orders, err := appContext.Database(r).FindAllOrdersWithUserID(user.ID)
+	if err != nil {
+		HandleError(w, r, err)
+		return
+	}
+
+	data := calculateOrdersView(offset, orders)
+	data.OrdersViewURL = DestChefOrdersView
+	data.OrdersURL = DestChefOrders
+
+	appContext.ExecuteTemplate(w, r, "ordersView", data)
+}
+
+func GetAllOrdersView(w http.ResponseWriter, r *http.Request) {
+	orders, err := appContext.Database(r).FindAllOrders()
+	if err != nil {
+		HandleError(w, r, err)
+		return
+	}
+
+	offset, _ := strconv.Atoi(r.URL.Query().Get("offset"))
+
+	data := calculateOrdersView(offset, orders)
+	data.OrdersViewURL = DestAllOrdersView
+
+	appContext.ExecuteTemplate(w, r, "ordersView", data)
+}
+
+func calculateOrdersView(offset int, orders []database.Order) components.OrdersView {
+	start := calculateWeekStart(offset)
+	days := makeOrdersViewDays(start, orders)
+
+	return components.OrdersView{
+		WeekTitle:  "Settimana del " + start.Format("02/01/2006"),
+		NextOffset: offset + 1,
+		PrevOffset: offset - 1,
+		Days:       days,
+	}
+}
+
+func calculateWeekStart(offset int) time.Time {
+	daysFromMonday := time.Duration(time.Now().Weekday() - 1)
+	offsetDays := time.Duration(offset * 7)
+	return time.Now().Add(time.Hour * 24 * (offsetDays - daysFromMonday))
+}
+
+func makeOrdersViewDays(start time.Time, orders []database.Order) []components.OrdersViewDay {
+	ordersByDay := map[string][]database.Order{}
+	days := []components.OrdersViewDay{}
 	keyFormat := "2006-01-02"
 
 	for _, o := range orders {
@@ -139,11 +191,11 @@ func composeOrdersView(start time.Time, ordersUrl string, orders []database.Orde
 	for i := 0; i < 7; i++ {
 		t := start.Add(time.Hour * 24 * time.Duration(i))
 
-		data.Days = append(data.Days, components.OrdersViewDay{
+		days = append(days, components.OrdersViewDay{
 			Heading: weekdayNames[t.Weekday()] + " " + t.Format("2"),
 			Orders:  ordersByDay[t.Format(keyFormat)],
 		})
 	}
 
-	return data
+	return days
 }

@@ -1,14 +1,20 @@
 {{ define "ordersView" }}
-<div class="border-outline border rounded-lg overflow-hidden">
-  <div class="flex items-center border-outline p-2 border-b">
-    {{ .WeekTitle }}
-    <i class="w-8 btn-sm fa-calendar fas"></i>
-    <i class="fa-chevron-left ml-auto w-8 btn-sm fas"></i>
-    <i class="fa-chevron-right w-8 btn-sm fas"></i>
+<div class="border-outline border rounded-lg overflow-hidden ordersView">
+  <div class="flex items-center gap-1 p-2">
+    <button class="btn-sm" hx-get="{{ .OrdersViewURL }}">
+      <i class="fa-calendar fas"></i>
+      {{ .WeekTitle }}
+    </button>
+    <button class="ml-auto w-8 btn-sm" hx-get="{{ .OrdersViewURL }}?offset={{ .PrevOffset }}">
+      <i class="fa-chevron-left fas"></i>
+    </button>
+    <button class="w-8 btn-sm" hx-get="{{ .OrdersViewURL }}?offset={{ .NextOffset }}">
+      <i class="fa-chevron-right w-8 btn-sm fas"></i>
+    </button>
   </div>
-  <div class="flex flex-row max-sm:flex-col bg-white sm:divide-x max-sm:divide-y divide-outline overflow-x-auto">
+  <div class="flex flex-row max-sm:flex-col border-outline bg-white border-t sm:divide-x max-sm:divide-y divide-outline overflow-x-auto">
     {{ range .Days }}
-    <div class="flex max-sm:flex-row flex-col basis-1/2">
+    <div class="flex max-sm:flex-row flex-col basis-1/2 selectable">
       <p class="max-sm:text-right p-2 min-w-20 font-bold text-center">
         {{ .Heading }}
       </p>

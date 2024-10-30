@@ -15,8 +15,8 @@
           Tutti gli ordini
         </h2>
 
-        {{ template "ordersView" .OrdersView }}
-      </div>
+        <div hx-get="/console/allOrdersView" hx-trigger="load" hx-target="this">
+        </div>
     </main>
   </body>
 </html>

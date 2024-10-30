@@ -64,9 +64,12 @@ type TableHeading struct {
 }
 
 type OrdersView struct {
-	OrdersURL string
-	WeekTitle string
-	Days      []OrdersViewDay
+	OrdersURL     string
+	OrdersViewURL string
+	WeekTitle     string
+	NextOffset    int
+	PrevOffset    int
+	Days          []OrdersViewDay
 }
 
 type OrdersViewDay struct {
