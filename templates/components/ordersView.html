@@ -1,0 +1,38 @@
+{{ define "ordersView" }}
+<div class="border-outline border rounded-lg divide-y divide-outline">
+  <div class="flex items-center p-2">
+    {{ .WeekTitle }}
+    <i class="fa-chevron-left ml-auto w-8 btn-sm fas"></i>
+    <i class="fa-chevron-right w-8 btn-sm fas"></i>
+  </div>
+  <table class="table-fixed bg-white w-full">
+    <thead>
+      <tr class="divide-x divide-outline">
+        {{ range .Days }}
+        <th>
+          {{ .Heading }}
+        </th>
+        {{ end }}
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="divide-x divide-outline">
+        {{ range .Days }}
+        <td class="h-full">
+          {{ range .Orders }}
+          <a href="/chef/orders/{{ .ID }}">
+            <div class="bg-primary bg-opacity-20 m-1 p-1 rounded-md text-sm selectable">
+              <p class="line-clamp-2">
+                {{ .Product.Name }}
+              </p>
+              {{ .Amount }} {{ .Product.UnitOfMeasure.Symbol }}
+            </div>
+          </a>
+          {{ end }}
+        </td>
+        {{ end }}
+      </tr>
+    </tbody>
+  </table>
+</div>
+{{ end }}
