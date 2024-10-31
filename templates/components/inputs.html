@@ -1,12 +1,12 @@
 {{ define "input" }}
-<div>
+<div class="w-full">
   <label>{{ .Label }}</label>
   <input class="w-full input" type="{{ .Type }}" name="{{ .Name }}" value="{{ .DefaultValue }}" required>
 </div>
 {{ end }}
 
 {{ define "select" }}
-<div>
+<div class="w-full">
   <label>{{ .Label }}</label>
   <select class="w-full input" name="{{ .Name }}" required>
     {{ range .Options }}
@@ -29,7 +29,7 @@
     setUnitOfMeasure()
   });
 </script>
-<div>
+<div class="w-full">
   <label>Prodotto</label>
   <select id="productSelect" class="w-full input" name="{{ .ProductSelectName }}" required onchange="setUnitOfMeasure()">
     {{ range .Products }}
@@ -37,7 +37,7 @@
     {{ end }}
   </select>
 </div>
-<div>
+<div class="w-full">
   <label>
     Quantità<span id="unitOfMeasure"></span>
   </label>
