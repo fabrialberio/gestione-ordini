@@ -57,7 +57,7 @@ func (db *GormDB) FindAllOrders() ([]Order, error) {
 func (db *GormDB) FindAllOrdersWithUserID(userId int) ([]Order, error) {
 	var orders []Order
 
-	err := db.conn.Find(&orders).Where("id_utente = ?", userId).Error
+	err := db.conn.Where(&Order{UserID: userId}).Find(&orders).Error
 	for i, o := range orders {
 		orders[i] = db.completeOrder(o)
 	}
