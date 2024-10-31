@@ -34,14 +34,15 @@ const (
 	DestChefOrdersView = "/chef/ordersView"
 
 	// admin and manager
-	DestConsole        = "/console/"
-	DestAllOrders      = "/console/allOrders/"
-	DestAllOrdersView  = "/console/allOrdersView"
-	DestOrderSelection = "/console/orderSelection/"
-	DestProducts       = "/console/products/"
-	DestProductsTable  = "/console/productsTable"
-	DestSuppliers      = "/console/suppliers/"
-	DestSuppliersTable = "/console/suppliersTable"
+	DestConsole             = "/console/"
+	DestAllOrders           = "/console/allOrders/"
+	DestAllOrdersView       = "/console/allOrdersView"
+	DestOrderSelection      = "/console/orderSelection/"
+	DestOrderSelectionCount = "/console/orderSelectionCount"
+	DestProducts            = "/console/products/"
+	DestProductsTable       = "/console/productsTable"
+	DestSuppliers           = "/console/suppliers/"
+	DestSuppliersTable      = "/console/suppliersTable"
 
 	// admin
 	DestUsers      = "/console/users/"

@@ -22,7 +22,29 @@
           Seleziona ordini
         </h2>
 
-        <form class="space-y-4 border-outline p-4 border rounded-lg" method="post" action="/console/orderSelection/">
+        <script>
+          function updateCount() {
+            const keyStart = 'orderSelection.start';
+            const keyEnd = 'orderSelection.end';
+            const keySupplier = 'orderSelection.supplier';
+            
+            const start = document.getElementById(keyStart).value;
+            const end = document.getElementById(keyEnd).value;
+            const supplier = document.getElementById(keySupplier).value;
+
+            fetch(`/console/orderSelectionCount?${keyStart}=${start}&${keyEnd}=${end}&${keySupplier}=${supplier}`)
+              .then(response => response.text())
+              .then(count => {
+                document.getElementById('count').textContent = count;
+              });
+          }
+
+          document.addEventListener('DOMContentLoaded', () => {
+            updateCount();
+          });
+        </script>
+
+        <form class="space-y-4 border-outline p-4 border rounded-lg" method="post" action="/console/orderSelection/" onchange="updateCount()">
           <div class="flex sm:flex-row flex-col gap-4 w-full">
             {{ template "input" .StartDateInput }}
             {{ template "input" .EndDateInput }}
@@ -30,10 +52,13 @@
           {{ template "select" .SupplierSelect }}
 
           <div class="flex items-center gap-2">
-            <button type="submit" class="ml-auto btn-lg">
+            <p class="text-on-surface-dim">
+              <span id="count">0</span> ordini selezionati
+            </p>
+            <button type="submit" class="ml-auto btn-lg" name="csv">
               Scarica CSV
             </button>
-            <button type="submit" class="btn-lg suggested">
+            <button type="submit" class="btn-lg suggested" name="list">
               Scarica lista
             </button>
           </div>
