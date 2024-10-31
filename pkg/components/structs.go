@@ -75,4 +75,5 @@ type OrdersView struct {
 type OrdersViewDay struct {
 	Heading string
 	Orders  []database.Order
+	IsPast  bool
 }

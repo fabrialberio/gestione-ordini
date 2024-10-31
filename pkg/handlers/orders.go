@@ -193,6 +193,7 @@ func makeOrdersViewDays(start time.Time, orders []database.Order) []components.O
 		days = append(days, components.OrdersViewDay{
 			Heading: weekdayNames[t.Weekday()] + " " + t.Format("2"),
 			Orders:  ordersByDay[t.Format(keyFormat)],
+			IsPast:  time.Until(t.Add(time.Hour*24)) < 0,
 		})
 	}
 
