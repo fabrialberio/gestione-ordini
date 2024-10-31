@@ -40,7 +40,7 @@ func GetAllOrders(w http.ResponseWriter, r *http.Request) {
 	}
 
 	defaultStart := currentWeekStart()
-	weekDuration := time.Hour * 24 * 7
+	weekDuration := time.Hour * 24 * 6
 
 	data.StartDateInput = components.Input{"Da", keyOrderSelectionStart, "date", defaultStart.Format(dateFormat)}
 	data.EndDateInput = components.Input{"A", keyOrderSelectionEnd, "date", defaultStart.Add(weekDuration).Format(dateFormat)}
