@@ -603,6 +603,10 @@ video {
   margin-top: 0.5rem;
 }
 
+.mr-0 {
+  margin-right: 0px;
+}
+
 .line-clamp-2 {
   overflow: hidden;
   display: -webkit-box;
@@ -771,6 +775,10 @@ video {
   flex-basis: 50%;
 }
 
+.basis-full {
+  flex-basis: 100%;
+}
+
 .table-fixed {
   table-layout: fixed;
 }
@@ -789,6 +797,10 @@ video {
 
 .justify-center {
   justify-content: center;
+}
+
+.justify-stretch {
+  justify-content: stretch;
 }
 
 .gap-1 {
@@ -1459,6 +1471,10 @@ main {
 
   .sm\:min-h-12 {
     min-height: 3rem;
+  }
+
+  .sm\:flex-row {
+    flex-direction: row;
   }
 
   .sm\:divide-x > :not([hidden]) ~ :not([hidden]) {

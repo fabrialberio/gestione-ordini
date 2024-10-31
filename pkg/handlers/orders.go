@@ -162,7 +162,7 @@ func GetAllOrdersView(w http.ResponseWriter, r *http.Request) {
 }
 
 func calculateOrdersView(offset int, orders []database.Order) components.OrdersView {
-	start := calculateWeekStart(offset)
+	start := currentWeekStart().Add(time.Hour * 24 * 7 * time.Duration(offset))
 	days := makeOrdersViewDays(start, orders)
 
 	return components.OrdersView{
@@ -173,10 +173,9 @@ func calculateOrdersView(offset int, orders []database.Order) components.OrdersV
 	}
 }
 
-func calculateWeekStart(offset int) time.Time {
+func currentWeekStart() time.Time {
 	daysFromMonday := time.Duration(time.Now().Weekday() - 1)
-	offsetDays := time.Duration(offset * 7)
-	return time.Now().Add(time.Hour * 24 * (offsetDays - daysFromMonday))
+	return time.Now().Add(time.Hour * 24 * -daysFromMonday)
 }
 
 func makeOrdersViewDays(start time.Time, orders []database.Order) []components.OrdersViewDay {

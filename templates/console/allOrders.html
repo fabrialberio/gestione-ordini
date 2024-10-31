@@ -17,6 +17,30 @@
 
         <div hx-get="/console/allOrdersView" hx-trigger="load" hx-target="this">
         </div>
+
+        <h2>
+          Seleziona ordini
+        </h2>
+
+        <form class="space-y-4 border-outline p-4 border rounded-lg">
+          <div class="flex sm:flex-row flex-col gap-4 w-full">
+            {{ template "input" .StartDateInput }}
+            {{ template "input" .EndDateInput }}
+          </div>
+          {{ template "select" .SupplierSelect }}
+
+          <div class="flex items-center gap-2">
+            <p class="text-on-surface-dim">
+              <span id="count">10</span> ordini selezionati
+            </p>
+            <button type="submit" class="ml-auto btn-lg">
+              Scarica CSV
+            </button>
+            <button type="submit" class="btn-lg suggested">
+              Scarica lista
+            </button>
+          </div>
+        </form>
     </main>
   </body>
 </html>

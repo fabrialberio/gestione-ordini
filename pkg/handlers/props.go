@@ -24,6 +24,10 @@ const (
 	keySupplierEmail = "supplier.email"
 	keySupplierName  = "supplier.name"
 
+	keyOrderSelectionStart      = "orderSelection.start"
+	keyOrderSelectionEnd        = "orderSelection.end"
+	keyOrderSelectionSupplierID = "orderSelection.supplier"
+
 	// chef
 	DestChef           = "/chef/"
 	DestChefOrders     = "/chef/orders/"
