@@ -12,6 +12,7 @@ type Order struct {
 	UserID           int       `gorm:"column:id_utente"`
 	User             User      `gorm:"-:all"`
 	Amount           int       `gorm:"column:quantita"`
+	AmountString     string    `gorm:"-:all"`
 	ExpiresAt        time.Time `gorm:"column:richiesto_il"`
 	ExpirationString string    `gorm:"-:all"`
 }
@@ -21,6 +22,8 @@ func (Order) TableName() string { return "ordini" }
 func (db *GormDB) completeOrder(order Order) Order {
 	order.Product, _ = db.FindProduct(order.ProductID)
 	order.User, _ = db.FindUser(order.UserID)
+
+	order.AmountString = strconv.Itoa(order.Amount) + " " + order.Product.UnitOfMeasure.Symbol
 
 	expiresInHours := time.Until(order.ExpiresAt).Hours()
 
