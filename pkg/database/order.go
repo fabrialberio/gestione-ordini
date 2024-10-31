@@ -64,6 +64,16 @@ func (db *GormDB) FindAllOrdersWithUserID(userId int) ([]Order, error) {
 	return orders, err
 }
 
+func (db *GormDB) FindAllOrdersWithExpiresAtBetween(start, end time.Time) ([]Order, error) {
+	var orders []Order
+
+	err := db.conn.Where("richiesto_il BETWEEN ? AND ?", start, end).Find(&orders).Error
+	for i, o := range orders {
+		orders[i] = db.completeOrder(o)
+	}
+	return orders, err
+}
+
 func (db *GormDB) CreateOrder(order Order) error {
 	return db.conn.Create(&order).Error
 }

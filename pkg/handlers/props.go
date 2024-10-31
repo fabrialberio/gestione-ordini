@@ -37,6 +37,7 @@ const (
 	DestConsole        = "/console/"
 	DestAllOrders      = "/console/allOrders/"
 	DestAllOrdersView  = "/console/allOrdersView"
+	DestOrderSelection = "/console/orderSelection/"
 	DestProducts       = "/console/products/"
 	DestProductsTable  = "/console/productsTable"
 	DestSuppliers      = "/console/suppliers/"

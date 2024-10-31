@@ -22,7 +22,7 @@
           Seleziona ordini
         </h2>
 
-        <form class="space-y-4 border-outline p-4 border rounded-lg">
+        <form class="space-y-4 border-outline p-4 border rounded-lg" method="post" action="/console/orderSelection/">
           <div class="flex sm:flex-row flex-col gap-4 w-full">
             {{ template "input" .StartDateInput }}
             {{ template "input" .EndDateInput }}
@@ -30,9 +30,6 @@
           {{ template "select" .SupplierSelect }}
 
           <div class="flex items-center gap-2">
-            <p class="text-on-surface-dim">
-              <span id="count">10</span> ordini selezionati
-            </p>
             <button type="submit" class="ml-auto btn-lg">
               Scarica CSV
             </button>
