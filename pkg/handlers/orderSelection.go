@@ -17,7 +17,7 @@ func PostOrderSelection(w http.ResponseWriter, r *http.Request) {
 
 	orders, err := getFilteredOrders(r, start, end, supplierId)
 	if err != nil {
-		HandleError(w, r, err)
+		ShowError(w, r, err)
 		return
 	}
 

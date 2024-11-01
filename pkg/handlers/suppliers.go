@@ -30,7 +30,7 @@ func GetSuppliersTable(w http.ResponseWriter, r *http.Request) {
 
 	data.Suppliers, err = appContext.Database(r).FindAllSuppliers(data.Table.OrderBy, data.Table.OrderDesc)
 	if err != nil {
-		HandleError(w, r, err)
+		ShowError(w, r, err)
 		return
 	}
 
@@ -52,7 +52,7 @@ func GetSupplier(w http.ResponseWriter, r *http.Request) {
 	} else {
 		supplier, err := appContext.Database(r).FindSupplier(id)
 		if err != nil {
-			HandleError(w, r, err)
+			ShowError(w, r, err)
 			return
 		}
 		data.Supplier = supplier
@@ -77,20 +77,20 @@ func PostSupplier(w http.ResponseWriter, r *http.Request) {
 			Name:  name,
 		})
 		if err != nil {
-			HandleError(w, r, err)
+			ShowError(w, r, err)
 			return
 		}
 	} else {
 		id, err := strconv.Atoi(r.FormValue(keySupplierID))
 		if err != nil {
-			HandleError(w, r, err)
+			ShowError(w, r, err)
 			return
 		}
 
 		if delete {
 			err := appContext.Database(r).DeleteSupplier(id)
 			if err != nil {
-				HandleError(w, r, err)
+				ShowError(w, r, err)
 				return
 			}
 		} else {
@@ -100,7 +100,7 @@ func PostSupplier(w http.ResponseWriter, r *http.Request) {
 				Name:  name,
 			})
 			if err != nil {
-				HandleError(w, r, err)
+				ShowError(w, r, err)
 				return
 			}
 		}
