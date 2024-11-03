@@ -29,8 +29,7 @@ services:
     image: cosmtrek/air
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.app.rule=Host(`localhost`)"
-      - "traefik.http.routers.app.rule=Host(`gestione-ordini.enaiptesero.it`)"
+      - "traefik.http.routers.app.rule=Host(`localhost`, `gestione-ordini.enaiptesero.it`)"
       - "traefik.http.services.app.loadbalancer.server.port=8080"
     depends_on:
       - db
