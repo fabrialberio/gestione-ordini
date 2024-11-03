@@ -11,11 +11,27 @@ services:
     networks:
       - gestione-ordini-network
 
+  reverse-proxy:
+    image: traefik:v3.1
+    command:      
+      - "--api.insecure=true"
+      - "--providers.docker=true"
+      - "--entrypoints.web.address=:80"
+    ports:
+      - "80:80"
+      - "8080:8080"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - gestione-ordini-network
+
   app:
     image: cosmtrek/air
     labels:
-      - "traefik.http.routers.gestione-ordini-app.rule=Host(`gestione-ordini.enaiptesero.it`)"
-    container_name: gestione-ordini-app
+      - "traefik.enable=true"
+      - "traefik.http.routers.app.rule=Host(`localhost`)"
+      - "traefik.http.routers.app.rule=Host(`gestione-ordini.enaipestero.it`)"
+      - "traefik.http.services.app.loadbalancer.server.port=8080"
     depends_on:
       - db
     restart: always
@@ -28,17 +44,6 @@ services:
       - .:/app
     networks:
       - gestione-ordini-network
-
-  reverse-proxy:
-    image: traefik:v3.1
-    command:
-      - "--api.insecure=true"
-      - "--providers.docker"
-    ports:
-      - "80:80"
-      - "8080:8080"
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
 
 volumes:
   mysql-data:
