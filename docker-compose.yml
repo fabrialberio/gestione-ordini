@@ -1,5 +1,5 @@
 services:
-  mysql:
+  db:
     image: mysql:8.0
     container_name: ${MYSQL_CONTAINER_NAME}
     restart: always
@@ -11,17 +11,11 @@ services:
     networks:
       - gestione-ordini-network
 
-  tailwind:
-    build: ./tailwind
-    container_name: gestione-ordini-tailwind
-    volumes:
-      - .:/app
-
-  golang:
+  app:
     image: cosmtrek/air
     container_name: gestione-ordini-app
     depends_on:
-      - mysql
+      - db
     restart: always
     working_dir: /app
     env_file:
