@@ -29,11 +29,11 @@ func main() {
 	setupRoutes(mux)
 
 	server := http.Server{
-		Addr:    ":80",
+		Addr:    ":8080",
 		Handler: mw.WithLogging(mw.WithContext(db, tmpl, mux)),
 	}
 
-	log.Println("Server started on port 80.")
+	log.Println("Server started on port 8080.")
 	log.Fatal(server.ListenAndServe())
 }
 
