@@ -14,7 +14,7 @@ services:
   app:
     image: cosmtrek/air
     labels:
-      - "traefik.http.routers.app.rule=Host(`gestione-ordini.enaiptesero.it`)"
+      - "traefik.http.routers.gestione-ordini-app.rule=Host(`gestione-ordini.enaiptesero.it`)"
     container_name: gestione-ordini-app
     depends_on:
       - db
