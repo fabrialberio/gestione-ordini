@@ -73,6 +73,7 @@ func GetUser(w http.ResponseWriter, r *http.Request) {
 		NameInput     components.Input
 		SurnameInput  components.Input
 		UsernameInput components.Input
+		PasswordInput components.Input
 		RoleSelect    components.Select
 	}{
 		IsNew: isNew,
@@ -95,6 +96,10 @@ func GetUser(w http.ResponseWriter, r *http.Request) {
 			Type:         "text",
 			DefaultValue: defaultUser.Username,
 		},
+		PasswordInput: components.Input{
+			Label: "Password",
+			Name:  keyUserPassword,
+		},
 		RoleSelect: components.Select{
 			Label:    "Ruolo",
 			Name:     keyUserRoleID,
@@ -116,17 +121,20 @@ func PostUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	username := r.FormValue(keyUserUsername)
+	password := r.FormValue(keyUserPassword)
 	name := r.FormValue(keyUserName)
 	surname := r.FormValue(keyUserSurname)
+	passwordHash := ""
 
-	if isNew {
-		password := r.FormValue(keyUserPassword)
-		passwordHash, err := auth.HashPassword(password)
+	if password != "" {
+		passwordHash, err = auth.HashPassword(password)
 		if err != nil {
 			ShowError(w, r, err)
 			return
 		}
+	}
 
+	if isNew {
 		err = appContext.Database(r).CreateUser(database.User{
 			RoleID:       roleId,
 			Username:     username,
@@ -153,11 +161,12 @@ func PostUser(w http.ResponseWriter, r *http.Request) {
 			}
 		} else {
 			err = appContext.Database(r).UpdateUser(database.User{
-				ID:       id,
-				RoleID:   roleId,
-				Username: username,
-				Name:     name,
-				Surname:  surname,
+				ID:           id,
+				RoleID:       roleId,
+				Username:     username,
+				PasswordHash: passwordHash,
+				Name:         name,
+				Surname:      surname,
 			})
 			if err != nil {
 				ShowError(w, r, err)
