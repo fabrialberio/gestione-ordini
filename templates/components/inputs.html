@@ -17,25 +17,46 @@
 {{ end }}
 
 {{ define "productAmountInput" }}
+<script src="/public/searchSelect.js"></script>
 <script>
   function setUnitOfMeasure() {
-    select = document.querySelector("#productSelect")
+    select = document.getElementById("{{ .ProductSelectName }}-select")
     unit = select.options[select.selectedIndex].getAttribute("data-unitOfMeasure")
 
     document.getElementById("unitOfMeasure").innerHTML = " ("+unit+")"
   }
 
   document.addEventListener("DOMContentLoaded", function() {
+    searchSelect(
+      document.getElementById("{{ .ProductSelectName }}-input"),
+      document.getElementById("{{ .ProductSelectName }}-dialog"),
+      document.getElementById("{{ .ProductSelectName }}-input"),
+      document.getElementById("{{ .ProductSelectName }}-options"),
+      document.getElementById("{{ .ProductSelectName }}-select"),
+    )
+
+    document.getElementById("{{ .ProductSelectName }}-dialog").addEventListener("click", setUnitOfMeasure)
+
     setUnitOfMeasure()
   });
 </script>
 <div class="w-full">
   <label>Prodotto</label>
-  <select id="productSelect" class="w-full input" name="{{ .ProductSelectName }}" required onchange="setUnitOfMeasure()">
+  <select id="{{ .ProductSelectName }}-select" class="sr-only" name="{{ .ProductSelectName }}">
     {{ range .Products }}
     <option data-unitOfMeasure="{{ .UnitOfMeasure.Symbol }}" value="{{ .ID }}"{{ if eq .ID $.SelectedProduct }} selected{{ end }}>{{ .Name }}</option>
     {{ end }}
   </select>
+  <div id="{{ .ProductSelectName }}-input" class="bg-white cursor-pointer input">
+  </div>
+  <dialog id="{{ .ProductSelectName }}-dialog" class="z-50 bg-white shadow-lg p-2 rounded-lg">
+    <input id="{{ .ProductSelectName }}-search" class="mb-2 w-full h-8 input" type="search" placeholder="Search">
+    <ul id="{{ .ProductSelectName }}-options">
+      {{ range .Products }}
+      <li value="{{ .ID }}" class="flex items-center px-2 rounded-lg h-8 text-sm selectable">{{ .Name }}</li>
+      {{ end }}
+    </ul>
+  </dialog>
 </div>
 <div class="w-full">
   <label>
@@ -43,4 +64,8 @@
   </label>
   <input class="w-full input" type="number" min="1" name="{{ .AmountInputName }}" value="{{ .AmountInputDefaultValue }}" required>
 </div>
+{{ end }}
+
+{{ define "searchSelect" }}
+
 {{ end }}
