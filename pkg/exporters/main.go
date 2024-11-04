@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/csv"
 	"gestione-ordini/pkg/database"
+	"strconv"
 )
 
 func ExportToList(orders []database.Order) []byte {
@@ -25,9 +26,14 @@ func ExportToCSV(orders []database.Order) []byte {
 	writer := csv.NewWriter(&builder)
 	writer.Comma = ';'
 
-	writer.Write([]string{"Prodotto", "Quantità", "Fornitore"})
+	writer.Write([]string{"Prodotto", "Quantità", "Unità di misura", "Fornitore"})
 	for _, order := range orders {
-		writer.Write([]string{order.Product.Name, order.AmountString, order.Product.Supplier.Name})
+		writer.Write([]string{
+			order.Product.Name,
+			strconv.Itoa(order.Amount),
+			order.Product.UnitOfMeasure.Symbol,
+			order.Product.Supplier.Name,
+		})
 	}
 	writer.Flush()
 

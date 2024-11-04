@@ -13,14 +13,11 @@ services:
 
   reverse-proxy:
     image: traefik:v3.1
-    command:      
+    command:
       - "--providers.docker=true"
-      - "--providers.docker.exposedbydefault=false"
-      - "--entrypoints.websecure.address=:443"
-      - "--certificatesresolvers.myresolver.acme.tlschallenge=true"
-      - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"
+      - "--entrypoints.web.address=:80"
     ports:
-      - "443:443"
+      - "80:80"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - letsencrypt:/letsencrypt
@@ -31,10 +28,8 @@ services:
     image: cosmtrek/air
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.app.rule=Host(`gestione-ordini.enaiptesero.it`)"
+      - "traefik.http.routers.app.rule=Host(`localhost`)"
       - "traefik.http.services.app.loadbalancer.server.port=8080"
-      - "traefik.http.routers.app.entrypoints=websecure"
-      - "traefik.http.routers.app.tls.certresolver=myresolver"
     restart: always
     working_dir: /app
     env_file:
@@ -45,6 +40,12 @@ services:
       - .:/app
     networks:
       - gestione-ordini-network
+
+  tailwind:
+    build: ./tailwind
+    container_name: gestione-ordini-tailwind
+    volumes:
+      - .:/app
 
 volumes:
   mysql-data:

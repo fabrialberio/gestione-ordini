@@ -42,7 +42,7 @@ func GetChefOrder(w http.ResponseWriter, r *http.Request) {
 	} else {
 		order, err := appContext.Database(r).FindOrder(id)
 		if err != nil {
-			HandleError(w, r, err)
+			ShowError(w, r, err)
 			return
 		}
 
@@ -53,7 +53,7 @@ func GetChefOrder(w http.ResponseWriter, r *http.Request) {
 
 	products, err := appContext.Database(r).FindAllProducts(database.OrderProductByID, true)
 	if err != nil {
-		HandleError(w, r, err)
+		ShowError(w, r, err)
 		return
 	}
 
@@ -61,7 +61,7 @@ func GetChefOrder(w http.ResponseWriter, r *http.Request) {
 
 	user, err := auth.GetAuthenticatedUser(r)
 	if err != nil {
-		HandleError(w, r, err)
+		ShowError(w, r, err)
 		return
 	}
 	data.UserID = user.ID
@@ -74,7 +74,7 @@ func PostChefOrder(w http.ResponseWriter, r *http.Request) {
 	delete := r.Form.Has("delete")
 	user, err := appContext.AuthenticatedUser(r)
 	if err != nil {
-		HandleError(w, r, err)
+		ShowError(w, r, err)
 		return
 	}
 
@@ -90,20 +90,20 @@ func PostChefOrder(w http.ResponseWriter, r *http.Request) {
 			ExpiresAt: requestedAt,
 		})
 		if err != nil {
-			HandleError(w, r, err)
+			ShowError(w, r, err)
 			return
 		}
 	} else {
 		id, err := strconv.Atoi(r.FormValue(keyOrderID))
 		if err != nil {
-			HandleError(w, r, err)
+			ShowError(w, r, err)
 			return
 		}
 
 		if delete {
 			err = appContext.Database(r).DeleteOrder(id)
 			if err != nil {
-				HandleError(w, r, err)
+				ShowError(w, r, err)
 				return
 			}
 		} else {
@@ -115,7 +115,7 @@ func PostChefOrder(w http.ResponseWriter, r *http.Request) {
 				ExpiresAt: requestedAt,
 			})
 			if err != nil {
-				HandleError(w, r, err)
+				ShowError(w, r, err)
 				return
 			}
 		}
@@ -129,13 +129,13 @@ func GetChefOrdersView(w http.ResponseWriter, r *http.Request) {
 
 	user, err := appContext.AuthenticatedUser(r)
 	if err != nil {
-		HandleError(w, r, err)
+		ShowError(w, r, err)
 		return
 	}
 
 	orders, err := appContext.Database(r).FindAllOrdersWithUserID(user.ID)
 	if err != nil {
-		HandleError(w, r, err)
+		ShowError(w, r, err)
 		return
 	}
 
@@ -149,7 +149,7 @@ func GetChefOrdersView(w http.ResponseWriter, r *http.Request) {
 func GetAllOrdersView(w http.ResponseWriter, r *http.Request) {
 	orders, err := appContext.Database(r).FindAllOrders()
 	if err != nil {
-		HandleError(w, r, err)
+		ShowError(w, r, err)
 		return
 	}
 

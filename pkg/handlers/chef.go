@@ -23,7 +23,7 @@ func GetChef(w http.ResponseWriter, r *http.Request) {
 
 	products, err := appContext.Database(r).FindAllProducts(database.OrderProductByID, true)
 	if err != nil {
-		HandleError(w, r, err)
+		ShowError(w, r, err)
 		return
 	}
 
