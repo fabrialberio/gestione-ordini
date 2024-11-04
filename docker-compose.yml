@@ -29,8 +29,6 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.app.rule=Host(`gestione-ordini.enaiptesero.it`)"
       - "traefik.http.services.app.loadbalancer.server.port=8080"
-    depends_on:
-      - db
     restart: always
     working_dir: /app
     env_file:
