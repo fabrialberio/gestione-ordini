@@ -12,7 +12,7 @@
     searchSelect(
       document.getElementById("{{ .ProductSelectName }}-input"),
       document.getElementById("{{ .ProductSelectName }}-dialog"),
-      document.getElementById("{{ .ProductSelectName }}-input"),
+      document.getElementById("{{ .ProductSelectName }}-search"),
       document.getElementById("{{ .ProductSelectName }}-options"),
       document.getElementById("{{ .ProductSelectName }}-select"),
     )
@@ -31,9 +31,12 @@
   </select>
   <div id="{{ .ProductSelectName }}-input" class="bg-white cursor-pointer input">
   </div>
-  <dialog id="{{ .ProductSelectName }}-dialog" class="z-50 bg-white shadow-lg p-2 rounded-lg">
+  <dialog id="{{ .ProductSelectName }}-dialog" class="bg-white shadow-lg sm:mt-auto max-sm:mb-0 p-2 rounded-lg max-sm:rounded-b-none w-full max-w-md">
+    <h3 class="p-2 font-bold text-center text-lg">
+      Seleziona un prodotto
+    </h3>
     <input id="{{ .ProductSelectName }}-search" class="mb-2 w-full h-8 input" type="search" placeholder="Search">
-    <ul id="{{ .ProductSelectName }}-options">
+    <ul id="{{ .ProductSelectName }}-options" class="max-h-96 overflow-y-scroll">
       {{ range .Products }}
       <li value="{{ .ID }}" class="flex items-center px-2 rounded-lg h-8 text-sm selectable">{{ .Name }}</li>
       {{ end }}
