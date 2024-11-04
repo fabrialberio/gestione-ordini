@@ -24,32 +24,22 @@ var weekdayNames = map[time.Weekday]string{
 
 func GetChefOrder(w http.ResponseWriter, r *http.Request) {
 	// TODO: Check order is made by current user
-	var data struct {
-		Order              database.Order
-		ProductAmountInput components.ProductAmountInput
-		ExpiresAtInput     components.Input
-		UserID             int
-		IsNew              bool
+	isNew := false
+	defaultOrder := database.Order{
+		Amount:    1,
+		ExpiresAt: time.Now(),
 	}
 
 	id, err := strconv.Atoi(r.PathValue("id"))
 	if err != nil {
-		data.IsNew = true
-		data.Order = database.Order{
-			Amount:    1,
-			ExpiresAt: time.Now(),
-		}
+		isNew = true
 	} else {
-		order, err := appContext.Database(r).FindOrder(id)
+		defaultOrder, err = appContext.Database(r).FindOrder(id)
 		if err != nil {
 			ShowError(w, r, err)
 			return
 		}
-
-		data.Order = order
 	}
-
-	data.ExpiresAtInput = components.Input{"Scadenza", keyOrderRequestedAt, "date", data.Order.ExpiresAt.Format(dateFormat)}
 
 	products, err := appContext.Database(r).FindAllProducts(database.OrderProductByID, true)
 	if err != nil {
@@ -57,14 +47,36 @@ func GetChefOrder(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	data.ProductAmountInput = components.ProductAmountInput{keyOrderProductID, products, data.Order.ProductID, keyOrderAmount, data.Order.Amount}
-
 	user, err := auth.GetAuthenticatedUser(r)
 	if err != nil {
 		ShowError(w, r, err)
 		return
 	}
-	data.UserID = user.ID
+
+	data := struct {
+		IsNew              bool
+		Order              database.Order
+		ProductAmountInput components.ProductAmountInput
+		ExpiresAtInput     components.Input
+		UserID             int
+	}{
+		IsNew: isNew,
+		Order: defaultOrder,
+		ProductAmountInput: components.ProductAmountInput{
+			ProductSelectName:       keyOrderProductID,
+			Products:                products,
+			SelectedProduct:         defaultOrder.ProductID,
+			AmountInputName:         keyOrderAmount,
+			AmountInputDefaultValue: defaultOrder.Amount,
+		},
+		ExpiresAtInput: components.Input{
+			Label:        "Scadenza",
+			Name:         keyOrderRequestedAt,
+			Type:         "date",
+			DefaultValue: defaultOrder.ExpiresAt.Format(dateFormat),
+		},
+		UserID: user.ID,
+	}
 
 	appContext.ExecuteTemplate(w, r, "chefOrder.html", data)
 }

@@ -10,14 +10,30 @@ import (
 
 func sidebarDestinations(r *http.Request, selected int) []components.SidebarDest {
 	sidebar := []components.SidebarDest{
-		{DestAllOrders, "fa-clipboard-check", "Ordini", false},
-		{DestProducts, "fa-box", "Prodotti", false},
-		{DestSuppliers, "fa-truck", "Fornitori", false},
+		{
+			DestURL:     DestAllOrders,
+			FasIconName: "fa-clipboard-check",
+			Label:       "Ordini",
+		},
+		{
+			DestURL:     DestProducts,
+			FasIconName: "fa-box",
+			Label:       "Prodotti",
+		},
+		{
+			DestURL:     DestSuppliers,
+			FasIconName: "fa-truck",
+			Label:       "Fornitori",
+		},
 	}
 
 	user, _ := appContext.AuthenticatedUser(r)
 	if user != nil && user.RoleID == database.RoleIDAdministrator {
-		sidebar = append(sidebar, components.SidebarDest{DestUsers, "fa-users", "Utenti", false})
+		sidebar = append(sidebar, components.SidebarDest{
+			DestURL:     DestUsers,
+			FasIconName: "fa-users",
+			Label:       "Utenti",
+		})
 	}
 
 	sidebar[selected].Selected = true
@@ -30,20 +46,8 @@ func GetConsole(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetAllOrders(w http.ResponseWriter, r *http.Request) {
-	data := struct {
-		Sidebar        []components.SidebarDest
-		StartDateInput components.Input
-		EndDateInput   components.Input
-		SupplierSelect components.Select
-	}{
-		Sidebar: sidebarDestinations(r, 0),
-	}
-
 	defaultStart := currentWeekStart()
 	weekDuration := time.Hour * 24 * 6
-
-	data.StartDateInput = components.Input{"Da", keyOrderSelectionStart, "date", defaultStart.Format(dateFormat)}
-	data.EndDateInput = components.Input{"A", keyOrderSelectionEnd, "date", defaultStart.Add(weekDuration).Format(dateFormat)}
 
 	suppliers, err := appContext.Database(r).FindAllSuppliers(database.OrderSupplierByID, true)
 	if err != nil {
@@ -51,14 +55,39 @@ func GetAllOrders(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	data.SupplierSelect = components.Select{"Fornitore", keyOrderSelectionSupplierID, 0, []components.SelectOption{}}
-	data.SupplierSelect.Options = append(data.SupplierSelect.Options, components.SelectOption{
+	supplierOptions := []components.SelectOption{{
 		Value: 0,
 		Text:  "Tutti i fornitori",
-	})
-
+	}}
 	for _, s := range suppliers {
-		data.SupplierSelect.Options = append(data.SupplierSelect.Options, components.SelectOption{s.ID, s.Name})
+		supplierOptions = append(supplierOptions, components.SelectOption{Value: s.ID, Text: s.Name})
+	}
+
+	data := struct {
+		Sidebar        []components.SidebarDest
+		StartDateInput components.Input
+		EndDateInput   components.Input
+		SupplierSelect components.Select
+	}{
+		Sidebar: sidebarDestinations(r, 0),
+		StartDateInput: components.Input{
+			Label:        "Da",
+			Name:         keyOrderSelectionStart,
+			Type:         "date",
+			DefaultValue: defaultStart.Format(dateFormat),
+		},
+		EndDateInput: components.Input{
+			Label:        "A",
+			Name:         keyOrderSelectionEnd,
+			Type:         "date",
+			DefaultValue: defaultStart.Add(weekDuration).Format(dateFormat),
+		},
+		SupplierSelect: components.Select{
+			Label:    "Fornitore",
+			Name:     keyOrderSelectionSupplierID,
+			Selected: 0,
+			Options:  supplierOptions,
+		},
 	}
 
 	appContext.ExecuteTemplate(w, r, "allOrders.html", data)

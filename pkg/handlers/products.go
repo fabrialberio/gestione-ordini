@@ -9,61 +9,51 @@ import (
 )
 
 func GetProductsTable(w http.ResponseWriter, r *http.Request) {
-	var err error
-	data := components.ProductsTable{
-		Table: components.Table{
-			TableURL: DestProductsTable,
-		},
-	}
-
-	data.Table.Headings = []components.TableHeading{
-		{database.OrderProductByID, "ID"},
-		{database.OrderProductByName, "Nome"},
-		{database.OrderProductByProductType, "Tipologia"},
-		{database.OrderProductBySupplier, "Fornitore"},
-		{database.OrderProductByUnitOfMeasure, "Unità"},
-	}
-
-	data.Table.OrderBy, err = strconv.Atoi(r.URL.Query().Get("orderBy"))
+	orderBy, err := strconv.Atoi(r.URL.Query().Get("orderBy"))
 	if err != nil {
-		data.Table.OrderBy = database.OrderProductByID
+		orderBy = database.OrderProductByID
 	}
-	data.Table.OrderDesc = r.URL.Query().Get("orderDesc") == "true"
+	orderDesc := r.URL.Query().Get("orderDesc") == "true"
 
-	data.Products, err = appContext.Database(r).FindAllProducts(data.Table.OrderBy, data.Table.OrderDesc)
+	products, err := appContext.Database(r).FindAllProducts(orderBy, orderDesc)
 	if err != nil {
 		ShowError(w, r, err)
 		return
+	}
+
+	data := components.ProductsTable{
+		Table: components.Table{
+			TableURL:  DestProductsTable,
+			OrderBy:   orderBy,
+			OrderDesc: orderDesc,
+			Headings: []components.TableHeading{
+				{Index: database.OrderProductByID, Name: "ID"},
+				{Index: database.OrderProductByName, Name: "Nome"},
+				{Index: database.OrderProductByProductType, Name: "Tipologia"},
+				{Index: database.OrderProductBySupplier, Name: "Fornitore"},
+				{Index: database.OrderProductByUnitOfMeasure, Name: "Unità"},
+			},
+		},
+		Products: products,
 	}
 
 	appContext.ExecuteTemplate(w, r, "productsTable", data)
 }
 
 func GetProduct(w http.ResponseWriter, r *http.Request) {
-	var data struct {
-		Product             database.Product
-		NameInput           components.Input
-		ProductTypeSelect   components.Select
-		SupplierSelect      components.Select
-		UnitOfMeasureSelect components.Select
-		IsNew               bool
-	}
+	isNew := false
+	defaultProduct := database.Product{}
 
 	id, err := strconv.Atoi(r.PathValue("id"))
 	if err != nil {
-		data.IsNew = true
-		data.Product = database.Product{}
+		isNew = true
 	} else {
-		product, err := appContext.Database(r).FindProduct(id)
+		defaultProduct, err = appContext.Database(r).FindProduct(id)
 		if err != nil {
 			ShowError(w, r, err)
 			return
 		}
-
-		data.Product = product
 	}
-
-	data.NameInput = components.Input{"Nome", keyProductName, "text", data.Product.Name}
 
 	productTypes, err := appContext.Database(r).FindAllProductTypes()
 	if err != nil {
@@ -71,9 +61,9 @@ func GetProduct(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	data.ProductTypeSelect = components.Select{"Tipologia di prodotto", keyProductProductTypeID, data.Product.ProductTypeID, []components.SelectOption{}}
+	productTypeOptions := []components.SelectOption{}
 	for _, p := range productTypes {
-		data.ProductTypeSelect.Options = append(data.ProductTypeSelect.Options, components.SelectOption{p.ID, p.Name})
+		productTypeOptions = append(productTypeOptions, components.SelectOption{Value: p.ID, Text: p.Name})
 	}
 
 	suppliers, err := appContext.Database(r).FindAllSuppliers(database.OrderSupplierByID, true)
@@ -82,9 +72,9 @@ func GetProduct(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	data.SupplierSelect = components.Select{"Fornitore", keyProductSupplierID, data.Product.SupplierID, []components.SelectOption{}}
+	suppilerOptions := []components.SelectOption{}
 	for _, s := range suppliers {
-		data.SupplierSelect.Options = append(data.SupplierSelect.Options, components.SelectOption{s.ID, s.Name})
+		suppilerOptions = append(suppilerOptions, components.SelectOption{Value: s.ID, Text: s.Name})
 	}
 
 	unitsOfMeasure, err := appContext.Database(r).FindAllUnitsOfMeasure()
@@ -93,9 +83,45 @@ func GetProduct(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	data.UnitOfMeasureSelect = components.Select{"Unità di misura", keyProductUnitOfMeasureID, data.Product.UnitOfMeasureID, []components.SelectOption{}}
+	unitOfMeasureOptions := []components.SelectOption{}
 	for _, u := range unitsOfMeasure {
-		data.UnitOfMeasureSelect.Options = append(data.UnitOfMeasureSelect.Options, components.SelectOption{u.ID, u.Symbol})
+		unitOfMeasureOptions = append(unitOfMeasureOptions, components.SelectOption{Value: u.ID, Text: u.Symbol})
+	}
+
+	data := struct {
+		IsNew               bool
+		Product             database.Product
+		NameInput           components.Input
+		ProductTypeSelect   components.Select
+		SupplierSelect      components.Select
+		UnitOfMeasureSelect components.Select
+	}{
+		IsNew:   isNew,
+		Product: defaultProduct,
+		NameInput: components.Input{
+			Label:        "Nome",
+			Name:         keyProductName,
+			Type:         "text",
+			DefaultValue: defaultProduct.Name,
+		},
+		ProductTypeSelect: components.Select{
+			Label:    "Tipologia di prodotto",
+			Name:     keyProductProductTypeID,
+			Selected: defaultProduct.ProductTypeID,
+			Options:  productTypeOptions,
+		},
+		SupplierSelect: components.Select{
+			Label:    "Fornitore",
+			Name:     keyProductSupplierID,
+			Selected: defaultProduct.SupplierID,
+			Options:  suppilerOptions,
+		},
+		UnitOfMeasureSelect: components.Select{
+			Label:    "Unità di misura",
+			Name:     keyProductUnitOfMeasureID,
+			Selected: defaultProduct.UnitOfMeasureID,
+			Options:  unitOfMeasureOptions,
+		},
 	}
 
 	appContext.ExecuteTemplate(w, r, "product.html", data)

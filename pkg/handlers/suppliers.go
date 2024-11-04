@@ -9,57 +9,71 @@ import (
 )
 
 func GetSuppliersTable(w http.ResponseWriter, r *http.Request) {
-	var err error
-	data := components.SuppliersTable{
-		Table: components.Table{
-			TableURL: DestSuppliersTable,
-		},
-	}
-
-	data.Table.Headings = []components.TableHeading{
-		{database.OrderSupplierByID, "ID"},
-		{database.OrderSupplierByName, "Nome"},
-		{database.OrderSupplierByEmail, "Email"},
-	}
-
-	data.Table.OrderBy, err = strconv.Atoi(r.URL.Query().Get("orderBy"))
+	orderBy, err := strconv.Atoi(r.URL.Query().Get("orderBy"))
 	if err != nil {
-		data.Table.OrderBy = database.OrderSupplierByID
+		orderBy = database.OrderSupplierByID
 	}
-	data.Table.OrderDesc = r.URL.Query().Get("orderDesc") == "true"
+	orderDesc := r.URL.Query().Get("orderDesc") == "true"
 
-	data.Suppliers, err = appContext.Database(r).FindAllSuppliers(data.Table.OrderBy, data.Table.OrderDesc)
+	suppliers, err := appContext.Database(r).FindAllSuppliers(orderBy, orderDesc)
 	if err != nil {
 		ShowError(w, r, err)
 		return
+	}
+
+	data := components.SuppliersTable{
+		Table: components.Table{
+			TableURL:  DestSuppliersTable,
+			OrderBy:   orderBy,
+			OrderDesc: orderDesc,
+			Headings: []components.TableHeading{
+				{Index: database.OrderSupplierByID, Name: "ID"},
+				{Index: database.OrderSupplierByName, Name: "Nome"},
+				{Index: database.OrderSupplierByEmail, Name: "Email"},
+			},
+		},
+		Suppliers: suppliers,
 	}
 
 	appContext.ExecuteTemplate(w, r, "suppliersTable", data)
 }
 
 func GetSupplier(w http.ResponseWriter, r *http.Request) {
-	var data struct {
-		Supplier   database.Supplier
-		NameInput  components.Input
-		EmailInput components.Input
-		IsNew      bool
-	}
+	isNew := false
+	defaultSupplier := database.Supplier{}
 
 	id, err := strconv.Atoi(r.PathValue("id"))
 	if err != nil {
-		data.IsNew = true
-		data.Supplier = database.Supplier{}
+		isNew = true
 	} else {
-		supplier, err := appContext.Database(r).FindSupplier(id)
+		defaultSupplier, err = appContext.Database(r).FindSupplier(id)
 		if err != nil {
 			ShowError(w, r, err)
 			return
 		}
-		data.Supplier = supplier
 	}
 
-	data.NameInput = components.Input{"Nome", keySupplierName, "text", data.Supplier.Name}
-	data.EmailInput = components.Input{"Email", keySupplierEmail, "text", data.Supplier.Email}
+	data := struct {
+		IsNew      bool
+		Supplier   database.Supplier
+		NameInput  components.Input
+		EmailInput components.Input
+	}{
+		IsNew:    isNew,
+		Supplier: defaultSupplier,
+		NameInput: components.Input{
+			Label:        "Nome",
+			Name:         keySupplierName,
+			Type:         "text",
+			DefaultValue: defaultSupplier.Name,
+		},
+		EmailInput: components.Input{
+			Label:        "Email",
+			Name:         keySupplierEmail,
+			Type:         "text",
+			DefaultValue: defaultSupplier.Email,
+		},
+	}
 
 	appContext.ExecuteTemplate(w, r, "supplier.html", data)
 }

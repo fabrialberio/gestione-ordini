@@ -10,63 +10,51 @@ import (
 )
 
 func GetUsersTable(w http.ResponseWriter, r *http.Request) {
-	var err error
-	data := components.UsersTable{
-		Table: components.Table{
-			TableURL: DestUsersTable,
-		},
-	}
-
-	data.Table.Headings = []components.TableHeading{
-		{database.OrderUserByID, "ID"},
-		{database.OrderUserByRole, "Ruolo"},
-		{database.OrderUserByUsername, "Username"},
-		{database.OrderUserByName, "Nome"},
-		{database.OrderUserBySurname, "Cognome"},
-	}
-
-	data.Table.OrderBy, err = strconv.Atoi(r.URL.Query().Get("orderBy"))
+	orderBy, err := strconv.Atoi(r.URL.Query().Get("orderBy"))
 	if err != nil {
-		data.Table.OrderBy = database.OrderUserByID
+		orderBy = database.OrderUserByID
 	}
-	data.Table.OrderDesc = r.URL.Query().Get("orderDesc") == "true"
+	orderDesc := r.URL.Query().Get("orderDesc") == "true"
 
-	data.Users, err = appContext.Database(r).FindAllUsers(data.Table.OrderBy, data.Table.OrderDesc)
+	users, err := appContext.Database(r).FindAllUsers(orderBy, orderDesc)
 	if err != nil {
 		ShowError(w, r, err)
 		return
+	}
+
+	data := components.UsersTable{
+		Table: components.Table{
+			TableURL:  DestUsersTable,
+			OrderBy:   orderBy,
+			OrderDesc: orderDesc,
+			Headings: []components.TableHeading{
+				{Index: database.OrderUserByID, Name: "ID"},
+				{Index: database.OrderUserByRole, Name: "Ruolo"},
+				{Index: database.OrderUserByUsername, Name: "Username"},
+				{Index: database.OrderUserByName, Name: "Nome"},
+				{Index: database.OrderUserBySurname, Name: "Cognome"},
+			},
+		},
+		Users: users,
 	}
 
 	appContext.ExecuteTemplate(w, r, "usersTable", data)
 }
 
 func GetUser(w http.ResponseWriter, r *http.Request) {
-	var data struct {
-		User          database.User
-		NameInput     components.Input
-		SurnameInput  components.Input
-		UsernameInput components.Input
-		RoleSelect    components.Select
-		IsNew         bool
-	}
+	isNew := false
+	defaultUser := database.User{}
 
 	id, err := strconv.Atoi(r.PathValue("id"))
 	if err != nil {
-		data.IsNew = true
-		data.User = database.User{}
+		isNew = true
 	} else {
-		user, err := appContext.Database(r).FindUser(id)
+		defaultUser, err = appContext.Database(r).FindUser(id)
 		if err != nil {
 			ShowError(w, r, err)
 			return
 		}
-
-		data.User = user
 	}
-
-	data.NameInput = components.Input{"Nome", keyUserName, "text", data.User.Name}
-	data.SurnameInput = components.Input{"Cognome", keyUserSurname, "text", data.User.Surname}
-	data.UsernameInput = components.Input{"Username", keyUserUsername, "text", data.User.Username}
 
 	roles, err := appContext.Database(r).FindAllRoles()
 	if err != nil {
@@ -74,9 +62,45 @@ func GetUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	data.RoleSelect = components.Select{"Ruolo", keyUserRoleID, data.User.RoleID, []components.SelectOption{}}
+	roleOptions := []components.SelectOption{}
 	for _, r := range roles {
-		data.RoleSelect.Options = append(data.RoleSelect.Options, components.SelectOption{int(r.ID), r.Name})
+		roleOptions = append(roleOptions, components.SelectOption{Value: int(r.ID), Text: r.Name})
+	}
+
+	data := struct {
+		IsNew         bool
+		User          database.User
+		NameInput     components.Input
+		SurnameInput  components.Input
+		UsernameInput components.Input
+		RoleSelect    components.Select
+	}{
+		IsNew: isNew,
+		User:  defaultUser,
+		NameInput: components.Input{
+			Label:        "Nome",
+			Name:         keyUserName,
+			Type:         "text",
+			DefaultValue: defaultUser.Name,
+		},
+		SurnameInput: components.Input{
+			Label:        "Cognome",
+			Name:         keyUserSurname,
+			Type:         "text",
+			DefaultValue: defaultUser.Surname,
+		},
+		UsernameInput: components.Input{
+			Label:        "Username",
+			Name:         keyUserUsername,
+			Type:         "text",
+			DefaultValue: defaultUser.Username,
+		},
+		RoleSelect: components.Select{
+			Label:    "Ruolo",
+			Name:     keyUserRoleID,
+			Selected: defaultUser.RoleID,
+			Options:  roleOptions,
+		},
 	}
 
 	appContext.ExecuteTemplate(w, r, "user.html", data)
