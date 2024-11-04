@@ -4,3 +4,23 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.app.rule=Host(`localhost`)"
       - "traefik.http.services.app.loadbalancer.server.port=8080"
+
+  tailwind:
+    build: ./tailwind
+    container_name: gestione-ordini-tailwind
+    volumes:
+      - .:/app
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    restart: always
+    env_file:
+      - .env
+    environment:
+      - PMA_HOST=${MYSQL_CONTAINER_NAME}
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.phpmyadmin.rule=Host(`localhost`) && PathPrefix(`/phpmyadmin`)"
+      - "traefik.http.services.phpmyadmin.loadbalancer.server.port=80"
+    networks:
+      - gestione-ordini-network
