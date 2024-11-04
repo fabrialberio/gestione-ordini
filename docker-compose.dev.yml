@@ -41,6 +41,12 @@ services:
     networks:
       - gestione-ordini-network
 
+  tailwind:
+    build: ./tailwind
+    container_name: gestione-ordini-tailwind
+    volumes:
+      - .:/app
+
 volumes:
   mysql-data:
   letsencrypt:
