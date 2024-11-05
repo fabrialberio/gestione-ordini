@@ -44,13 +44,14 @@
           });
         </script>
 
-        <form class="space-y-4 border-outline p-4 border rounded-lg" method="post" action="/console/orderSelection/" onchange="updateCount()">
-          <div class="flex sm:flex-row flex-col gap-4 w-full">
-            {{ template "input" .StartDateInput }}
-            {{ template "input" .EndDateInput }}
+        <form class="card" method="post" action="/console/orderSelection/" onchange="updateCount()">
+          <div class="flex sm:flex-row flex-col gap-4">
+            <div class="w-full">{{ template "input" .StartDateInput }}</div>
+            <div class="w-full">{{ template "input" .EndDateInput }}</div>  
           </div>
+          
           {{ template "select" .SupplierSelect }}
-
+          
           <div class="flex items-center gap-2">
             <p class="text-on-surface-dim">
               <span id="count">0</span> ordini selezionati
@@ -63,6 +64,7 @@
             </button>
           </div>
         </form>
-    </main>
+      </main>
+    </div>
   </body>
 </html>

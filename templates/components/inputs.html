@@ -1,14 +1,14 @@
 {{ define "input" }}
-<div class="w-full">
+<div>
   <label for="{{ .Name }}-input">{{ .Label }}</label>
-  <input id="{{ .Name }}-input" class="w-full input" type="{{ .Type }}" name="{{ .Name }}" value="{{ .DefaultValue }}" required>
+  <input id="{{ .Name }}-input" type="{{ .Type }}" name="{{ .Name }}" value="{{ .DefaultValue }}" required>
 </div>
 {{ end }}
 
 {{ define "select" }}
-<div class="w-full">
+<div>
   <label for="{{ .Name }}-select">{{ .Label }}</label>
-  <select id="{{ .Name }}-select" class="w-full input" name="{{ .Name }}" required>
+  <select id="{{ .Name }}-select" name="{{ .Name }}" required>
     {{ range .Options }}
     <option value="{{ .Value }}"{{ if eq .Value $.Selected }} selected{{ end }}>{{ .Text }}</option>
     {{ end }}

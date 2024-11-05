@@ -10,24 +10,24 @@
       <h2>
         Nuovo ordine
       </h2>
-      
-      <form class="space-y-4 border-outline px-4 pb-4 border rounded-lg" method="post" action="/chef/orders/">
+
+      <form class="card" method="post" action="/chef/orders/">
         <input type="hidden" name="isNew" value="true">
         
         {{ template "productAmountInput" .ProductAmountInput }}
         {{ template "input" .ExpiresAtInput }}
-          
+
         <div class="flex">
           <button class="ml-auto btn-lg suggested">
             Aggiungi
           </button>
         </div>
       </form>
-      
+    
       <h2>
         I tuoi ordini
       </h2>
-      
+
       <div hx-get="/chef/ordersView" hx-trigger="load" hx-target="this">
       </div>
     </main>

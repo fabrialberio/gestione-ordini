@@ -2,8 +2,8 @@
 <thead>
   <tr>
      {{ range .Headings }}
-     <th class="selectable" hx-get="{{ $.TableURL }}?orderBy={{ .Index }}&orderDesc={{ if eq .Index $.OrderBy }}{{ not $.OrderDesc }}{{ else }}false{{ end }}" hx-target=".dataTable" hx-swap="outerHTML">
-        <div class="inline-flex items-center gap-1">
+     <th class="py-1 first:pl-1" hx-get="{{ $.TableURL }}?orderBy={{ .Index }}&orderDesc={{ if eq .Index $.OrderBy }}{{ not $.OrderDesc }}{{ else }}false{{ end }}" hx-target=".dataTable" hx-swap="outerHTML">
+        <div class="px-1 py-2 rounded-lg w-full min-h-10 btn">
           {{ .Name }}
           <i class="{{ if $.OrderDesc }}fa-sort-up{{ else }}fa-sort{{ end }} fas{{ if ne $.OrderBy .Index }} opacity-0{{ end }}"></i>
         </div>
@@ -25,8 +25,8 @@
         <td>{{ .ID }}</td>
         <td>{{ .Name }}</td>
         <td>{{ .Email }}</td>
-        <td class="w-8"> 
-          <a class="w-8 h-8 btn-sm" href="/console/suppliers/{{ .ID }}">
+        <td>
+          <a class="btn-md" href="/console/suppliers/{{ .ID }}">
             <i class="fa-pen fas"></i>
           </a>
         </td>
@@ -54,8 +54,8 @@
           <a class="link" href="/console/suppliers/{{ .Supplier.ID }}">{{ .Supplier.Name }}</a>
         </td>
         <td>{{ .UnitOfMeasure.Symbol }}</td>
-        <td class="w-8">
-          <a class="w-8 h-8 btn-sm" href="/console/products/{{ .ID }}">
+        <td>
+          <a class="btn-md" href="/console/products/{{ .ID }}">
             <i class="fa-pen fas"></i>
           </a>
         </td>
@@ -79,8 +79,8 @@
         <td>{{ .Username }}</td>
         <td>{{ .Name }}</td>
         <td>{{ .Surname }}</td>
-        <td class="w-8">
-          <a class="w-8 h-8 btn-sm" href="/console/users/{{ .ID }}">
+        <td>
+          <a class="btn-md" href="/console/users/{{ .ID }}">
             <i class="fa-pen fas"></i>
           </a>
         </td>

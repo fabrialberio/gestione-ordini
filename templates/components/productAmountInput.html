@@ -1,41 +1,41 @@
 {{ define "productAmountInput" }}
-<script src="/public/searchSelect.js"></script>
-<script>
-  function setUnitOfMeasure() {
-    select = document.getElementById("{{ .ProductSelectName }}-select")
-    unit = select.options[select.selectedIndex].getAttribute("data-unitOfMeasure")
-
-    document.getElementById("unitOfMeasure").innerHTML = " ("+unit+")"
-  }
-
-  document.addEventListener("DOMContentLoaded", function() {
-    searchSelect(
-      document.getElementById("{{ .ProductSelectName }}-input"),
-      document.getElementById("{{ .ProductSelectName }}-dialog"),
-      document.getElementById("{{ .ProductSelectName }}-search"),
-      document.getElementById("{{ .ProductSelectName }}-options"),
-      document.getElementById("{{ .ProductSelectName }}-select"),
-    )
-
-    document.getElementById("{{ .ProductSelectName }}-dialog").addEventListener("click", setUnitOfMeasure)
-
-    setUnitOfMeasure()
-  });
-</script>
 <div class="w-full">
+  <script src="/public/searchSelect.js"></script>
+  <script>
+    function setUnitOfMeasure() {
+      select = document.getElementById("{{ .ProductSelectName }}-select")
+      unit = select.options[select.selectedIndex].getAttribute("data-unitOfMeasure")
+
+      document.getElementById("unitOfMeasure").innerHTML = " ("+unit+")"
+    }
+
+    document.addEventListener("DOMContentLoaded", function() {
+      searchSelect(
+        document.getElementById("{{ .ProductSelectName }}-input"),
+        document.getElementById("{{ .ProductSelectName }}-dialog"),
+        document.getElementById("{{ .ProductSelectName }}-search"),
+        document.getElementById("{{ .ProductSelectName }}-options"),
+        document.getElementById("{{ .ProductSelectName }}-select"),
+      )
+
+      document.getElementById("{{ .ProductSelectName }}-dialog").addEventListener("click", setUnitOfMeasure)
+
+      setUnitOfMeasure()
+    });
+  </script>
   <label>Prodotto</label>
   <select id="{{ .ProductSelectName }}-select" class="sr-only" name="{{ .ProductSelectName }}">
     {{ range .Products }}
     <option data-unitOfMeasure="{{ .UnitOfMeasure.Symbol }}" value="{{ .ID }}"{{ if eq .ID $.SelectedProduct }} selected{{ end }}>{{ .Name }}</option>
     {{ end }}
   </select>
-  <div id="{{ .ProductSelectName }}-input" class="bg-white cursor-pointer input">
+  <div id="{{ .ProductSelectName }}-input" class="flex items-center px-3 input selectable">
   </div>
-  <dialog id="{{ .ProductSelectName }}-dialog" class="bg-white shadow-lg sm:mt-auto max-sm:mb-0 p-2 rounded-lg max-sm:rounded-b-none w-full max-w-md">
-    <h3 class="p-2 font-bold text-center text-lg">
+  <dialog id="{{ .ProductSelectName }}-dialog">
+    <h3>
       Seleziona un prodotto
     </h3>
-    <input id="{{ .ProductSelectName }}-search" class="mb-2 w-full h-8 input" type="search" placeholder="Search">
+    <input id="{{ .ProductSelectName }}-search" type="search" placeholder="Search">
     <ul id="{{ .ProductSelectName }}-options" class="max-h-96 overflow-y-scroll">
       {{ range .Products }}
       <li value="{{ .ID }}" class="flex items-center px-2 rounded-lg h-8 text-sm selectable">{{ .Name }}</li>
@@ -43,10 +43,10 @@
     </ul>
   </dialog>
 </div>
-<div class="w-full">
+<div>
   <label>
     Quantità<span id="unitOfMeasure"></span>
   </label>
-  <input class="w-full input" type="number" min="1" name="{{ .AmountInputName }}" value="{{ .AmountInputDefaultValue }}" required>
+  <input type="number" min="1" name="{{ .AmountInputName }}" value="{{ .AmountInputDefaultValue }}" required>
 </div>
 {{ end }}

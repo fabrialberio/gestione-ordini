@@ -1,28 +1,29 @@
 {{ define "ordersView" }}
-<div class="border-outline border rounded-lg overflow-hidden ordersView">
-  <div class="flex items-center gap-1 p-2">
-    <button class="btn-sm" hx-get="{{ .OrdersViewURL }}">
-      <i class="fa-calendar fas"></i>
-      {{ .WeekTitle }}
+<div class="elevated">
+  <div class="flex items-center p-1">
+    <button class="btn-md" hx-get="{{ .OrdersViewURL }}">
+      <i class="fa-calendar-day fas"></i>
     </button>
-    <button class="ml-auto w-8 btn-sm" hx-get="{{ .OrdersViewURL }}?offset={{ .PrevOffset }}">
+    <h3 class="w-full text-center">{{ .WeekTitle }}</h3>
+    <button class="btn-md" hx-get="{{ .OrdersViewURL }}?offset={{ .PrevOffset }}">
       <i class="fa-chevron-left fas"></i>
     </button>
-    <button class="w-8 btn-sm" hx-get="{{ .OrdersViewURL }}?offset={{ .NextOffset }}">
-      <i class="fa-chevron-right w-8 btn-sm fas"></i>
+    <button class="btn-md" hx-get="{{ .OrdersViewURL }}?offset={{ .NextOffset }}">
+      <i class="fa-chevron-right fas"></i>
     </button>
   </div>
-  <div class="flex flex-row max-sm:flex-col border-outline bg-white border-t sm:divide-x max-sm:divide-y divide-outline overflow-x-auto">
+  <div class="flex flex-row max-sm:flex-col border-outline bg-surface border-t sm:divide-x max-sm:divide-y divide-outline overflow-x-auto">
     {{ range .Days }}
     <div class="flex max-sm:flex-row flex-col basis-1/2">
-      <p class="max-sm:text-right p-2 min-w-20 font-bold text-center{{ if .IsPast }} text-on-surface-dim{{ end }}">
+      {{ $isPast := .IsPast }}
+      <h4 class="max-sm:text-right p-2 min-w-20 text-center">
         {{ .Heading }}
-      </p>
+      </h4>
       <div class="flex flex-col gap-1 p-1 w-full sm:min-h-12">
         <td class="align-top h-full">
           {{ range .Orders }}
           <a{{ if $.OrdersURL }} href="{{ $.OrdersURL }}{{ .ID }}"{{ end }}>
-            <div class="bg-primary bg-opacity-20 p-1 rounded-md text-sm{{ if $.OrdersURL }} selectable{{ end }}">
+            <div class="bg-primary {{ if $isPast }}bg-opacity-20{{ end }} p-1 rounded-md text-sm{{ if $.OrdersURL }} selectable{{ end }}">
               <p class="line-clamp-2">
                 {{ .Product.Name }}
               </p>
