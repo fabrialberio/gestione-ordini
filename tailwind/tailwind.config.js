@@ -3,12 +3,12 @@ module.exports = {
   content: ["./templates/**/*.html"],
   theme: {
     colors: {
-      "white": "#ffffff",
       "primary": "#2ec27e",
       "on-primary": "#ffffff",
       "error": "#c01c28",
       "on-error": "#ffffff",
-      "surface": "#f9fafb",
+      "view": "#f8f9fa",
+      "surface": "#ffffff",
       "on-surface": "#1f2937",
       "on-surface-dim": "#6b7280",
       "outline": "#d1d5db",
