@@ -71,7 +71,7 @@ input, select {
 }
 
 .btn {
-    @apply selectable focus-ring gap-2 focus:ring-offset-2 font-bold inline-flex items-center;
+    @apply selectable focus-ring gap-2 focus:ring-offset-2 font-bold inline-flex flex-none items-center;
 }
 
 .btn-md {

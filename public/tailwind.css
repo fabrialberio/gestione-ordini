@@ -646,12 +646,20 @@ video {
   max-width: 3.5rem;
 }
 
+.max-w-md {
+  max-width: 28rem;
+}
+
 .max-w-screen-md {
   max-width: 768px;
 }
 
 .max-w-sm {
   max-width: 24rem;
+}
+
+.flex-none {
+  flex: none;
 }
 
 .basis-1\/2 {
@@ -694,6 +702,16 @@ video {
   gap: 1rem;
 }
 
+.gap-3 {
+  gap: 0.75rem;
+}
+
+.space-x-1 > :not([hidden]) ~ :not([hidden]) {
+  --tw-space-x-reverse: 0;
+  margin-right: calc(0.25rem * var(--tw-space-x-reverse));
+  margin-left: calc(0.25rem * calc(1 - var(--tw-space-x-reverse)));
+}
+
 .space-y-1 > :not([hidden]) ~ :not([hidden]) {
   --tw-space-y-reverse: 0;
   margin-top: calc(0.25rem * calc(1 - var(--tw-space-y-reverse)));
@@ -723,6 +741,10 @@ video {
 
 .overflow-x-auto {
   overflow-x: auto;
+}
+
+.overflow-x-scroll {
+  overflow-x: scroll;
 }
 
 .overflow-y-scroll {
@@ -817,6 +839,10 @@ video {
 
 .pt-4 {
   padding-top: 1rem;
+}
+
+.pr-2 {
+  padding-right: 0.5rem;
 }
 
 .text-center {
@@ -1096,6 +1122,7 @@ input:focus, select:focus {
 
 .btn {
   display: inline-flex;
+  flex: none;
   align-items: center;
   gap: 0.5rem;
   font-weight: 700;
@@ -1141,6 +1168,7 @@ input:focus, select:focus {
   padding-top: 0.5rem;
   padding-bottom: 0.5rem;
   display: inline-flex;
+  flex: none;
   align-items: center;
   gap: 0.5rem;
   font-weight: 700;
@@ -1186,6 +1214,7 @@ input:focus, select:focus {
   padding-top: 0.75rem;
   padding-bottom: 0.75rem;
   display: inline-flex;
+  flex: none;
   align-items: center;
   gap: 0.5rem;
   font-weight: 700;
