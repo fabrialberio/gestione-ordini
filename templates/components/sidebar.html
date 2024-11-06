@@ -29,8 +29,10 @@
       {{ range . }}
       <li>
         <a {{ if not .Selected }}href="{{ .DestURL }}"{{ end }} class="{{ if .Selected }}bg-secondary {{ end }}btn-lg w-full">
-          <i class="{{ .FasIconName }} fas"></i>
-          {{ .Label }}
+          <div class="justify-start w-full">
+            <i class="{{ .FasIconName }} fas"></i>
+            {{ .Label }}
+          </div>
         </a>
       </li>
       {{ end }}

@@ -14,7 +14,7 @@
         Modifica utente
         {{ end }}
       </h2>
-      <form class="space-y-4" method="post" action="/console/users/">
+      <form class="card" method="post" action="/console/users/">
         <input type="hidden" name="user.id" value="{{ .User.ID }}">
         <input type="hidden" name="isNew" value="{{ .IsNew }}">
         
