@@ -35,7 +35,7 @@ dialog::backdrop {
 }
 
 label {
-    @apply text-on-surface-dim pl-2
+    @apply text-on-surface-dim pl-2 text-sm
 }
 
 input, select {
@@ -79,7 +79,7 @@ input, select {
 }
 
 .btn-lg {
-    @apply btn min-h-12 min-w-12 px-4 py-3 rounded-full
+    @apply btn min-h-12 min-w-12 px-4 py-3 rounded-full justify-center
 }
 
 .suggested {
