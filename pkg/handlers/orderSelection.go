@@ -36,10 +36,10 @@ func PostOrderSelection(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func GetOrderSelectionCount(w http.ResponseWriter, r *http.Request) {
-	start, _ := time.Parse(dateFormat, r.URL.Query().Get(keyOrderSelectionStart))
-	end, _ := time.Parse(dateFormat, r.URL.Query().Get(keyOrderSelectionEnd))
-	supplierId, _ := strconv.Atoi(r.URL.Query().Get(keyOrderSelectionSupplierID))
+func PostOrderSelectionCount(w http.ResponseWriter, r *http.Request) {
+	start, _ := time.Parse(dateFormat, r.FormValue(keyOrderSelectionStart))
+	end, _ := time.Parse(dateFormat, r.FormValue(keyOrderSelectionEnd))
+	supplierId, _ := strconv.Atoi(r.FormValue(keyOrderSelectionSupplierID))
 
 	orders, err := getFilteredOrders(r, start, end, supplierId)
 	if err != nil {

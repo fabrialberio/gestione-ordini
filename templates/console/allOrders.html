@@ -22,29 +22,11 @@
           Seleziona ordini
         </h2>
 
-        <script>
-          function updateCount() {
-            const keyStart = 'orderSelection.start';
-            const keyEnd = 'orderSelection.end';
-            const keySupplier = 'orderSelection.supplier';
-            
-            const start = document.getElementById(keyStart).value;
-            const end = document.getElementById(keyEnd).value;
-            const supplier = document.getElementById(keySupplier).value;
-
-            fetch(`/console/orderSelectionCount?${keyStart}=${start}&${keyEnd}=${end}&${keySupplier}=${supplier}`)
-              .then(response => response.text())
-              .then(count => {
-                document.getElementById('count').textContent = count;
-              });
-          }
-
-          document.addEventListener('DOMContentLoaded', () => {
-            updateCount();
-          });
-        </script>
-
-        <form class="card" method="post" action="/console/orderSelection/" onchange="updateCount()">
+        <form class="card" method="post" action="/console/orderSelection/"
+          hx-post="/console/orderSelectionCount"
+          hx-target="#count"
+          hx-trigger="change, load"
+        >
           <div class="flex sm:flex-row flex-col gap-4">
             <div class="w-full">{{ template "input" .StartDateInput }}</div>
             <div class="w-full">{{ template "input" .EndDateInput }}</div>  
