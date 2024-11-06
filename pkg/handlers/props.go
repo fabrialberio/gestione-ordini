@@ -32,6 +32,7 @@ const (
 	DestChef           = "/chef/"
 	DestChefOrders     = "/chef/orders/"
 	DestChefOrdersView = "/chef/ordersView"
+	DestProductSearch  = "/chef/productSearch"
 
 	// admin and manager
 	DestConsole             = "/console/"
