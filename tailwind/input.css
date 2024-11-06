@@ -78,16 +78,20 @@ input, select {
     @apply selectable focus-ring gap-2 focus:ring-offset-2 font-bold inline-flex items-center;
 }
 
-.btn-lg {
-    @apply btn h-12 px-4 py-2 min-w-12 rounded-full justify-center;
-}
-
 .btn-md {
     @apply btn min-h-10 min-w-10 px-3 py-2 rounded-lg justify-center;
 }
 
+.btn-lg {
+    @apply btn min-h-12 min-w-12 px-4 py-3 rounded-full
+}
+
 .suggested {
-    @apply bg-primary text-on-primary shadow-sm;
+    @apply bg-primary text-on-primary
+}
+
+.destructive {
+    @apply bg-error text-on-primary
 }
 
 .sidebar {
@@ -119,7 +123,7 @@ input, select {
 }
 
 .elevated {
-    @apply rounded-xl border border-outline border-b-4 overflow-auto
+    @apply rounded-xl overflow-auto border border-outline shadow-md
 }
 
 .card {

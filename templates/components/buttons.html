@@ -13,13 +13,13 @@
 {{ end }}
 
 {{ define "formSubmitButtons" }}
-<div class="flex gap-4 pt-4">
+<div class="flex pt-4">
   {{ if not . }}
-  <button class="w-24 btn-lg" type="submit" name="delete">
+  <button class="basis-1/4 btn-md destructive" type="submit" name="delete">
     Elimina
   </button>
   {{ end }}
-  <button class="ml-auto w-24 btn-lg suggested" type="submit" autofocus>
+  <button class="ml-auto basis-1/4 btn-md suggested" type="submit" autofocus>
     {{ if . }}
     Crea
     {{ else }}
