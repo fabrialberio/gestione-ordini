@@ -12,7 +12,7 @@ func sidebarDestinations(r *http.Request, selected int) []components.SidebarDest
 	sidebar := []components.SidebarDest{
 		{
 			DestURL:     DestAllOrders,
-			FasIconName: "fa-clipboard-check",
+			FasIconName: "fa-calendar-check",
 			Label:       "Ordini",
 		},
 		{

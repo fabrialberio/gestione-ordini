@@ -1,7 +1,7 @@
 {{ define "logoutButton" }}
 <a class="ml-auto btn-lg" href="/logout">
   Esci
-  <i class="fa-right-to-bracket fas"></i>
+  <i class="fa-arrow-right-from-bracket fas"></i>
 </a>
 {{ end }}
 
@@ -16,10 +16,12 @@
 <div class="flex pt-4">
   {{ if not . }}
   <button class="basis-1/4 btn-md destructive" type="submit" name="delete">
+    <i class="fa-trash-can far"></i>
     Elimina
   </button>
   {{ end }}
   <button class="ml-auto basis-1/4 btn-md suggested" type="submit" autofocus>
+    <i class="fa-floppy-disk far"></i>
     {{ if . }}
     Crea
     {{ else }}
