@@ -54,21 +54,25 @@ func GetChefOrder(w http.ResponseWriter, r *http.Request) {
 	}
 
 	data := struct {
-		IsNew              bool
-		Order              database.Order
-		ProductAmountInput components.ProductInput
-		ExpiresAtInput     components.Input
-		UserID             int
+		IsNew          bool
+		Order          database.Order
+		ProductInput   components.ProductInput
+		AmountInputURL string
+		AmountInput    components.Input
+		ExpiresAtInput components.Input
+		UserID         int
 	}{
 		IsNew: isNew,
 		Order: defaultOrder,
-		ProductAmountInput: components.ProductInput{
-			ProductSelectName: keyOrderProductID,
-			ProductSearchURL:  DestProductSearch,
-			SearchInputName:   keyProductSearchQuery,
-			ProductTypesName:  keyProductSearchProductTypes,
-			ProductTypes:      productTypes,
+		ProductInput: components.ProductInput{
+			InitialProductName: defaultOrder.Product.Name,
+			ProductSelectName:  keyOrderProductID,
+			ProductSearchURL:   DestProductSearch,
+			SearchInputName:    keyProductSearchQuery,
+			ProductTypesName:   keyProductSearchProductTypes,
+			ProductTypes:       productTypes,
 		},
+		AmountInputURL: DestOrderAmountInput,
 		ExpiresAtInput: components.Input{
 			Label:        "Scadenza",
 			Name:         keyOrderRequestedAt,

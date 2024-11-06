@@ -15,8 +15,19 @@ func PostProductSearch(w http.ResponseWriter, r *http.Request) {
 	productTypeIds := r.Form[keyProductSearchProductTypes]
 
 	selectedProductId := 0
-	if s := r.Form[keyOrderProductID]; len(s) > 0 {
-		selectedProductId, _ = strconv.Atoi(s[0])
+	orderId, err := strconv.Atoi(r.FormValue(keyOrderID))
+	if err != nil {
+		if s := r.Form[keyOrderProductID]; len(s) > 0 {
+			selectedProductId, _ = strconv.Atoi(s[0])
+		}
+	} else {
+		order, err := appContext.Database(r).FindOrder(orderId)
+		if err != nil {
+			ShowError(w, r, err)
+			return
+		}
+
+		selectedProductId = order.ProductID
 	}
 
 	allProducts, err := appContext.Database(r).FindAllProducts(database.OrderProductByID, false)

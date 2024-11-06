@@ -17,11 +17,12 @@ type Input struct {
 }
 
 type ProductInput struct {
-	ProductSelectName string
-	ProductSearchURL  string
-	SearchInputName   string
-	ProductTypesName  string
-	ProductTypes      []database.ProductType
+	InitialProductName string
+	ProductSelectName  string
+	ProductSearchURL   string
+	SearchInputName    string
+	ProductTypesName   string
+	ProductTypes       []database.ProductType
 }
 
 type ProductSearchResult struct {

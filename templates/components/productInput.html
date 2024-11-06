@@ -20,12 +20,17 @@
   </script>
   <label>Prodotto</label>
   <div id="productSearchButton" class="flex items-center px-3 input selectable" onclick="dialog.showModal()">
+    {{ if .InitialProductName }}
+      {{ .InitialProductName }}
+    {{ else }}
+      <span class="text-on-surface-dim">Seleziona prodotto</span>
+    {{ end }}
   </div>
   <dialog id="productSearchDialog">
     <!-- TODO: Weird double vertical scroll when page it too short -->
     <div class="space-y-2">
       <input id="productSearchInput" name="{{ .SearchInputName }}" type="search"
-      placeholder="Cerca prodotti..."
+      placeholder="Cerca prodotti"
       autofocus
       hx-post="{{ .ProductSearchURL }}"
       hx-trigger="input changed delay:100ms, search, load"
@@ -51,7 +56,7 @@
 
 {{ define "productSearchResult" }}
 <span onclick="this.querySelector('input').click()" class="btn">
-  <input type="radio" class="sr-only"
+  <input type="radio" class="sr-only" required
   name="{{ .ProductSelectName }}"
   value="{{ .Product.ID }}"
   onclick="onOptionClicked(this)"

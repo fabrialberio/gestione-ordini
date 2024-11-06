@@ -42,7 +42,15 @@ func GetChef(w http.ResponseWriter, r *http.Request) {
 }
 
 func PostOrderAmountInput(w http.ResponseWriter, r *http.Request) {
-	amount, _ := strconv.Atoi(r.FormValue(keyOrderAmount))
+	amount, err := strconv.Atoi(r.FormValue(keyOrderAmount))
+	if amount == 0 || err != nil {
+		id, err := strconv.Atoi(r.FormValue(keyOrderID))
+		if err != nil {
+			return
+		}
+		order, _ := appContext.Database(r).FindOrder(id)
+		amount = order.Amount
+	}
 
 	selectedProductId, err := strconv.Atoi(r.FormValue(keyOrderProductID))
 	if err != nil {
@@ -55,14 +63,14 @@ func PostOrderAmountInput(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	appContext.ExecuteTemplate(w, r, "input", constructAmountInput(product, strconv.Itoa(amount)))
+	appContext.ExecuteTemplate(w, r, "input", constructAmountInput(product, amount))
 }
 
-func constructAmountInput(product database.Product, defaultValue string) components.Input {
+func constructAmountInput(product database.Product, defaultValue int) components.Input {
 	return components.Input{
 		Label:        "Quantità (" + product.UnitOfMeasure.Symbol + ")",
 		Name:         keyOrderAmount,
 		Type:         "number",
-		DefaultValue: defaultValue,
+		DefaultValue: strconv.Itoa(defaultValue),
 	}
 }
