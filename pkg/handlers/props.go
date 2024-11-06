@@ -8,11 +8,13 @@ const (
 	keyUserName     = "user.name"
 	keyUserSurname  = "user.surname"
 
-	keyOrderID          = "order.id"
-	keyOrderProductID   = "order.productId"
-	keyOrderUserID      = "order.userId"
-	keyOrderAmount      = "order.amount"
-	keyOrderRequestedAt = "order.requestedAt"
+	keyOrderID                   = "order.id"
+	keyOrderProductID            = "order.productId"
+	keyOrderUserID               = "order.userId"
+	keyOrderAmount               = "order.amount"
+	keyOrderRequestedAt          = "order.requestedAt"
+	keyProductSearchQuery        = "product.searchQuery"
+	keyProductSearchProductTypes = "product.searchProductTypes"
 
 	keyProductID              = "product.id"
 	keyProductProductTypeID   = "product.productTypeId"

@@ -17,11 +17,24 @@ type Input struct {
 }
 
 type ProductAmountInput struct {
+	SearchDialog            ProductSearchDialog
 	ProductSelectName       string
-	Products                []database.Product
 	SelectedProduct         int
 	AmountInputName         string
 	AmountInputDefaultValue int
+}
+
+type ProductSearchDialog struct {
+	ProductSearchURL string
+	SearchInputName  string
+	ProductTypesName string
+	ProductTypes     []database.ProductType
+}
+
+type ProductSearchResult struct {
+	ProductSelectName string
+	Product           database.Product
+	IsSelected        bool
 }
 
 type Select struct {

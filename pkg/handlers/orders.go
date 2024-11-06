@@ -41,7 +41,7 @@ func GetChefOrder(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	products, err := appContext.Database(r).FindAllProducts(database.OrderProductByID, true)
+	productTypes, err := appContext.Database(r).FindAllProductTypes()
 	if err != nil {
 		ShowError(w, r, err)
 		return
@@ -63,8 +63,13 @@ func GetChefOrder(w http.ResponseWriter, r *http.Request) {
 		IsNew: isNew,
 		Order: defaultOrder,
 		ProductAmountInput: components.ProductAmountInput{
-			ProductSelectName:       keyOrderProductID,
-			Products:                products,
+			ProductSelectName: keyOrderProductID,
+			SearchDialog: components.ProductSearchDialog{
+				ProductSearchURL: DestProductSearch,
+				SearchInputName:  keyProductSearchQuery,
+				ProductTypesName: keyProductSearchProductTypes,
+				ProductTypes:     productTypes,
+			},
 			SelectedProduct:         defaultOrder.ProductID,
 			AmountInputName:         keyOrderAmount,
 			AmountInputDefaultValue: defaultOrder.Amount,

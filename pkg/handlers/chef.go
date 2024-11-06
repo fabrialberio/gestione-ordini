@@ -3,13 +3,12 @@ package handlers
 import (
 	"gestione-ordini/pkg/appContext"
 	"gestione-ordini/pkg/components"
-	"gestione-ordini/pkg/database"
 	"net/http"
 	"time"
 )
 
 func GetChef(w http.ResponseWriter, r *http.Request) {
-	products, err := appContext.Database(r).FindAllProducts(database.OrderProductByID, true)
+	productTypes, err := appContext.Database(r).FindAllProductTypes()
 	if err != nil {
 		ShowError(w, r, err)
 		return
@@ -20,8 +19,13 @@ func GetChef(w http.ResponseWriter, r *http.Request) {
 		ExpiresAtInput     components.Input
 	}{
 		ProductAmountInput: components.ProductAmountInput{
-			ProductSelectName:       keyOrderProductID,
-			Products:                products,
+			ProductSelectName: keyOrderProductID,
+			SearchDialog: components.ProductSearchDialog{
+				ProductSearchURL: DestProductSearch,
+				SearchInputName:  keyProductSearchQuery,
+				ProductTypesName: keyProductSearchProductTypes,
+				ProductTypes:     productTypes,
+			},
 			SelectedProduct:         0,
 			AmountInputName:         keyOrderAmount,
 			AmountInputDefaultValue: 1,
