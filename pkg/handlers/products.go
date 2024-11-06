@@ -4,7 +4,6 @@ import (
 	"gestione-ordini/pkg/appContext"
 	"gestione-ordini/pkg/components"
 	"gestione-ordini/pkg/database"
-	"log"
 	"net/http"
 	"strconv"
 )
@@ -177,10 +176,4 @@ func PostProduct(w http.ResponseWriter, r *http.Request) {
 	}
 
 	http.Redirect(w, r, DestProducts, http.StatusSeeOther)
-}
-
-func PostProductSearch(w http.ResponseWriter, r *http.Request) {
-	log.Println("Searching products...")
-
-	appContext.ExecuteTemplate(w, r, "productSearchDialog", nil)
 }
