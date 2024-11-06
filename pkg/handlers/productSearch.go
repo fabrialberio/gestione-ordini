@@ -48,11 +48,15 @@ func PostProductSearch(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	for _, p := range products {
-		appContext.ExecuteTemplate(w, r, "productSearchResult", components.ProductSearchResult{
-			ProductSelectName: keyOrderProductID,
-			Product:           p,
-			IsSelected:        p.ID == selectedProductId,
-		})
+	if len(products) > 0 {
+		for _, p := range products {
+			appContext.ExecuteTemplate(w, r, "productSearchResult", components.ProductSearchResult{
+				ProductSelectName: keyOrderProductID,
+				Product:           p,
+				IsSelected:        p.ID == selectedProductId,
+			})
+		}
+	} else {
+		appContext.ExecuteTemplate(w, r, "productSearchNoResults", nil)
 	}
 }

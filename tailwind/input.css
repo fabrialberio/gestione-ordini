@@ -159,7 +159,7 @@ input:not([checkbox]), select {
 }
 
 .selectList > * {
-    @apply btn px-3 rounded-lg h-10
+    @apply px-3 rounded-lg h-10
 }
 
 .selectList > *:has(input:checked) {
