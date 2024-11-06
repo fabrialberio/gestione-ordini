@@ -43,13 +43,14 @@ func GetChef(w http.ResponseWriter, r *http.Request) {
 
 func PostOrderAmountInput(w http.ResponseWriter, r *http.Request) {
 	amount, err := strconv.Atoi(r.FormValue(keyOrderAmount))
-	if amount == 0 || err != nil {
+	if err != nil {
 		id, err := strconv.Atoi(r.FormValue(keyOrderID))
 		if err != nil {
-			return
+			amount = 1
+		} else {
+			order, _ := appContext.Database(r).FindOrder(id)
+			amount = order.Amount
 		}
-		order, _ := appContext.Database(r).FindOrder(id)
-		amount = order.Amount
 	}
 
 	selectedProductId, err := strconv.Atoi(r.FormValue(keyOrderProductID))
