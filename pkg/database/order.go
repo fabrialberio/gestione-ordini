@@ -82,7 +82,7 @@ func (db *GormDB) CreateOrder(order Order) error {
 }
 
 func (db *GormDB) UpdateOrder(order Order) error {
-	columns := []string{"id_prodotto", "id_utente", "quanita", "richiesto_il"}
+	columns := []string{"id_prodotto", "id_utente", "quantita", "richiesto_il"}
 	return db.conn.Model(&order).Select(columns).Updates(order).Error
 }
 
