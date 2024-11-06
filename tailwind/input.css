@@ -153,3 +153,15 @@ input:not([checkbox]), select {
 .chipBox > * > input:checked ~ i {
     @apply block
 }
+
+.selectList {
+    @apply flex flex-col overflow-y-scroll
+}
+
+.selectList > * {
+    @apply btn px-3 rounded-lg h-10
+}
+
+.selectList > *:has(input:checked) {
+    @apply bg-disabled
+}
