@@ -23,21 +23,19 @@
 <div class="scrim" onclick="toggleSidebar()">
 </div>
 
-<aside class="sidebar">
-  <div class="border-outline bg-surface border-r w-64 h-screen">
-    <div class="p-4 overflow-y-auto">
-      <ul class="space-y-1">
-        {{ range . }}
-        <li>
-          <a {{ if not .Selected }}href="{{ .DestURL }}"{{ end }} class="{{ if .Selected }}bg-scrim bg-opacity-5 {{ end }}inline-flex items-center gap-2 px-4 rounded-full focus-ring focus:ring-offset-2 w-full h-12 font-bold selectable">
-            <i class="{{ .FasIconName }} fas"></i>
-            {{ .Label }}
-          </a>
-        </li>
-        {{ end }}
-      </ul>
-    </div>
-  </div>
+<aside class="w-64 sidebar">
+  <nav class="border-0 border-outline bg-surface shadow-md p-4 border-r rounded-r-xl h-full">
+    <ul class="space-y-1">
+      {{ range . }}
+      <li>
+        <a {{ if not .Selected }}href="{{ .DestURL }}"{{ end }} class="{{ if .Selected }}bg-secondary {{ end }}btn-lg w-full">
+          <i class="{{ .FasIconName }} fas"></i>
+          {{ .Label }}
+        </a>
+      </li>
+      {{ end }}
+    </ul>
+  </nav>
   <div id="hideButton" class="top-0 left-64 z-400 fixed">
     <button class="sm:hidden m-4 btn-lg" onclick="toggleSidebar()">
       <i class="fa-close fas"></i>

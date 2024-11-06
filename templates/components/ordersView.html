@@ -23,10 +23,10 @@
         <td class="align-top h-full">
           {{ range .Orders }}
           <a{{ if $.OrdersURL }} href="{{ $.OrdersURL }}{{ .ID }}"{{ end }}>
-            <div class="bg-primary {{ if $isPast }}bg-opacity-20{{ end }} p-1 rounded-md text-sm{{ if $.OrdersURL }} selectable{{ end }}">
-              <p class="line-clamp-2">
+            <div class="{{ if $isPast }}bg-disabled{{ else }}bg-secondary{{ end }} shadow-sm p-1 rounded-md text-sm{{ if $.OrdersURL }} selectable{{ end }}">
+              <h4 class="line-clamp-2">
                 {{ .Product.Name }}
-              </p>
+              </h4>
               {{ .AmountString }}
             </div>
           </a>
