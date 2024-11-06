@@ -56,18 +56,3 @@ func PostProductSearch(w http.ResponseWriter, r *http.Request) {
 		})
 	}
 }
-
-func GetUnitOfMeasure(w http.ResponseWriter, r *http.Request) {
-	selectedProductId := 0
-	if s := r.Form[keyOrderProductID]; len(s) > 0 {
-		selectedProductId, _ = strconv.Atoi(s[0])
-	}
-
-	product, err := appContext.Database(r).FindProduct(selectedProductId)
-	if err != nil {
-		ShowError(w, r, err)
-		return
-	}
-
-	w.Write([]byte(product.UnitOfMeasure.Symbol))
-}
