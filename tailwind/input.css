@@ -67,11 +67,7 @@ input, select {
 }
 
 .selectable {
-    @apply cursor-pointer;
-}
-
-.selectable:hover {
-    @apply shadow-[inset_0_0_0_1000px_rgba(0,0,0,0.1)] transition duration-200;
+    @apply cursor-pointer hover:shadow-[inset_0_0_0_1000px_rgba(0,0,0,0.1)] transition duration-200;
 }
 
 .btn {
@@ -95,15 +91,15 @@ input, select {
 }
 
 .sidebar {
-    @apply top-0 left-0 z-40 fixed h-full transition-transform translate-x-0
+    @apply w-64 top-0 left-0 z-40 fixed h-full transition-transform translate-x-0
 }
 
 .sidebar.collapsed {
-    @apply -translate-x-full
+    @apply translate-x-[-17rem]
 }
 
 .content {
-    @apply sm:pl-64
+    @apply md:pl-64
 }
 
 .content.collapsed {
@@ -111,7 +107,7 @@ input, select {
 }
 
 .scrim {
-    @apply top-0 left-0 z-20 fixed sm:hidden bg-scrim bg-opacity-10 w-screen h-screen
+    @apply top-0 left-0 z-20 fixed md:hidden bg-scrim bg-opacity-10 w-screen h-screen
 }
 
 .scrim.collapsed {

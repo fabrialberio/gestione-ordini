@@ -23,7 +23,7 @@
 <div class="scrim" onclick="toggleSidebar()">
 </div>
 
-<aside class="w-64 sidebar">
+<aside class="sidebar">
   <nav class="border-0 border-outline bg-surface shadow-md p-4 border-r rounded-r-xl h-full">
     <ul class="space-y-1">
       {{ range . }}
@@ -37,7 +37,7 @@
     </ul>
   </nav>
   <div id="hideButton" class="top-0 left-64 z-400 fixed">
-    <button class="sm:hidden m-4 btn-lg" onclick="toggleSidebar()">
+    <button class="md:hidden m-4 btn-lg" onclick="toggleSidebar()">
       <i class="fa-close fas"></i>
     </button>
   </div>
