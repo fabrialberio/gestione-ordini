@@ -92,6 +92,7 @@ func setupRoutes(mux *http.ServeMux) {
 	chefMux.HandleFunc("POST "+handlers.DestChefOrders, handlers.PostChefOrder)
 	chefMux.HandleFunc("GET "+handlers.DestChefOrdersView, handlers.GetChefOrdersView)
 	chefMux.HandleFunc("POST "+handlers.DestProductSearch, handlers.PostProductSearch)
+	chefMux.HandleFunc("POST "+handlers.DestOrderAmountInput, handlers.PostOrderAmountInput)
 
 	consoleMux := http.NewServeMux()
 	consoleMux.HandleFunc("GET "+handlers.DestConsole, handlers.GetConsole)

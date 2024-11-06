@@ -11,10 +11,17 @@
         Nuovo ordine
       </h2>
 
-      <form class="card" method="post" action="/chef/orders/">
+      <form class="card" method="post" action="/chef/orders/"
+        hx-post="{{ .AmountInputURL }}"
+        hx-target="#amountInput"
+        hx-trigger="change, load">
         <input type="hidden" name="isNew" value="true">
         
-        {{ template "productAmountInput" .ProductAmountInput }}
+        {{ template "productInput" .ProductAmountInput }}
+
+        <div id="amountInput">
+        </div>
+
         {{ template "input" .ExpiresAtInput }}
 
         <div class="flex">
