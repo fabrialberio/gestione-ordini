@@ -622,6 +622,26 @@ video {
   height: 100vh;
 }
 
+.max-h-\[35rem\] {
+  max-height: 35rem;
+}
+
+.max-h-\[30rem\] {
+  max-height: 30rem;
+}
+
+.max-h-\[50\%\] {
+  max-height: 50%;
+}
+
+.max-h-\[0\.5vh\] {
+  max-height: 0.5vh;
+}
+
+.max-h-\[0\.5\%\] {
+  max-height: 0.5%;
+}
+
 .min-h-10 {
   min-height: 2.5rem;
 }
@@ -664,6 +684,10 @@ video {
 
 .flex-col {
   flex-direction: column;
+}
+
+.flex-wrap {
+  flex-wrap: wrap;
 }
 
 .items-center {
