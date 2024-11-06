@@ -3,6 +3,7 @@
 <div class="w-full" hx-post="/chef/unitOfMeasureSymbol" hx-target="#unitOfMeasure" hx-trigger="change, load">
   <script>
     document.addEventListener("DOMContentLoaded", function() {
+      button = document.getElementById("productSearchButton")
       dialog = document.getElementById("productSearchDialog"),
 
       dialog.addEventListener("click" , function(event) {
@@ -11,6 +12,11 @@
         }
       })
     })
+
+    function onOptionClicked(option) {
+      button.innerHTML = option.parentElement.innerText
+      dialog.close()
+    }
   </script>
   <label>Prodotto</label>
   <div id="productSearchButton" class="flex items-center px-3 input selectable" onclick="dialog.showModal()">
@@ -48,7 +54,7 @@
   <input type="radio" class="sr-only"
   name="{{ .ProductSelectName }}"
   value="{{ .Product.ID }}"
-  onclick="dialog.close()"
+  onclick="onOptionClicked(this)"
   {{ if .IsSelected }} checked{{ end }}>
   {{ .Product.Name }}
 </span>
