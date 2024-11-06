@@ -17,12 +17,12 @@ func GetChef(w http.ResponseWriter, r *http.Request) {
 	}
 
 	data := struct {
-		ProductAmountInput components.ProductAmountInput
-		AmountInputURL     string
-		AmountInput        components.Input
-		ExpiresAtInput     components.Input
+		ProductInput   components.ProductInput
+		AmountInputURL string
+		AmountInput    components.Input
+		ExpiresAtInput components.Input
 	}{
-		ProductAmountInput: components.ProductAmountInput{
+		ProductInput: components.ProductInput{
 			ProductSelectName: keyOrderProductID,
 			ProductSearchURL:  DestProductSearch,
 			SearchInputName:   keyProductSearchQuery,
@@ -42,6 +42,8 @@ func GetChef(w http.ResponseWriter, r *http.Request) {
 }
 
 func PostOrderAmountInput(w http.ResponseWriter, r *http.Request) {
+	amount, _ := strconv.Atoi(r.FormValue(keyOrderAmount))
+
 	selectedProductId, err := strconv.Atoi(r.FormValue(keyOrderProductID))
 	if err != nil {
 		selectedProductId = 1
@@ -53,7 +55,7 @@ func PostOrderAmountInput(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	appContext.ExecuteTemplate(w, r, "input", constructAmountInput(product, "1"))
+	appContext.ExecuteTemplate(w, r, "input", constructAmountInput(product, strconv.Itoa(amount)))
 }
 
 func constructAmountInput(product database.Product, defaultValue string) components.Input {

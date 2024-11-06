@@ -16,19 +16,12 @@ type Input struct {
 	DefaultValue string
 }
 
-type ProductAmountInput struct {
-	SearchDialog            ProductSearchDialog
-	ProductSelectName       string
-	SelectedProduct         int
-	AmountInputName         string
-	AmountInputDefaultValue int
-}
-
-type ProductSearchDialog struct {
-	ProductSearchURL string
-	SearchInputName  string
-	ProductTypesName string
-	ProductTypes     []database.ProductType
+type ProductInput struct {
+	ProductSelectName string
+	ProductSearchURL  string
+	SearchInputName   string
+	ProductTypesName  string
+	ProductTypes      []database.ProductType
 }
 
 type ProductSearchResult struct {
