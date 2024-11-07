@@ -21,14 +21,13 @@
   <label>Prodotto</label>
   <div id="productSearchButton" class="flex items-center px-3 input selectable" onclick="searchDialog.showModal()">
     {{ if .InitialProductName }}
+    <!-- TODO: Fix long names overflowing -->
       {{ .InitialProductName }}
     {{ else }}
       <span class="text-on-surface-dim">Seleziona prodotto</span>
     {{ end }}
   </div>
-  <dialog id="productSearchDialog">
-    <!-- TODO: Weird double vertical scroll when page it too short -->
-    <!-- TODO: On Webkit and Chrome horizontal scroll -->
+  <dialog id="productSearchDialog" class="max-w-md overflow-hidden">
     <div class="space-y-2">
       <!-- TODO: Search cancel button -->
       <input id="productSearchInput" name="{{ .SearchInputName }}" type="search"
@@ -50,7 +49,7 @@
         {{ end }}
       </fieldset>
     </div>
-    <fieldset id="productSelect" class="max-h-[30rem] selectList">
+    <fieldset id="productSelect" class="max-h-[19rem] overflow-y-auto selectList">
     </fieldset>
   </dialog>
 </div>
@@ -63,6 +62,7 @@
   value="{{ .Product.ID }}"
   onclick="onOptionClicked(this)"
   {{ if .IsSelected }} checked{{ end }}>
+  <!-- TODO: Fix long names overflowing -->
   {{ .Product.Name }}
 </span>
 {{ end }}

@@ -119,7 +119,7 @@ input:not([checkbox]), select {
 }
 
 .elevated {
-    @apply rounded-xl overflow-auto border border-outline shadow-md
+    @apply rounded-xl border border-outline shadow-md
 }
 
 .card {
@@ -131,7 +131,7 @@ input:not([checkbox]), select {
 }
 
 .chipBox {
-    @apply flex gap-1 flex-wrap
+    @apply flex gap-1
 }
 
 .chipBox > * {
@@ -155,11 +155,11 @@ input:not([checkbox]), select {
 }
 
 .selectList {
-    @apply flex flex-col overflow-y-scroll
+    @apply flex flex-col
 }
 
 .selectList > * {
-    @apply px-3 rounded-lg h-10 btn
+    @apply flex-none px-3 rounded-lg h-10 btn
 }
 
 .selectList > *:has(input:checked) {

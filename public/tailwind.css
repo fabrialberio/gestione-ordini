@@ -626,8 +626,8 @@ video {
   height: 100vh;
 }
 
-.max-h-\[30rem\] {
-  max-height: 30rem;
+.max-h-\[19rem\] {
+  max-height: 19rem;
 }
 
 .min-h-10 {
@@ -729,12 +729,20 @@ video {
   border-color: rgb(209 213 219 / var(--tw-divide-opacity));
 }
 
+.overflow-hidden {
+  overflow: hidden;
+}
+
 .overflow-clip {
   overflow: clip;
 }
 
 .overflow-x-auto {
   overflow-x: auto;
+}
+
+.overflow-y-auto {
+  overflow-y: auto;
 }
 
 .text-ellipsis {
@@ -921,7 +929,6 @@ dialog {
   --tw-bg-opacity: 1;
   background-color: rgb(255 255 255 / var(--tw-bg-opacity));
   padding: 1rem;
-  overflow: auto;
   border-radius: 0.75rem;
   border-width: 1px;
   --tw-border-opacity: 1;
@@ -1031,7 +1038,6 @@ input:not([checkbox]):focus, select:focus {
 
 .dataTable {
   overflow-x: auto;
-  overflow: auto;
   border-radius: 0.75rem;
   border-width: 1px;
   --tw-border-opacity: 1;
@@ -1305,7 +1311,6 @@ input:not([checkbox]):focus, select:focus {
 }
 
 .elevated {
-  overflow: auto;
   border-radius: 0.75rem;
   border-width: 1px;
   --tw-border-opacity: 1;
@@ -1319,7 +1324,6 @@ input:not([checkbox]):focus, select:focus {
   --tw-bg-opacity: 1;
   background-color: rgb(255 255 255 / var(--tw-bg-opacity));
   padding: 1rem;
-  overflow: auto;
   border-radius: 0.75rem;
   border-width: 1px;
   --tw-border-opacity: 1;
@@ -1339,7 +1343,6 @@ input:not([checkbox]):focus, select:focus {
 
 .chipBox {
   display: flex;
-  flex-wrap: wrap;
   gap: 0.25rem;
 }
 
@@ -1417,11 +1420,11 @@ input:not([checkbox]):focus, select:focus {
 .selectList {
   display: flex;
   flex-direction: column;
-  overflow-y: scroll;
 }
 
 .selectList > * {
   height: 2.5rem;
+  flex: none;
   border-radius: 0.5rem;
   padding-left: 0.75rem;
   padding-right: 0.75rem;
