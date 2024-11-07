@@ -3,23 +3,23 @@
 <div class="w-full" hx-post="/chef/unitOfMeasureSymbol" hx-target="#unitOfMeasure" hx-trigger="change, load">
   <script>
     document.addEventListener("DOMContentLoaded", function() {
-      button = document.getElementById("productSearchButton")
-      dialog = document.getElementById("productSearchDialog"),
+      searchButton = document.getElementById("productSearchButton")
+      searchDialog = document.getElementById("productSearchDialog"),
 
-      dialog.addEventListener("click" , function(event) {
-        if (event.target === dialog) {
-          dialog.close()
+      searchDialog.addEventListener("click" , function(event) {
+        if (event.target === searchDialog) {
+          searchDialog.close()
         }
       })
     })
 
     function onOptionClicked(option) {
-      button.innerHTML = option.parentElement.innerText
-      dialog.close()
+      searchButton.innerHTML = option.parentElement.innerText
+      searchDialog.close()
     }
   </script>
   <label>Prodotto</label>
-  <div id="productSearchButton" class="flex items-center px-3 input selectable" onclick="dialog.showModal()">
+  <div id="productSearchButton" class="flex items-center px-3 input selectable" onclick="searchDialog.showModal()">
     {{ if .InitialProductName }}
       {{ .InitialProductName }}
     {{ else }}
@@ -28,7 +28,9 @@
   </div>
   <dialog id="productSearchDialog">
     <!-- TODO: Weird double vertical scroll when page it too short -->
+    <!-- TODO: On Webkit and Chrome horizontal scroll -->
     <div class="space-y-2">
+      <!-- TODO: Search cancel button -->
       <input id="productSearchInput" name="{{ .SearchInputName }}" type="search"
       placeholder="Cerca prodotti"
       autofocus
@@ -55,7 +57,7 @@
 {{ end }}
 
 {{ define "productSearchResult" }}
-<span onclick="this.querySelector('input').click()" class="btn">
+<span onclick="this.querySelector('input').click()">
   <input type="radio" class="sr-only" required
   name="{{ .ProductSelectName }}"
   value="{{ .Product.ID }}"

@@ -27,7 +27,7 @@ main {
 }
 
 dialog {
-    @apply card border-none
+    @apply card
 }
 
 dialog::backdrop {
@@ -71,7 +71,7 @@ input:not([checkbox]), select {
 }
 
 .btn {
-    @apply selectable focus-ring gap-2 focus:ring-offset-2 inline-flex flex-none items-center;
+    @apply selectable focus-ring gap-2 focus:ring-offset-2 inline-flex items-center text-ellipsis overflow-hidden;
 }
 
 .btn-md {
@@ -159,7 +159,7 @@ input:not([checkbox]), select {
 }
 
 .selectList > * {
-    @apply px-3 rounded-lg h-10
+    @apply px-3 rounded-lg h-10 btn
 }
 
 .selectList > *:has(input:checked) {
