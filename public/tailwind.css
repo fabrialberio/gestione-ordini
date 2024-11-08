@@ -1118,7 +1118,7 @@ input.btn:not([checkbox]):focus-visible, select.btn:focus-visible {
   width: 0px;
 }
 
-.selectable {
+.clickable {
   cursor: pointer;
   transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, -webkit-backdrop-filter;
   transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;
@@ -1127,11 +1127,11 @@ input.btn:not([checkbox]):focus-visible, select.btn:focus-visible {
   transition-duration: 200ms;
 }
 
-.selectable:hover {
+.clickable:hover {
   box-shadow: inset 0 0 0 1000px rgba(0, 0, 0, 0.1);
 }
 
-.selectable:active {
+.clickable:active {
   box-shadow: inset 0 0 0 1000px rgba(0, 0, 0, 0.2);
 }
 

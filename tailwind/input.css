@@ -78,20 +78,20 @@ input:not([checkbox]), select {
     @apply p-1 first:pl-2 last:w-0
 }
 
-.selectable {
+.clickable {
     @apply cursor-pointer transition duration-200
 }
 
-.selectable:hover {
+.clickable:hover {
     box-shadow: inset 0 0 0 1000px rgba(0, 0, 0, 0.1);
 }
 
-.selectable:active {
+.clickable:active {
     box-shadow: inset 0 0 0 1000px rgba(0, 0, 0, 0.2);
 }
 
 .btn {
-    @apply selectable focus-visible:ring-offset-2 flex items-center truncate
+    @apply clickable focus-visible:ring-offset-2 flex items-center truncate
 }
 
 .btn.input:focus-visible {
