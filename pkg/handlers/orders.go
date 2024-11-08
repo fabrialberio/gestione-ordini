@@ -87,48 +87,28 @@ func GetChefOrder(w http.ResponseWriter, r *http.Request) {
 func PostChefOrder(w http.ResponseWriter, r *http.Request) {
 	isNew := r.FormValue("isNew") == "true"
 	delete := r.Form.Has("delete")
-	user, err := appContext.AuthenticatedUser(r)
+
+	order, err := parseOrderFromForm(r)
 	if err != nil {
 		ShowError(w, r, err)
 		return
 	}
 
-	productId, _ := strconv.Atoi(r.FormValue(keyOrderProductID))
-	amount, _ := strconv.Atoi(r.FormValue(keyOrderAmount))
-	requestedAt, _ := time.Parse(dateFormat, r.FormValue(keyOrderRequestedAt))
-
 	if isNew {
-		err := appContext.Database(r).CreateOrder(database.Order{
-			ProductID: productId,
-			UserID:    user.ID,
-			Amount:    amount,
-			ExpiresAt: requestedAt,
-		})
+		err := appContext.Database(r).CreateOrder(order)
 		if err != nil {
 			ShowError(w, r, err)
 			return
 		}
 	} else {
-		id, err := strconv.Atoi(r.FormValue(keyOrderID))
-		if err != nil {
-			ShowError(w, r, err)
-			return
-		}
-
 		if delete {
-			err = appContext.Database(r).DeleteOrder(id)
+			err = appContext.Database(r).DeleteOrder(order.ID)
 			if err != nil {
 				ShowError(w, r, err)
 				return
 			}
 		} else {
-			err = appContext.Database(r).UpdateOrder(database.Order{
-				ID:        id,
-				ProductID: productId,
-				UserID:    user.ID,
-				Amount:    amount,
-				ExpiresAt: requestedAt,
-			})
+			err = appContext.Database(r).UpdateOrder(order)
 			if err != nil {
 				ShowError(w, r, err)
 				return
@@ -137,6 +117,34 @@ func PostChefOrder(w http.ResponseWriter, r *http.Request) {
 	}
 
 	http.Redirect(w, r, DestChef, http.StatusSeeOther)
+}
+
+func parseOrderFromForm(r *http.Request) (database.Order, error) {
+	order := database.Order{}
+
+	id, err := strconv.Atoi(r.FormValue(keyOrderID))
+	if err == nil {
+		order.ID = id
+	}
+
+	userId, err := strconv.Atoi(r.FormValue(keyOrderUserID))
+	if err != nil {
+		// If no userId value is found, use authenticated user ID
+		user, err := appContext.AuthenticatedUser(r)
+		if err != nil {
+			return database.Order{}, err
+		}
+
+		order.UserID = user.ID
+	} else {
+		order.UserID = userId
+	}
+
+	order.ProductID, _ = strconv.Atoi(r.FormValue(keyOrderProductID))
+	order.Amount, _ = strconv.Atoi(r.FormValue(keyOrderAmount))
+	order.ExpiresAt, _ = time.Parse(dateFormat, r.FormValue(keyOrderRequestedAt))
+
+	return order, nil
 }
 
 func GetChefOrdersView(w http.ResponseWriter, r *http.Request) {

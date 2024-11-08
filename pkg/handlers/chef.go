@@ -40,8 +40,6 @@ func GetChef(w http.ResponseWriter, r *http.Request) {
 }
 
 func PostOrderAmountInput(w http.ResponseWriter, r *http.Request) {
-	label := "Quantità"
-
 	amount, err := strconv.Atoi(r.FormValue(keyOrderAmount))
 	if err != nil {
 		id, err := strconv.Atoi(r.FormValue(keyOrderID))
@@ -53,20 +51,41 @@ func PostOrderAmountInput(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	selectedProductId, err := strconv.Atoi(r.FormValue(keyOrderProductID))
-	if err == nil {
-		product, err := appContext.Database(r).FindProduct(selectedProductId)
-		if err != nil {
-			LogError(r, err)
-		}
-
-		label += " (" + product.UnitOfMeasure.Symbol + ")"
-	}
-
 	appContext.ExecuteTemplate(w, r, "input", components.Input{
-		Label:        label,
+		Label:        composeLabel(r),
 		Name:         keyOrderAmount,
 		Type:         "number",
 		DefaultValue: strconv.Itoa(amount),
 	})
+}
+
+func composeLabel(r *http.Request) string {
+	baseLabel := "Quantità"
+	var productId int
+
+	parsedOrder, err := parseOrderFromForm(r)
+	if err != nil {
+		LogError(r, err)
+		return baseLabel
+	}
+
+	if parsedOrder.ProductID != 0 {
+		productId = parsedOrder.ProductID
+	} else {
+		if parsedOrder.ID != 0 {
+			order, err := appContext.Database(r).FindOrder(parsedOrder.ID)
+			if err != nil {
+				return baseLabel
+			}
+
+			productId = order.ProductID
+		}
+	}
+
+	product, err := appContext.Database(r).FindProduct(productId)
+	if err != nil {
+		return baseLabel
+	}
+
+	return baseLabel + " (" + product.UnitOfMeasure.Symbol + ")"
 }
