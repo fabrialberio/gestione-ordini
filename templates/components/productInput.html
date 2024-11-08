@@ -19,38 +19,40 @@
     }
   </script>
   <label>Prodotto</label>
-  <div id="productSearchButton" class="flex items-center px-3 input selectable" onclick="searchDialog.showModal()">
+  <div id="productSearchButton" class="px-3 btn input" onclick="searchDialog.showModal()">
     {{ if .InitialProductName }}
-    <!-- TODO: Fix long names overflowing -->
-      {{ .InitialProductName }}
+    {{ .InitialProductName }}
     {{ else }}
-      <span class="text-on-surface-dim">Seleziona prodotto</span>
+    <span class="text-on-surface-dim">Seleziona prodotto</span>
     {{ end }}
   </div>
-  <dialog id="productSearchDialog" class="max-w-md overflow-hidden">
-    <div class="space-y-2">
-      <!-- TODO: Search cancel button -->
-      <input id="productSearchInput" name="{{ .SearchInputName }}" type="search"
-      placeholder="Cerca prodotti"
-      autofocus
-      hx-post="{{ .ProductSearchURL }}"
-      hx-trigger="input changed delay:100ms, search, load"
-      hx-target="#productSelect">
-      <fieldset class="flex-wrap max-w-md chipBox"
-      hx-post="{{ .ProductSearchURL }}"
-      hx-trigger="change"
-      hx-target="#productSelect">
-        {{ range .ProductTypes }}
-        <span onclick="this.querySelector('input').click()">
-          <input type="checkbox" value="{{ .ID }}" name="{{ $.ProductTypesName }}">
-          <i class="fa-check fas"></i>
-          {{ .Name }}
-        </span>
-        {{ end }}
-      </fieldset>
+  <dialog id="productSearchDialog" class="overflow-hidden">
+    <div class="space-y-4 max-w-md">
+      <div class="space-y-2">
+        <!-- TODO: Search cancel button -->
+        <!-- Hides some results in phones in landscape -->
+        <input id="productSearchInput" name="{{ .SearchInputName }}" type="search"
+          placeholder="Cerca prodotti"
+          autofocus
+          hx-post="{{ .ProductSearchURL }}"
+          hx-trigger="input changed delay:100ms, search, load"
+          hx-target="#productSelect">
+          <fieldset class="flex-wrap chipBox"
+          hx-post="{{ .ProductSearchURL }}"
+          hx-trigger="change"
+          hx-target="#productSelect">
+          {{ range .ProductTypes }}
+          <span onclick="this.querySelector('input').click()">
+            <input type="checkbox" value="{{ .ID }}" name="{{ $.ProductTypesName }}">
+            <i class="fa-check fas"></i>
+            {{ .Name }}
+          </span>
+          {{ end }}
+        </fieldset>
+      </div>
+      <div id="productSelect" class="max-h-[29rem] overflow-y-auto selectList">
+      </div>
     </div>
-    <fieldset id="productSelect" class="max-h-[19rem] overflow-y-auto selectList">
-    </fieldset>
   </dialog>
 </div>
 {{ end }}
@@ -62,13 +64,12 @@
   value="{{ .Product.ID }}"
   onclick="onOptionClicked(this)"
   {{ if .IsSelected }} checked{{ end }}>
-  <!-- TODO: Fix long names overflowing -->
-  {{ .Product.Name }}
+  <span class="truncate">{{ .Product.Name }}</span>
 </span>
 {{ end }}
 
 {{ define "productSearchNoResults" }}
-<span class="p-2 w-full text-center text-on-surface-dim italic">
+<span class="flex justify-center p-2 w-full text-on-surface-dim italic">
   Nessun risultato
 </span>
 {{ end }}

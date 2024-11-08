@@ -630,6 +630,10 @@ video {
   max-height: 19rem;
 }
 
+.max-h-\[29rem\] {
+  max-height: 29rem;
+}
+
 .min-h-10 {
   min-height: 2.5rem;
 }
@@ -656,6 +660,14 @@ video {
 
 .max-w-sm {
   max-width: 24rem;
+}
+
+.max-w-full {
+  max-width: 100%;
+}
+
+.max-w-lg {
+  max-width: 32rem;
 }
 
 .basis-1\/2 {
@@ -724,6 +736,12 @@ video {
   margin-bottom: calc(1.5rem * var(--tw-space-y-reverse));
 }
 
+.space-y-4 > :not([hidden]) ~ :not([hidden]) {
+  --tw-space-y-reverse: 0;
+  margin-top: calc(1rem * calc(1 - var(--tw-space-y-reverse)));
+  margin-bottom: calc(1rem * var(--tw-space-y-reverse));
+}
+
 .divide-outline > :not([hidden]) ~ :not([hidden]) {
   --tw-divide-opacity: 1;
   border-color: rgb(209 213 219 / var(--tw-divide-opacity));
@@ -743,6 +761,24 @@ video {
 
 .overflow-y-auto {
   overflow-y: auto;
+}
+
+.overflow-x-hidden {
+  overflow-x: hidden;
+}
+
+.overflow-y-hidden {
+  overflow-y: hidden;
+}
+
+.overflow-x-clip {
+  overflow-x: clip;
+}
+
+.truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .text-ellipsis {
@@ -840,6 +876,10 @@ video {
 
 .align-top {
   vertical-align: top;
+}
+
+.align-middle {
+  vertical-align: middle;
 }
 
 .font-mono {
@@ -1111,11 +1151,12 @@ input:not([checkbox]):focus, select:focus {
 }
 
 .btn {
-  display: inline-flex;
+  display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.25rem;
   overflow: hidden;
   text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .btn:focus {
@@ -1158,11 +1199,12 @@ input:not([checkbox]):focus, select:focus {
   padding-top: 0.5rem;
   padding-bottom: 0.5rem;
   font-weight: 700;
-  display: inline-flex;
+  display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.25rem;
   overflow: hidden;
   text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .btn-md:focus {
@@ -1195,6 +1237,11 @@ input:not([checkbox]):focus, select:focus {
   --tw-ring-offset-width: 2px;
 }
 
+.btn-md.destructive {
+  --tw-ring-opacity: 1;
+  --tw-ring-color: rgb(192 28 40 / var(--tw-ring-opacity));
+}
+
 .btn-lg {
   min-height: 3rem;
   min-width: 3rem;
@@ -1205,11 +1252,12 @@ input:not([checkbox]):focus, select:focus {
   padding-top: 0.75rem;
   padding-bottom: 0.75rem;
   font-weight: 700;
-  display: inline-flex;
+  display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.25rem;
   overflow: hidden;
   text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .btn-lg:focus {
@@ -1242,6 +1290,11 @@ input:not([checkbox]):focus, select:focus {
   --tw-ring-offset-width: 2px;
 }
 
+.btn-lg.destructive {
+  --tw-ring-opacity: 1;
+  --tw-ring-color: rgb(192 28 40 / var(--tw-ring-opacity));
+}
+
 .suggested {
   --tw-bg-opacity: 1;
   background-color: rgb(61 178 104 / var(--tw-bg-opacity));
@@ -1254,6 +1307,11 @@ input:not([checkbox]):focus, select:focus {
   background-color: rgb(192 28 40 / var(--tw-bg-opacity));
   --tw-text-opacity: 1;
   color: rgb(255 255 255 / var(--tw-text-opacity));
+}
+
+.btn.destructive {
+  --tw-ring-opacity: 1;
+  --tw-ring-color: rgb(192 28 40 / var(--tw-ring-opacity));
 }
 
 .sidebar {
@@ -1355,11 +1413,12 @@ input:not([checkbox]):focus, select:focus {
   padding-right: 0.5rem;
   font-size: 0.875rem;
   line-height: 1.25rem;
-  display: inline-flex;
+  display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.25rem;
   overflow: hidden;
   text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .chipBox > *:focus {
@@ -1392,9 +1451,9 @@ input:not([checkbox]):focus, select:focus {
   --tw-ring-offset-width: 2px;
 }
 
-.chipBox > *:has(input:checked) {
-  --tw-bg-opacity: 1;
-  background-color: rgb(197 232 210 / var(--tw-bg-opacity));
+.chipBox > *.destructive {
+  --tw-ring-opacity: 1;
+  --tw-ring-color: rgb(192 28 40 / var(--tw-ring-opacity));
 }
 
 .chipBox > * > input {
@@ -1409,30 +1468,26 @@ input:not([checkbox]):focus, select:focus {
   border-width: 0;
 }
 
-.chipBox > * > input ~ i {
+.chipBox > *:has(input:checked) {
+  --tw-bg-opacity: 1;
+  background-color: rgb(197 232 210 / var(--tw-bg-opacity));
+}
+
+.chipBox > * > input:not(:checked) ~ i {
   display: none;
-}
-
-.chipBox > * > input:checked ~ i {
-  display: block;
-}
-
-.selectList {
-  display: flex;
-  flex-direction: column;
 }
 
 .selectList > * {
   height: 2.5rem;
-  flex: none;
   border-radius: 0.5rem;
   padding-left: 0.75rem;
   padding-right: 0.75rem;
-  display: inline-flex;
+  display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.25rem;
   overflow: hidden;
   text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .selectList > *:focus {
@@ -1463,6 +1518,11 @@ input:not([checkbox]):focus, select:focus {
 
 .selectList > *:focus {
   --tw-ring-offset-width: 2px;
+}
+
+.selectList > *.destructive {
+  --tw-ring-opacity: 1;
+  --tw-ring-color: rgb(192 28 40 / var(--tw-ring-opacity));
 }
 
 .selectList > *:has(input:checked) {
