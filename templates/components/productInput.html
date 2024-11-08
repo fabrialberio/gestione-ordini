@@ -26,8 +26,8 @@
     <span class="text-on-surface-dim">Seleziona prodotto</span>
     {{ end }}
   </button>
-  <dialog id="productSearchDialog" class="overflow-hidden">
-    <div class="space-y-4 max-w-md">
+  <dialog id="productSearchDialog">
+    <div class="border-outline pb-4 border-b max-w-md">
       <div class="space-y-2">
         <!-- TODO: Search cancel button -->
         <!-- Hides some results in phones in landscape -->
@@ -50,8 +50,8 @@
           {{ end }}
         </fieldset>
       </div>
-      <div id="productSelect" class="max-h-[29rem] overflow-y-auto selectList">
-      </div>
+    </div>
+    <div id="productSelect" class="max-w-md max-h-[29rem] overflow-y-auto selectList">
     </div>
   </dialog>
 </div>
