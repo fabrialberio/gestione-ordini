@@ -31,9 +31,9 @@
     Elimina
   </button>
   <dialog id="confirmDeleteDialog">
-    <div class="space-y-4 w-screen max-w-md text-center">
+    <div class="space-y-4 max-w-sm text-center">
       <h3>Eliminare?</h3>
-      <p>L'eliminazione è un'azione irreversibile.</p>
+      <p class="mx-6">L'eliminazione è un'azione irreversibile.</p>
       <div class="gap-4 grid grid-cols-2">
         <button type="button" class="bg-raised btn-md" onclick="deleteDialog.close()">
           Annulla
@@ -45,7 +45,7 @@
     </div>
   </dialog>
   {{ end }}
-  <button class="ml-auto basis-1/4 btn-md suggested" type="submit" autofocus>
+  <button class="ml-auto btn-md suggested" type="submit" autofocus>
     <i class="fa-floppy-disk far"></i>
     {{ if . }}
     Crea

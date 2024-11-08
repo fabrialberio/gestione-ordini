@@ -587,6 +587,11 @@ video {
   margin-right: 0.5rem;
 }
 
+.mx-6 {
+  margin-left: 1.5rem;
+  margin-right: 1.5rem;
+}
+
 .mb-10 {
   margin-bottom: 2.5rem;
 }
@@ -638,12 +643,29 @@ video {
   width: 100%;
 }
 
+.w-\[100\%-4rem\] {
+  width: 100%-4rem;
+}
+
 .w-screen {
   width: 100vw;
 }
 
 .min-w-20 {
   min-width: 5rem;
+}
+
+.min-w-\[100svw-4rem\] {
+  min-width: 100svw-4rem;
+}
+
+.min-w-\[100\%-4rem\] {
+  min-width: 100%-4rem;
+}
+
+.min-w-max {
+  min-width: -moz-max-content;
+  min-width: max-content;
 }
 
 .max-w-14 {
@@ -660,6 +682,14 @@ video {
 
 .max-w-sm {
   max-width: 24rem;
+}
+
+.max-w-xs {
+  max-width: 20rem;
+}
+
+.shrink-0 {
+  flex-shrink: 0;
 }
 
 .basis-1\/2 {
@@ -840,6 +870,21 @@ video {
 .py-2 {
   padding-top: 0.5rem;
   padding-bottom: 0.5rem;
+}
+
+.px-6 {
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+}
+
+.px-80 {
+  padding-left: 20rem;
+  padding-right: 20rem;
+}
+
+.px-10 {
+  padding-left: 2.5rem;
+  padding-right: 2.5rem;
 }
 
 .pr-2 {
@@ -1516,6 +1561,10 @@ input.btn:not([checkbox]):focus-visible, select.btn:focus-visible {
 
   .max-sm\:flex-col {
     flex-direction: column;
+  }
+
+  .max-sm\:gap-2 {
+    gap: 0.5rem;
   }
 
   .max-sm\:divide-y > :not([hidden]) ~ :not([hidden]) {
