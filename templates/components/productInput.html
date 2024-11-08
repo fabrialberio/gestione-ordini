@@ -42,7 +42,7 @@
           hx-trigger="change"
           hx-target="#productSelect">
           {{ range .ProductTypes }}
-          <button onclick="this.querySelector('input').click()">
+          <button type="button" onclick="this.querySelector('input').click()">
             <input tabindex="-1" type="checkbox" value="{{ .ID }}" name="{{ $.ProductTypesName }}">
             <i class="fa-check fas"></i>
             {{ .Name }}
@@ -58,7 +58,7 @@
 {{ end }}
 
 {{ define "productSearchResult" }}
-<button onclick="this.querySelector('input').click()">
+<button type="button" onclick="this.querySelector('input').click()">
   <input tabindex="-1" type="radio" class="sr-only" required
   name="{{ .ProductSelectName }}"
   value="{{ .Product.ID }}"
