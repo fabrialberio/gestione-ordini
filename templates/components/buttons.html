@@ -15,10 +15,35 @@
 {{ define "formSubmitButtons" }}
 <div class="flex pt-4">
   {{ if not . }}
-  <button class="basis-1/4 btn-md destructive" type="submit" name="delete">
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      deleteDialog = document.getElementById("confirmDeleteDialog")
+
+      deleteDialog.addEventListener("click" , function(event) {
+        if (event.target === deleteDialog) {
+          deleteDialog.close()
+        }
+      })
+    })
+  </script>
+  <button type="button" class="btn-md destructive" onclick="deleteDialog.showModal()">
     <i class="fa-trash-can far"></i>
     Elimina
   </button>
+  <dialog id="confirmDeleteDialog">
+    <div class="space-y-4 w-screen max-w-md text-center">
+      <h3>Eliminare?</h3>
+      <p>L'eliminazione è un'azione irreversibile.</p>
+      <div class="gap-4 grid grid-cols-2">
+        <button type="button" class="bg-raised btn-md" onclick="deleteDialog.close()">
+          Annulla
+        </button>
+        <button class="btn-md destructive" type="submit" name="delete">
+          Elimina
+        </button>    
+      </div>
+    </div>
+  </dialog>
   {{ end }}
   <button class="ml-auto basis-1/4 btn-md suggested" type="submit" autofocus>
     <i class="fa-floppy-disk far"></i>
