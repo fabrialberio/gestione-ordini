@@ -23,7 +23,12 @@ var weekdayNames = map[time.Weekday]string{
 }
 
 func GetChefOrder(w http.ResponseWriter, r *http.Request) {
-	// TODO: Check order is made by current user
+	user, err := auth.GetAuthenticatedUser(r)
+	if err != nil {
+		ShowError(w, r, err)
+		return
+	}
+
 	isNew := false
 	defaultOrder := database.Order{
 		Amount:    1,
@@ -39,17 +44,16 @@ func GetChefOrder(w http.ResponseWriter, r *http.Request) {
 			ShowError(w, r, err)
 			return
 		}
+
+		if defaultOrder.UserID != user.ID {
+			ShowError(w, r, auth.ErrInvalidPerm)
+			return
+		}
 	}
 
 	productTypes, err := appContext.Database(r).FindAllProductTypes()
 	if err != nil {
 		LogError(r, err)
-	}
-
-	user, err := auth.GetAuthenticatedUser(r)
-	if err != nil {
-		ShowError(w, r, err)
-		return
 	}
 
 	data := struct {
