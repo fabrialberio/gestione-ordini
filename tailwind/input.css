@@ -58,6 +58,7 @@ input:not([checkbox]), select {
     @apply input w-full px-3 py-2
 }
 
+/* Fix for Safari on iOS */
 input[type="date"] {
     @apply block;
     -webkit-appearance: textfield;

@@ -1040,6 +1040,8 @@ input.btn:not([checkbox]):focus-visible, select.btn:focus-visible {
   --tw-ring-offset-width: 0px;
 }
 
+/* Fix for Safari on iOS */
+
 input[type="date"] {
   display: block;
   -webkit-appearance: textfield;
