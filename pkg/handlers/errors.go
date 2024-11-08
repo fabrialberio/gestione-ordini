@@ -6,15 +6,6 @@ import (
 	"net/http"
 )
 
-func ErrorRedirect(w http.ResponseWriter, r *http.Request, err error) {
-	LogError(r, err)
-	http.Redirect(w, r, "/error", http.StatusSeeOther)
-}
-
-func GetError(w http.ResponseWriter, r *http.Request) {
-	appContext.ExecuteTemplate(w, r, "error.html", "Errore interno")
-}
-
 func ShowError(w http.ResponseWriter, r *http.Request, err error) {
 	LogError(r, err)
 	appContext.ExecuteTemplate(w, r, "error.html", err.Error())
