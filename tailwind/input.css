@@ -151,11 +151,15 @@ input:not([checkbox]), select {
 }
 
 .card {
-    @apply elevated p-4 bg-surface
+    @apply elevated bg-surface overflow-hidden
 }
 
 .card > * {
-    @apply mb-4 last:mb-0
+    @apply px-4 pt-4 last:pb-4
+}
+
+.cardFooter {
+    @apply flex border-outline bg-view mt-4 border-t gap-2
 }
 
 .chipBox {
@@ -163,7 +167,7 @@ input:not([checkbox]), select {
 }
 
 .chipBox > * {
-    @apply btn border border-outline px-2 rounded-md h-8 text-sm
+    @apply btn border border-outline px-2 gap-1 rounded-md h-8 text-sm
 }
 
 .chipBox > * > input {

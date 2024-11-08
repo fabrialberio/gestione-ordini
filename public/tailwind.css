@@ -582,18 +582,9 @@ video {
   margin: 1rem;
 }
 
-.mx-2 {
-  margin-left: 0.5rem;
-  margin-right: 0.5rem;
-}
-
 .mx-6 {
   margin-left: 1.5rem;
   margin-right: 1.5rem;
-}
-
-.mb-10 {
-  margin-bottom: 2.5rem;
 }
 
 .ml-auto {
@@ -643,29 +634,8 @@ video {
   width: 100%;
 }
 
-.w-\[100\%-4rem\] {
-  width: 100%-4rem;
-}
-
-.w-screen {
-  width: 100vw;
-}
-
 .min-w-20 {
   min-width: 5rem;
-}
-
-.min-w-\[100svw-4rem\] {
-  min-width: 100svw-4rem;
-}
-
-.min-w-\[100\%-4rem\] {
-  min-width: 100%-4rem;
-}
-
-.min-w-max {
-  min-width: -moz-max-content;
-  min-width: max-content;
 }
 
 .max-w-14 {
@@ -684,20 +654,8 @@ video {
   max-width: 24rem;
 }
 
-.max-w-xs {
-  max-width: 20rem;
-}
-
-.shrink-0 {
-  flex-shrink: 0;
-}
-
 .basis-1\/2 {
   flex-basis: 50%;
-}
-
-.basis-1\/4 {
-  flex-basis: 25%;
 }
 
 .grid-cols-2 {
@@ -734,10 +692,6 @@ video {
 
 .gap-1 {
   gap: 0.25rem;
-}
-
-.gap-2 {
-  gap: 0.5rem;
 }
 
 .gap-4 {
@@ -816,6 +770,10 @@ video {
   border-width: 0px;
 }
 
+.border-b {
+  border-bottom-width: 1px;
+}
+
 .border-r {
   border-right-width: 1px;
 }
@@ -876,37 +834,12 @@ video {
   padding-bottom: 0.5rem;
 }
 
-.px-6 {
-  padding-left: 1.5rem;
-  padding-right: 1.5rem;
-}
-
-.px-80 {
-  padding-left: 20rem;
-  padding-right: 20rem;
-}
-
-.px-10 {
-  padding-left: 2.5rem;
-  padding-right: 2.5rem;
-}
-
-.px-2 {
-  padding-left: 0.5rem;
-  padding-right: 0.5rem;
-}
-
-.px-4 {
-  padding-left: 1rem;
-  padding-right: 1rem;
+.pb-4 {
+  padding-bottom: 1rem;
 }
 
 .pr-2 {
   padding-right: 0.5rem;
-}
-
-.pt-4 {
-  padding-top: 1rem;
 }
 
 .text-center {
@@ -1012,9 +945,9 @@ main {
 }
 
 dialog {
+  overflow: hidden;
   --tw-bg-opacity: 1;
   background-color: rgb(255 255 255 / var(--tw-bg-opacity));
-  padding: 1rem;
   border-radius: 0.75rem;
   border-width: 1px;
   --tw-border-opacity: 1;
@@ -1025,11 +958,13 @@ dialog {
 }
 
 dialog > * {
-  margin-bottom: 1rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  padding-top: 1rem;
 }
 
 dialog > *:last-child {
-  margin-bottom: 0px;
+  padding-bottom: 1rem;
 }
 
 dialog {
@@ -1419,9 +1354,9 @@ input.btn:not([checkbox]):focus-visible, select.btn:focus-visible {
 }
 
 .card {
+  overflow: hidden;
   --tw-bg-opacity: 1;
   background-color: rgb(255 255 255 / var(--tw-bg-opacity));
-  padding: 1rem;
   border-radius: 0.75rem;
   border-width: 1px;
   --tw-border-opacity: 1;
@@ -1432,11 +1367,24 @@ input.btn:not([checkbox]):focus-visible, select.btn:focus-visible {
 }
 
 .card > * {
-  margin-bottom: 1rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  padding-top: 1rem;
 }
 
 .card > *:last-child {
-  margin-bottom: 0px;
+  padding-bottom: 1rem;
+}
+
+.cardFooter {
+  margin-top: 1rem;
+  display: flex;
+  gap: 0.5rem;
+  border-top-width: 1px;
+  --tw-border-opacity: 1;
+  border-color: rgb(209 213 219 / var(--tw-border-opacity));
+  --tw-bg-opacity: 1;
+  background-color: rgb(248 249 250 / var(--tw-bg-opacity));
 }
 
 .chipBox {
@@ -1446,6 +1394,7 @@ input.btn:not([checkbox]):focus-visible, select.btn:focus-visible {
 
 .chipBox > * {
   height: 2rem;
+  gap: 0.25rem;
   border-radius: 0.375rem;
   border-width: 1px;
   --tw-border-opacity: 1;
@@ -1575,10 +1524,6 @@ input.btn:not([checkbox]):focus-visible, select.btn:focus-visible {
 
   .max-sm\:flex-col {
     flex-direction: column;
-  }
-
-  .max-sm\:gap-2 {
-    gap: 0.5rem;
   }
 
   .max-sm\:divide-y > :not([hidden]) ~ :not([hidden]) {
