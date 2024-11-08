@@ -698,6 +698,10 @@ video {
   gap: 1rem;
 }
 
+.gap-2 {
+  gap: 0.5rem;
+}
+
 .space-y-1 > :not([hidden]) ~ :not([hidden]) {
   --tw-space-y-reverse: 0;
   margin-top: calc(0.25rem * calc(1 - var(--tw-space-y-reverse)));
@@ -1531,6 +1535,10 @@ input[type="date"] {
 }
 
 @media not all and (min-width: 640px) {
+  .max-sm\:w-full {
+    width: 100%;
+  }
+
   .max-sm\:flex-row {
     flex-direction: row;
   }
@@ -1543,6 +1551,10 @@ input[type="date"] {
     --tw-divide-y-reverse: 0;
     border-top-width: calc(1px * calc(1 - var(--tw-divide-y-reverse)));
     border-bottom-width: calc(1px * var(--tw-divide-y-reverse));
+  }
+
+  .max-sm\:text-center {
+    text-align: center;
   }
 
   .max-sm\:text-right {
