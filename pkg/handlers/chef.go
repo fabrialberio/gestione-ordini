@@ -3,7 +3,6 @@ package handlers
 import (
 	"gestione-ordini/pkg/appContext"
 	"gestione-ordini/pkg/components"
-	"gestione-ordini/pkg/database"
 	"net/http"
 	"strconv"
 	"time"
@@ -41,6 +40,8 @@ func GetChef(w http.ResponseWriter, r *http.Request) {
 }
 
 func PostOrderAmountInput(w http.ResponseWriter, r *http.Request) {
+	label := "Quantità"
+
 	amount, err := strconv.Atoi(r.FormValue(keyOrderAmount))
 	if err != nil {
 		id, err := strconv.Atoi(r.FormValue(keyOrderID))
@@ -53,23 +54,19 @@ func PostOrderAmountInput(w http.ResponseWriter, r *http.Request) {
 	}
 
 	selectedProductId, err := strconv.Atoi(r.FormValue(keyOrderProductID))
-	if err != nil {
-		selectedProductId = 1
+	if err == nil {
+		product, err := appContext.Database(r).FindProduct(selectedProductId)
+		if err != nil {
+			LogError(r, err)
+		}
+
+		label += " (" + product.UnitOfMeasure.Symbol + ")"
 	}
 
-	product, err := appContext.Database(r).FindProduct(selectedProductId)
-	if err != nil {
-		LogError(r, err)
-	}
-
-	appContext.ExecuteTemplate(w, r, "input", constructAmountInput(product, amount))
-}
-
-func constructAmountInput(product database.Product, defaultValue int) components.Input {
-	return components.Input{
-		Label:        "Quantità (" + product.UnitOfMeasure.Symbol + ")",
+	appContext.ExecuteTemplate(w, r, "input", components.Input{
+		Label:        label,
 		Name:         keyOrderAmount,
 		Type:         "number",
-		DefaultValue: strconv.Itoa(defaultValue),
-	}
+		DefaultValue: strconv.Itoa(amount),
+	})
 }
