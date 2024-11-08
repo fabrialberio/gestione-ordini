@@ -27,20 +27,17 @@ main {
 }
 
 dialog {
-    @apply card
+    @apply card;
+    animation: open 100ms ease-out;
 }
 
 dialog::backdrop {
     @apply bg-scrim bg-opacity-10
 }
 
-dialog[open] {
-    animation: open 100ms forwards;
-}
-
 @keyframes open {
     from {
-        scale: 0.9;
+        scale: 1.1;
         opacity: 0;
     }
     to {
@@ -154,7 +151,7 @@ input:not([checkbox]), select {
 }
 
 .chipBox > * {
-    @apply btn bg-disabled px-2 rounded-md h-8 text-sm
+    @apply btn border border-outline px-2 rounded-md h-8 text-sm
 }
 
 .chipBox > * > input {
@@ -162,7 +159,7 @@ input:not([checkbox]), select {
 }
 
 .chipBox > *:has(input:checked) {
-    @apply bg-secondary
+    @apply bg-secondary border-none
 }
 
 .chipBox > * > input:not(:checked) ~ i {
@@ -174,5 +171,5 @@ input:not([checkbox]), select {
 }
 
 .selectList > *:has(input:checked) {
-    @apply bg-disabled
+    @apply bg-raised
 }

@@ -6,7 +6,7 @@ module.exports = {
       "primary": "#3db268",
       "on-primary": "#ffffff",
       "secondary": "#c5e8d2",
-      "disabled": "#e3e5e8",
+      "raised": "#e3e3e3",
       "error": "#c01c28",
       "view": "#f8f9fa",
       "surface": "#ffffff",
