@@ -19,13 +19,13 @@
     }
   </script>
   <label>Prodotto</label>
-  <div id="productSearchButton" class="px-3 btn input" onclick="searchDialog.showModal()">
+  <button type="button" id="productSearchButton" class="px-3 w-full btn input" onclick="searchDialog.showModal()">
     {{ if .InitialProductName }}
     {{ .InitialProductName }}
     {{ else }}
     <span class="text-on-surface-dim">Seleziona prodotto</span>
     {{ end }}
-  </div>
+  </button>
   <dialog id="productSearchDialog" class="overflow-hidden">
     <div class="space-y-4 max-w-md">
       <div class="space-y-2">

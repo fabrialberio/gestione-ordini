@@ -891,6 +891,17 @@ video {
   box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
 }
 
+*:focus-visible {
+  z-index: 10;
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  --tw-ring-offset-shadow: var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);
+  --tw-ring-shadow: var(--tw-ring-inset) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color);
+  box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000);
+  --tw-ring-opacity: 1;
+  --tw-ring-color: rgb(61 178 104 / var(--tw-ring-opacity));
+}
+
 body {
   --tw-bg-opacity: 1;
   background-color: rgb(248 249 250 / var(--tw-bg-opacity));
@@ -1018,18 +1029,21 @@ input:not([checkbox])::placeholder, select::placeholder {
   color: rgb(107 114 128 / var(--tw-placeholder-opacity));
 }
 
-input:not([checkbox]):focus, select:focus {
-  z-index: 10;
-  outline: 2px solid transparent;
-  outline-offset: 2px;
-  --tw-ring-shadow: var(--tw-ring-inset) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color);
-  --tw-ring-opacity: 1;
-  --tw-ring-color: rgb(61 178 104 / var(--tw-ring-opacity));
+input:not([checkbox]):focus-visible, select:focus-visible {
   --tw-border-opacity: 1;
   border-color: rgb(61 178 104 / var(--tw-border-opacity));
   --tw-ring-offset-shadow: var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);
   --tw-ring-shadow: var(--tw-ring-inset) 0 0 0 calc(1px + var(--tw-ring-offset-width)) var(--tw-ring-color);
   box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000);
+}
+
+input.btn:not([checkbox]):focus-visible, select.btn:focus-visible {
+  --tw-border-opacity: 1;
+  border-color: rgb(61 178 104 / var(--tw-border-opacity));
+  --tw-ring-offset-shadow: var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);
+  --tw-ring-shadow: var(--tw-ring-inset) 0 0 0 calc(1px + var(--tw-ring-offset-width)) var(--tw-ring-color);
+  box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000);
+  --tw-ring-offset-width: 0px;
 }
 
 .input {
@@ -1054,13 +1068,7 @@ input:not([checkbox]):focus, select:focus {
   color: rgb(107 114 128 / var(--tw-placeholder-opacity));
 }
 
-.input:focus {
-  z-index: 10;
-  outline: 2px solid transparent;
-  outline-offset: 2px;
-  --tw-ring-shadow: var(--tw-ring-inset) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color);
-  --tw-ring-opacity: 1;
-  --tw-ring-color: rgb(61 178 104 / var(--tw-ring-opacity));
+.input:focus-visible {
   --tw-border-opacity: 1;
   border-color: rgb(61 178 104 / var(--tw-border-opacity));
   --tw-ring-offset-shadow: var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);
@@ -1116,17 +1124,6 @@ input:not([checkbox]):focus, select:focus {
   width: 0px;
 }
 
-.focus-ring:focus {
-  z-index: 10;
-  outline: 2px solid transparent;
-  outline-offset: 2px;
-  --tw-ring-offset-shadow: var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);
-  --tw-ring-shadow: var(--tw-ring-inset) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color);
-  box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000);
-  --tw-ring-opacity: 1;
-  --tw-ring-color: rgb(61 178 104 / var(--tw-ring-opacity));
-}
-
 .selectable {
   cursor: pointer;
   transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, -webkit-backdrop-filter;
@@ -1137,9 +1134,11 @@ input:not([checkbox]):focus, select:focus {
 }
 
 .selectable:hover {
-  --tw-shadow: inset 0 0 0 1000px rgba(0,0,0,0.1);
-  --tw-shadow-colored: inset 0 0 0 1000px var(--tw-shadow-color);
-  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+  box-shadow: inset 0 0 0 1000px rgba(0, 0, 0, 0.1);
+}
+
+.selectable:active {
+  box-shadow: inset 0 0 0 1000px rgba(0, 0, 0, 0.2);
 }
 
 .btn {
@@ -1149,20 +1148,6 @@ input:not([checkbox]):focus, select:focus {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-}
-
-.btn:focus {
-  z-index: 10;
-  outline: 2px solid transparent;
-  outline-offset: 2px;
-  --tw-ring-offset-shadow: var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);
-  --tw-ring-shadow: var(--tw-ring-inset) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color);
-  box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000);
-  --tw-ring-opacity: 1;
-  --tw-ring-color: rgb(61 178 104 / var(--tw-ring-opacity));
-}
-
-.btn {
   cursor: pointer;
   transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, -webkit-backdrop-filter;
   transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;
@@ -1172,13 +1157,24 @@ input:not([checkbox]):focus, select:focus {
 }
 
 .btn:hover {
-  --tw-shadow: inset 0 0 0 1000px rgba(0,0,0,0.1);
-  --tw-shadow-colored: inset 0 0 0 1000px var(--tw-shadow-color);
-  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+  box-shadow: inset 0 0 0 1000px rgba(0, 0, 0, 0.1);
 }
 
-.btn:focus {
+.btn:active {
+  box-shadow: inset 0 0 0 1000px rgba(0, 0, 0, 0.2);
+}
+
+.btn:focus-visible {
   --tw-ring-offset-width: 2px;
+}
+
+.btn.input:focus-visible {
+  --tw-border-opacity: 1;
+  border-color: rgb(61 178 104 / var(--tw-border-opacity));
+  --tw-ring-offset-shadow: var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);
+  --tw-ring-shadow: var(--tw-ring-inset) 0 0 0 calc(1px + var(--tw-ring-offset-width)) var(--tw-ring-color);
+  box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000);
+  --tw-ring-offset-width: 0px;
 }
 
 .btn-md {
@@ -1197,20 +1193,6 @@ input:not([checkbox]):focus, select:focus {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-}
-
-.btn-md:focus {
-  z-index: 10;
-  outline: 2px solid transparent;
-  outline-offset: 2px;
-  --tw-ring-offset-shadow: var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);
-  --tw-ring-shadow: var(--tw-ring-inset) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color);
-  box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000);
-  --tw-ring-opacity: 1;
-  --tw-ring-color: rgb(61 178 104 / var(--tw-ring-opacity));
-}
-
-.btn-md {
   cursor: pointer;
   transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, -webkit-backdrop-filter;
   transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;
@@ -1220,13 +1202,24 @@ input:not([checkbox]):focus, select:focus {
 }
 
 .btn-md:hover {
-  --tw-shadow: inset 0 0 0 1000px rgba(0,0,0,0.1);
-  --tw-shadow-colored: inset 0 0 0 1000px var(--tw-shadow-color);
-  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+  box-shadow: inset 0 0 0 1000px rgba(0, 0, 0, 0.1);
 }
 
-.btn-md:focus {
+.btn-md:active {
+  box-shadow: inset 0 0 0 1000px rgba(0, 0, 0, 0.2);
+}
+
+.btn-md:focus-visible {
   --tw-ring-offset-width: 2px;
+}
+
+.btn-md.input:focus-visible {
+  --tw-border-opacity: 1;
+  border-color: rgb(61 178 104 / var(--tw-border-opacity));
+  --tw-ring-offset-shadow: var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);
+  --tw-ring-shadow: var(--tw-ring-inset) 0 0 0 calc(1px + var(--tw-ring-offset-width)) var(--tw-ring-color);
+  box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000);
+  --tw-ring-offset-width: 0px;
 }
 
 .btn-md.destructive {
@@ -1250,20 +1243,6 @@ input:not([checkbox]):focus, select:focus {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-}
-
-.btn-lg:focus {
-  z-index: 10;
-  outline: 2px solid transparent;
-  outline-offset: 2px;
-  --tw-ring-offset-shadow: var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);
-  --tw-ring-shadow: var(--tw-ring-inset) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color);
-  box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000);
-  --tw-ring-opacity: 1;
-  --tw-ring-color: rgb(61 178 104 / var(--tw-ring-opacity));
-}
-
-.btn-lg {
   cursor: pointer;
   transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, -webkit-backdrop-filter;
   transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;
@@ -1273,13 +1252,24 @@ input:not([checkbox]):focus, select:focus {
 }
 
 .btn-lg:hover {
-  --tw-shadow: inset 0 0 0 1000px rgba(0,0,0,0.1);
-  --tw-shadow-colored: inset 0 0 0 1000px var(--tw-shadow-color);
-  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+  box-shadow: inset 0 0 0 1000px rgba(0, 0, 0, 0.1);
 }
 
-.btn-lg:focus {
+.btn-lg:active {
+  box-shadow: inset 0 0 0 1000px rgba(0, 0, 0, 0.2);
+}
+
+.btn-lg:focus-visible {
   --tw-ring-offset-width: 2px;
+}
+
+.btn-lg.input:focus-visible {
+  --tw-border-opacity: 1;
+  border-color: rgb(61 178 104 / var(--tw-border-opacity));
+  --tw-ring-offset-shadow: var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);
+  --tw-ring-shadow: var(--tw-ring-inset) 0 0 0 calc(1px + var(--tw-ring-offset-width)) var(--tw-ring-color);
+  box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000);
+  --tw-ring-offset-width: 0px;
 }
 
 .btn-lg.destructive {
@@ -1412,20 +1402,6 @@ input:not([checkbox]):focus, select:focus {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-}
-
-.chipBox > *:focus {
-  z-index: 10;
-  outline: 2px solid transparent;
-  outline-offset: 2px;
-  --tw-ring-offset-shadow: var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);
-  --tw-ring-shadow: var(--tw-ring-inset) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color);
-  box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000);
-  --tw-ring-opacity: 1;
-  --tw-ring-color: rgb(61 178 104 / var(--tw-ring-opacity));
-}
-
-.chipBox > * {
   cursor: pointer;
   transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, -webkit-backdrop-filter;
   transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;
@@ -1435,13 +1411,24 @@ input:not([checkbox]):focus, select:focus {
 }
 
 .chipBox > *:hover {
-  --tw-shadow: inset 0 0 0 1000px rgba(0,0,0,0.1);
-  --tw-shadow-colored: inset 0 0 0 1000px var(--tw-shadow-color);
-  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+  box-shadow: inset 0 0 0 1000px rgba(0, 0, 0, 0.1);
 }
 
-.chipBox > *:focus {
+.chipBox > *:active {
+  box-shadow: inset 0 0 0 1000px rgba(0, 0, 0, 0.2);
+}
+
+.chipBox > *:focus-visible {
   --tw-ring-offset-width: 2px;
+}
+
+.chipBox > *.input:focus-visible {
+  --tw-border-opacity: 1;
+  border-color: rgb(61 178 104 / var(--tw-border-opacity));
+  --tw-ring-offset-shadow: var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);
+  --tw-ring-shadow: var(--tw-ring-inset) 0 0 0 calc(1px + var(--tw-ring-offset-width)) var(--tw-ring-color);
+  box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000);
+  --tw-ring-offset-width: 0px;
 }
 
 .chipBox > *.destructive {
@@ -1482,20 +1469,6 @@ input:not([checkbox]):focus, select:focus {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-}
-
-.selectList > *:focus {
-  z-index: 10;
-  outline: 2px solid transparent;
-  outline-offset: 2px;
-  --tw-ring-offset-shadow: var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);
-  --tw-ring-shadow: var(--tw-ring-inset) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color);
-  box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000);
-  --tw-ring-opacity: 1;
-  --tw-ring-color: rgb(61 178 104 / var(--tw-ring-opacity));
-}
-
-.selectList > * {
   cursor: pointer;
   transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, -webkit-backdrop-filter;
   transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;
@@ -1505,13 +1478,24 @@ input:not([checkbox]):focus, select:focus {
 }
 
 .selectList > *:hover {
-  --tw-shadow: inset 0 0 0 1000px rgba(0,0,0,0.1);
-  --tw-shadow-colored: inset 0 0 0 1000px var(--tw-shadow-color);
-  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+  box-shadow: inset 0 0 0 1000px rgba(0, 0, 0, 0.1);
 }
 
-.selectList > *:focus {
+.selectList > *:active {
+  box-shadow: inset 0 0 0 1000px rgba(0, 0, 0, 0.2);
+}
+
+.selectList > *:focus-visible {
   --tw-ring-offset-width: 2px;
+}
+
+.selectList > *.input:focus-visible {
+  --tw-border-opacity: 1;
+  border-color: rgb(61 178 104 / var(--tw-border-opacity));
+  --tw-ring-offset-shadow: var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);
+  --tw-ring-shadow: var(--tw-ring-inset) 0 0 0 calc(1px + var(--tw-ring-offset-width)) var(--tw-ring-color);
+  box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000);
+  --tw-ring-offset-width: 0px;
 }
 
 .selectList > *.destructive {
