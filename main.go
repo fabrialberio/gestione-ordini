@@ -115,7 +115,7 @@ func setupRoutes(mux *http.ServeMux) {
 
 	mux.HandleFunc("/", handlers.GetIndex)
 	mux.HandleFunc("POST /login", handlers.PostLogin)
-	mux.HandleFunc("GET /logout", handlers.GetLogout)
+	mux.HandleFunc("GET /logout", handlers.Logout)
 	mux.Handle("GET /public/", http.FileServerFS(publicFS))
 	mux.Handle(handlers.DestChef, mw.WithUserCheck(
 		func(u *database.User) bool { return u.RoleID == database.RoleIDChef },

@@ -74,6 +74,6 @@ func PostLogin(w http.ResponseWriter, r *http.Request) {
 	loginRedirect(w, r, user.RoleID)
 }
 
-func GetLogout(w http.ResponseWriter, r *http.Request) {
+func Logout(w http.ResponseWriter, r *http.Request) {
 	logoutRedirect(w, r, false)
 }
