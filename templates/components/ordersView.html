@@ -3,9 +3,9 @@
   <div class="flex items-center p-1">
     <button class="btn-md" hx-get="{{ .OrdersViewURL }}">
       <i class="fa-calendar-day fas"></i>
+      <h3 class="truncate">{{ .WeekTitle }}</h3>
     </button>
-    <h3 class="w-full text-center">{{ .WeekTitle }}</h3>
-    <button class="btn-md" hx-get="{{ .OrdersViewURL }}?offset={{ .PrevOffset }}">
+    <button class="ml-auto btn-md" hx-get="{{ .OrdersViewURL }}?offset={{ .PrevOffset }}">
       <i class="fa-chevron-left fas"></i>
     </button>
     <button class="btn-md" hx-get="{{ .OrdersViewURL }}?offset={{ .NextOffset }}">
