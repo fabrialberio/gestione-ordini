@@ -1,20 +1,16 @@
 <!DOCTYPE html>
 <html>
   {{ template "head.html" }}
-  <body class="flex justify-center items-center h-screen">
-    <form class="space-y-6 mx-2 mb-10 w-full max-w-sm text-center" action="login" method="POST">
+  <body class="place-items-center grid h-screen">
+    <form class="space-y-6 p-4 w-full max-w-sm text-center" action="login" method="POST">
       <div class="space-y-2">
         <h2>
           Gestione ordini
         </h2>
         {{ if .ErrorMsg }}
-        <p class="text-error" role="alert">
-          {{ .ErrorMsg }}
-        </p>
+        <p class="text-error">{{ .ErrorMsg }}</p>
         {{ else }}
-        <p>
-          Inserisci le tue credenziali
-        </p>
+        <p class="">Inserisci le tue credenziali</p>
         {{ end }}
       </div>
       <div class="space-y-2">
