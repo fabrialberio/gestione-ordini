@@ -73,7 +73,7 @@ func GetChefOrder(w http.ResponseWriter, r *http.Request) {
 		},
 		AmountInputURL: DestOrderAmountInput,
 		ExpiresAtInput: components.Input{
-			Label:        "Scadenza",
+			Label:        "Data di consegna richiesta",
 			Name:         keyOrderRequestedAt,
 			Type:         "date",
 			DefaultValue: defaultOrder.ExpiresAt.Format(dateFormat),
