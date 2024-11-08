@@ -1466,6 +1466,7 @@ input.btn:not([checkbox]):focus-visible, select.btn:focus-visible {
 
 .selectList > * {
   height: 2.5rem;
+  width: 100%;
   border-radius: 0.5rem;
   padding-left: 0.75rem;
   padding-right: 0.75rem;
