@@ -71,7 +71,7 @@ input:not([checkbox]), select {
 }
 
 .btn {
-    @apply selectable focus-ring gap-2 focus:ring-offset-2 inline-flex items-center text-ellipsis overflow-hidden;
+    @apply selectable focus-ring focus:ring-offset-2 flex gap-1 items-center truncate
 }
 
 .btn-md {
@@ -142,28 +142,20 @@ input:not([checkbox]), select {
     @apply btn bg-disabled px-2 rounded-md h-8 text-sm
 }
 
-.chipBox > *:has(input:checked) {
-    @apply bg-secondary
-}
-
 .chipBox > * > input {
     @apply sr-only
 }
 
-.chipBox > * > input ~ i {
+.chipBox > *:has(input:checked) {
+    @apply bg-secondary
+}
+
+.chipBox > * > input:not(:checked) ~ i {
     @apply hidden
 }
 
-.chipBox > * > input:checked ~ i {
-    @apply block
-}
-
-.selectList {
-    @apply flex flex-col
-}
-
 .selectList > * {
-    @apply flex-none px-3 rounded-lg h-10 btn
+    @apply px-3 rounded-lg h-10 btn
 }
 
 .selectList > *:has(input:checked) {
