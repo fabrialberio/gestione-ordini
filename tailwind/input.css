@@ -90,6 +90,10 @@ input:not([checkbox]), select {
     @apply bg-error text-on-primary
 }
 
+.btn.destructive {
+    @apply ring-error
+}
+
 .sidebar {
     @apply w-64 top-0 left-0 z-40 fixed h-full transition-transform translate-x-0
 }
