@@ -23,8 +23,7 @@ func PostProductSearch(w http.ResponseWriter, r *http.Request) {
 	} else {
 		order, err := appContext.Database(r).FindOrder(orderId)
 		if err != nil {
-			ShowError(w, r, err)
-			return
+			LogError(r, err)
 		}
 
 		selectedProductId = order.ProductID
@@ -32,8 +31,7 @@ func PostProductSearch(w http.ResponseWriter, r *http.Request) {
 
 	allProducts, err := appContext.Database(r).FindAllProducts(database.OrderProductByID, false)
 	if err != nil {
-		ShowError(w, r, err)
-		return
+		LogError(r, err)
 	}
 
 	matchesQuery := func(p database.Product, q string) bool {

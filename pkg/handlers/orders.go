@@ -43,8 +43,7 @@ func GetChefOrder(w http.ResponseWriter, r *http.Request) {
 
 	productTypes, err := appContext.Database(r).FindAllProductTypes()
 	if err != nil {
-		ShowError(w, r, err)
-		return
+		LogError(r, err)
 	}
 
 	user, err := auth.GetAuthenticatedUser(r)
@@ -145,14 +144,12 @@ func GetChefOrdersView(w http.ResponseWriter, r *http.Request) {
 
 	user, err := appContext.AuthenticatedUser(r)
 	if err != nil {
-		ShowError(w, r, err)
-		return
+		LogError(r, err)
 	}
 
 	orders, err := appContext.Database(r).FindAllOrdersWithUserID(user.ID)
 	if err != nil {
-		ShowError(w, r, err)
-		return
+		LogError(r, err)
 	}
 
 	data := calculateOrdersView(offset, orders)
@@ -165,8 +162,7 @@ func GetChefOrdersView(w http.ResponseWriter, r *http.Request) {
 func GetAllOrdersView(w http.ResponseWriter, r *http.Request) {
 	orders, err := appContext.Database(r).FindAllOrders()
 	if err != nil {
-		ShowError(w, r, err)
-		return
+		LogError(r, err)
 	}
 
 	offset, _ := strconv.Atoi(r.URL.Query().Get("offset"))

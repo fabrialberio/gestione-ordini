@@ -18,8 +18,7 @@ func GetUsersTable(w http.ResponseWriter, r *http.Request) {
 
 	users, err := appContext.Database(r).FindAllUsers(orderBy, orderDesc)
 	if err != nil {
-		ShowError(w, r, err)
-		return
+		LogError(r, err)
 	}
 
 	data := components.UsersTable{

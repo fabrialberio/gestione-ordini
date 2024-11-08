@@ -17,8 +17,7 @@ func GetProductsTable(w http.ResponseWriter, r *http.Request) {
 
 	products, err := appContext.Database(r).FindAllProducts(orderBy, orderDesc)
 	if err != nil {
-		ShowError(w, r, err)
-		return
+		LogError(r, err)
 	}
 
 	data := components.ProductsTable{

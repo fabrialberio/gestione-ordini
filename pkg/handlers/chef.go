@@ -12,8 +12,7 @@ import (
 func GetChef(w http.ResponseWriter, r *http.Request) {
 	productTypes, err := appContext.Database(r).FindAllProductTypes()
 	if err != nil {
-		ShowError(w, r, err)
-		return
+		LogError(r, err)
 	}
 
 	data := struct {
@@ -60,8 +59,7 @@ func PostOrderAmountInput(w http.ResponseWriter, r *http.Request) {
 
 	product, err := appContext.Database(r).FindProduct(selectedProductId)
 	if err != nil {
-		ShowError(w, r, err)
-		return
+		LogError(r, err)
 	}
 
 	appContext.ExecuteTemplate(w, r, "input", constructAmountInput(product, amount))

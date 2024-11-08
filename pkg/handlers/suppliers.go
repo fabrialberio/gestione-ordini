@@ -17,8 +17,7 @@ func GetSuppliersTable(w http.ResponseWriter, r *http.Request) {
 
 	suppliers, err := appContext.Database(r).FindAllSuppliers(orderBy, orderDesc)
 	if err != nil {
-		ShowError(w, r, err)
-		return
+		LogError(r, err)
 	}
 
 	data := components.SuppliersTable{
