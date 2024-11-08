@@ -34,6 +34,21 @@ dialog::backdrop {
     @apply bg-scrim bg-opacity-10
 }
 
+dialog[open] {
+    animation: open 100ms forwards;
+}
+
+@keyframes open {
+    from {
+        scale: 0.9;
+        opacity: 0;
+    }
+    to {
+        scale: 1;
+        opacity: 1;
+    }
+}
+
 label {
     @apply text-on-surface-dim pl-2 text-sm
 }

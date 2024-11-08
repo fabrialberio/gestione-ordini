@@ -626,10 +626,6 @@ video {
   height: 100vh;
 }
 
-.max-h-\[19rem\] {
-  max-height: 19rem;
-}
-
 .max-h-\[29rem\] {
   max-height: 29rem;
 }
@@ -660,14 +656,6 @@ video {
 
 .max-w-sm {
   max-width: 24rem;
-}
-
-.max-w-full {
-  max-width: 100%;
-}
-
-.max-w-lg {
-  max-width: 32rem;
 }
 
 .basis-1\/2 {
@@ -730,16 +718,16 @@ video {
   margin-bottom: calc(0.5rem * var(--tw-space-y-reverse));
 }
 
-.space-y-6 > :not([hidden]) ~ :not([hidden]) {
-  --tw-space-y-reverse: 0;
-  margin-top: calc(1.5rem * calc(1 - var(--tw-space-y-reverse)));
-  margin-bottom: calc(1.5rem * var(--tw-space-y-reverse));
-}
-
 .space-y-4 > :not([hidden]) ~ :not([hidden]) {
   --tw-space-y-reverse: 0;
   margin-top: calc(1rem * calc(1 - var(--tw-space-y-reverse)));
   margin-bottom: calc(1rem * var(--tw-space-y-reverse));
+}
+
+.space-y-6 > :not([hidden]) ~ :not([hidden]) {
+  --tw-space-y-reverse: 0;
+  margin-top: calc(1.5rem * calc(1 - var(--tw-space-y-reverse)));
+  margin-bottom: calc(1.5rem * var(--tw-space-y-reverse));
 }
 
 .divide-outline > :not([hidden]) ~ :not([hidden]) {
@@ -761,18 +749,6 @@ video {
 
 .overflow-y-auto {
   overflow-y: auto;
-}
-
-.overflow-x-hidden {
-  overflow-x: hidden;
-}
-
-.overflow-y-hidden {
-  overflow-y: hidden;
-}
-
-.overflow-x-clip {
-  overflow-x: clip;
 }
 
 .truncate {
@@ -876,10 +852,6 @@ video {
 
 .align-top {
   vertical-align: top;
-}
-
-.align-middle {
-  vertical-align: middle;
 }
 
 .font-mono {
@@ -989,6 +961,22 @@ dialog > *:last-child {
 dialog::backdrop {
   background-color: rgb(0 0 0 / var(--tw-bg-opacity));
   --tw-bg-opacity: 0.1;
+}
+
+dialog[open] {
+  animation: open 100ms forwards;
+}
+
+@keyframes open {
+  from {
+    scale: 0.9;
+    opacity: 0;
+  }
+
+  to {
+    scale: 1;
+    opacity: 1;
+  }
 }
 
 label {
