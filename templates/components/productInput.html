@@ -26,7 +26,7 @@
     <span class="text-on-surface-dim">Seleziona prodotto</span>
     {{ end }}
   </button>
-  <dialog id="productSearchDialog">
+  <dialog tabindex="-1" id="productSearchDialog">
     <div class="border-outline pb-4 border-b max-w-md">
       <div class="space-y-2">
         <!-- TODO: Search cancel button -->
@@ -42,30 +42,30 @@
           hx-trigger="change"
           hx-target="#productSelect">
           {{ range .ProductTypes }}
-          <span onclick="this.querySelector('input').click()">
-            <input type="checkbox" value="{{ .ID }}" name="{{ $.ProductTypesName }}">
+          <button onclick="this.querySelector('input').click()">
+            <input tabindex="-1" type="checkbox" value="{{ .ID }}" name="{{ $.ProductTypesName }}">
             <i class="fa-check fas"></i>
             {{ .Name }}
-          </span>
+          </button>
           {{ end }}
         </fieldset>
       </div>
     </div>
-    <div id="productSelect" class="max-w-md max-h-[29rem] overflow-y-auto selectList">
+    <div tabindex="-1" id="productSelect" class="max-w-md max-h-[29rem] overflow-y-auto selectList">
     </div>
   </dialog>
 </div>
 {{ end }}
 
 {{ define "productSearchResult" }}
-<span onclick="this.querySelector('input').click()">
-  <input type="radio" class="sr-only" required
+<button onclick="this.querySelector('input').click()">
+  <input tabindex="-1" type="radio" class="sr-only" required
   name="{{ .ProductSelectName }}"
   value="{{ .Product.ID }}"
   onclick="onOptionClicked(this)"
   {{ if .IsSelected }} checked{{ end }}>
   <span class="truncate">{{ .Product.Name }}</span>
-</span>
+</button>
 {{ end }}
 
 {{ define "productSearchNoResults" }}
