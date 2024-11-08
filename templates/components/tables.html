@@ -3,7 +3,7 @@
   <tr>
      {{ range .Headings }}
      <th class="py-1 first:pl-1" hx-get="{{ $.TableURL }}?orderBy={{ .Index }}&orderDesc={{ if eq .Index $.OrderBy }}{{ not $.OrderDesc }}{{ else }}false{{ end }}" hx-target=".dataTable" hx-swap="outerHTML">
-        <button class="px-1 py-2 rounded-lg w-full min-h-10 btn">
+        <button class="gap-1 px-1 py-2 rounded-lg w-full min-h-10 btn">
           {{ .Name }}
           <i class="{{ if $.OrderDesc }}fa-sort-up{{ else }}fa-sort{{ end }} fas{{ if ne $.OrderBy .Index }} opacity-0{{ end }}"></i>
         </button>

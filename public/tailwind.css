@@ -1144,7 +1144,6 @@ input.btn:not([checkbox]):focus-visible, select.btn:focus-visible {
 .btn {
   display: flex;
   align-items: center;
-  gap: 0.25rem;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -1181,6 +1180,7 @@ input.btn:not([checkbox]):focus-visible, select.btn:focus-visible {
   min-height: 2.5rem;
   min-width: 2.5rem;
   justify-content: center;
+  gap: 0.5rem;
   border-radius: 0.5rem;
   padding-left: 0.75rem;
   padding-right: 0.75rem;
@@ -1189,7 +1189,6 @@ input.btn:not([checkbox]):focus-visible, select.btn:focus-visible {
   font-weight: 700;
   display: flex;
   align-items: center;
-  gap: 0.25rem;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -1231,6 +1230,7 @@ input.btn:not([checkbox]):focus-visible, select.btn:focus-visible {
   min-height: 3rem;
   min-width: 3rem;
   justify-content: center;
+  gap: 0.5rem;
   border-radius: 9999px;
   padding-left: 1rem;
   padding-right: 1rem;
@@ -1239,7 +1239,6 @@ input.btn:not([checkbox]):focus-visible, select.btn:focus-visible {
   font-weight: 700;
   display: flex;
   align-items: center;
-  gap: 0.25rem;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -1398,7 +1397,6 @@ input.btn:not([checkbox]):focus-visible, select.btn:focus-visible {
   line-height: 1.25rem;
   display: flex;
   align-items: center;
-  gap: 0.25rem;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -1465,7 +1463,6 @@ input.btn:not([checkbox]):focus-visible, select.btn:focus-visible {
   padding-right: 0.75rem;
   display: flex;
   align-items: center;
-  gap: 0.25rem;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
