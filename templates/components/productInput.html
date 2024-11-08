@@ -3,7 +3,7 @@
 <div class="w-full" hx-post="/chef/unitOfMeasureSymbol" hx-target="#unitOfMeasure" hx-trigger="change, load">
   <script>
     document.addEventListener("DOMContentLoaded", function() {
-      searchButton = document.getElementById("productSearchButton")
+      searchButtonLabel = document.getElementById("productSearchButtonLabel")
       searchDialog = document.getElementById("productSearchDialog"),
 
       searchDialog.addEventListener("click" , function(event) {
@@ -14,17 +14,20 @@
     })
 
     function onOptionClicked(option) {
-      searchButton.innerHTML = option.parentElement.innerText
+      searchButtonLabel.innerHTML = option.parentElement.innerText
       searchDialog.close()
     }
   </script>
   <label>Prodotto</label>
-  <button type="button" id="productSearchButton" class="px-3 w-full btn input" onclick="searchDialog.showModal()">
-    {{ if .InitialProductName }}
-    {{ .InitialProductName }}
-    {{ else }}
-    <span class="text-on-surface-dim">Seleziona prodotto</span>
-    {{ end }}
+  <button type="button" class="px-3 w-full btn input" onclick="searchDialog.showModal()">
+    <span id="productSearchButtonLabel" class="truncate">
+      {{ if .InitialProductName }}
+      {{ .InitialProductName }}
+      {{ else }}
+      <span class="text-on-surface-dim">Seleziona prodotto</span>
+      {{ end }}
+    </span>
+    <i class="ml-auto text-on-surface-dim fa-search fas"></i>
   </button>
   <dialog tabindex="-1" id="productSearchDialog">
     <div class="border-outline pb-4 border-b max-w-md">
@@ -37,7 +40,7 @@
           hx-post="{{ .ProductSearchURL }}"
           hx-trigger="input changed delay:100ms, search, load"
           hx-target="#productSelect">
-          <fieldset class="flex-wrap chipBox"
+        <fieldset class="flex-wrap chipBox"
           hx-post="{{ .ProductSearchURL }}"
           hx-trigger="change"
           hx-target="#productSelect">
