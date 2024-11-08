@@ -1040,6 +1040,14 @@ input.btn:not([checkbox]):focus-visible, select.btn:focus-visible {
   --tw-ring-offset-width: 0px;
 }
 
+input[type="date"] {
+  display: block;
+  -webkit-appearance: textfield;
+  -mox-appearance: textfield;
+  -moz-appearance: textfield;
+       appearance: textfield;
+}
+
 .input {
   height: 2.5rem;
   border-radius: 0.5rem;

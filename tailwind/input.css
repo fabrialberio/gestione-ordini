@@ -58,6 +58,13 @@ input:not([checkbox]), select {
     @apply input w-full px-3 py-2
 }
 
+input[type="date"] {
+    @apply block;
+    -webkit-appearance: textfield;
+    -mox-appearance: textfield;
+    appearance: textfield;
+}
+
 .input {
     @apply h-10 focus-visible:ring-1 focus-visible:border-primary rounded-lg placeholder-on-surface-dim text-on-surface border border-outline bg-surface;
 }
