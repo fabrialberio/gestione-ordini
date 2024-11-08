@@ -895,6 +895,7 @@ video {
 }
 
 body {
+  overflow-x: hidden;
   --tw-bg-opacity: 1;
   background-color: rgb(248 249 250 / var(--tw-bg-opacity));
   --tw-text-opacity: 1;
@@ -940,7 +941,6 @@ main > :not([hidden]) ~ :not([hidden]) {
 }
 
 main {
-  overflow: hidden;
   padding-left: 1.5rem;
   padding-right: 1.5rem;
 }
