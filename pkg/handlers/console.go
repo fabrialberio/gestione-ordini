@@ -2,41 +2,47 @@ package handlers
 
 import (
 	"gestione-ordini/pkg/appContext"
+	"gestione-ordini/pkg/auth"
 	"gestione-ordini/pkg/components"
 	"gestione-ordini/pkg/database"
 	"net/http"
 	"time"
 )
 
-func sidebarDestinations(r *http.Request, selected int) []components.SidebarDest {
-	sidebar := []components.SidebarDest{
-		{
-			DestURL:     DestAllOrders,
-			FasIconName: "fa-calendar-check",
-			Label:       "Ordini",
-		},
-		{
-			DestURL:     DestProducts,
-			FasIconName: "fa-box",
-			Label:       "Prodotti",
-		},
-		{
-			DestURL:     DestSuppliers,
-			FasIconName: "fa-truck",
-			Label:       "Fornitori",
-		},
-	}
+var defaultSidebar = []components.SidebarDest{
+	{
+		DestURL:     DestAllOrders,
+		FasIconName: "fa-calendar-check",
+		Label:       "Ordini",
+	},
+	{
+		DestURL:     DestProducts,
+		FasIconName: "fa-box",
+		Label:       "Prodotti",
+	},
+	{
+		DestURL:     DestSuppliers,
+		FasIconName: "fa-truck",
+		Label:       "Fornitori",
+	},
+}
 
-	user, _ := appContext.AuthenticatedUser(r)
-	if user != nil && user.RoleID == database.RoleIDAdministrator {
-		sidebar = append(sidebar, components.SidebarDest{
-			DestURL:     DestUsers,
-			FasIconName: "fa-users",
-			Label:       "Utenti",
-		})
-	}
-
+func currentSidebar(selected int) []components.SidebarDest {
+	var sidebar = defaultSidebar
 	sidebar[selected].Selected = true
+
+	return sidebar
+}
+
+func adminSidebar(currentUser *database.User) []components.SidebarDest {
+	var sidebar = defaultSidebar
+
+	sidebar = append(sidebar, components.SidebarDest{
+		DestURL:     DestUsers,
+		FasIconName: "fa-users",
+		Label:       "Utenti",
+		Selected:    true,
+	})
 
 	return sidebar
 }
@@ -69,7 +75,7 @@ func GetAllOrders(w http.ResponseWriter, r *http.Request) {
 		EndDateInput   components.Input
 		SupplierSelect components.Select
 	}{
-		Sidebar: sidebarDestinations(r, 0),
+		Sidebar: currentSidebar(0),
 		StartDateInput: components.Input{
 			Label:        "Da",
 			Name:         keyOrderSelectionStart,
@@ -97,7 +103,7 @@ func GetProducts(w http.ResponseWriter, r *http.Request) {
 	data := struct {
 		Sidebar []components.SidebarDest
 	}{
-		Sidebar: sidebarDestinations(r, 1),
+		Sidebar: currentSidebar(1),
 	}
 
 	appContext.ExecuteTemplate(w, r, "products.html", data)
@@ -107,17 +113,26 @@ func GetSuppliers(w http.ResponseWriter, r *http.Request) {
 	data := struct {
 		Sidebar []components.SidebarDest
 	}{
-		Sidebar: sidebarDestinations(r, 2),
+		Sidebar: currentSidebar(2),
 	}
 
 	appContext.ExecuteTemplate(w, r, "suppliers.html", data)
 }
 
 func GetUsers(w http.ResponseWriter, r *http.Request) {
+	user, err := appContext.AuthenticatedUser(r)
+	if err != nil {
+		LogoutError(w, r, err)
+		return
+	} else if user.RoleID != database.RoleIDAdministrator {
+		ShowItemNotAllowedError(w, r, auth.ErrInvalidRole)
+		return
+	}
+
 	data := struct {
 		Sidebar []components.SidebarDest
 	}{
-		Sidebar: sidebarDestinations(r, 3),
+		Sidebar: adminSidebar(user),
 	}
 
 	appContext.ExecuteTemplate(w, r, "users.html", data)
