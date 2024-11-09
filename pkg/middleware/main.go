@@ -53,7 +53,7 @@ func WithUserCheck(checker UserCheckerFunc, next http.Handler) http.Handler {
 		}
 
 		if !checker(user) {
-			handlers.LogoutError(w, r, auth.ErrInvalidRole)
+			handlers.ShowItemNotAllowedError(w, r, auth.ErrInvalidRole)
 			return
 		}
 
