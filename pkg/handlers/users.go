@@ -41,6 +41,15 @@ func GetUsersTable(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetUser(w http.ResponseWriter, r *http.Request) {
+	user, err := appContext.AuthenticatedUser(r)
+	if err != nil {
+		LogoutError(w, r, err)
+		return
+	} else if user.RoleID != database.RoleIDAdministrator {
+		ShowItemNotAllowedError(w, r, auth.ErrInvalidRole)
+		return
+	}
+
 	isNew := false
 	defaultUser := database.User{}
 
@@ -111,6 +120,15 @@ func GetUser(w http.ResponseWriter, r *http.Request) {
 }
 
 func PostUser(w http.ResponseWriter, r *http.Request) {
+	user, err := appContext.AuthenticatedUser(r)
+	if err != nil {
+		LogoutError(w, r, err)
+		return
+	} else if user.RoleID != database.RoleIDAdministrator {
+		ShowItemNotAllowedError(w, r, auth.ErrInvalidRole)
+		return
+	}
+
 	isNew := r.FormValue("isNew") == "true"
 	delete := r.Form.Has("delete")
 
