@@ -8,11 +8,9 @@
     </header>
     
     <main>
-      <h2>
-        Errore interno
-      </h2>
+      <h2>{{ .Title }}</h2>
       <div class="font-mono text-sm card">
-        <p>{{ . }}</p>
+        <p>{{ .ErrorMsg }}</p>
       </div>
     </main>
   </body>
