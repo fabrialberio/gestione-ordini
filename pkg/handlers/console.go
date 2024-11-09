@@ -9,41 +9,36 @@ import (
 	"time"
 )
 
-var defaultSidebar = []components.SidebarDest{
-	{
-		DestURL:     DestAllOrders,
-		FasIconName: "fa-calendar-check",
-		Label:       "Ordini",
-	},
-	{
-		DestURL:     DestProducts,
-		FasIconName: "fa-box",
-		Label:       "Prodotti",
-	},
-	{
-		DestURL:     DestSuppliers,
-		FasIconName: "fa-truck",
-		Label:       "Fornitori",
-	},
-}
+func currentSidebar(selected int, isAdmin bool) []components.SidebarDest {
+	sidebar := []components.SidebarDest{
+		{
+			DestURL:     DestAllOrders,
+			FasIconName: "fa-calendar-check",
+			Label:       "Ordini",
+		},
+		{
+			DestURL:     DestProducts,
+			FasIconName: "fa-box",
+			Label:       "Prodotti",
+		},
+		{
+			DestURL:     DestSuppliers,
+			FasIconName: "fa-truck",
+			Label:       "Fornitori",
+		},
+	}
 
-func currentSidebar(selected int) []components.SidebarDest {
-	var sidebar = defaultSidebar
+	if isAdmin {
+		sidebar = append(sidebar, components.SidebarDest{
+			DestURL:     DestUsers,
+			FasIconName: "fa-users",
+			Label:       "Utenti",
+		})
+	} else if selected >= 3 {
+		return sidebar
+	}
+
 	sidebar[selected].Selected = true
-
-	return sidebar
-}
-
-func adminSidebar(currentUser *database.User) []components.SidebarDest {
-	var sidebar = defaultSidebar
-
-	sidebar = append(sidebar, components.SidebarDest{
-		DestURL:     DestUsers,
-		FasIconName: "fa-users",
-		Label:       "Utenti",
-		Selected:    true,
-	})
-
 	return sidebar
 }
 
@@ -69,13 +64,19 @@ func GetAllOrders(w http.ResponseWriter, r *http.Request) {
 		supplierOptions = append(supplierOptions, components.SelectOption{Value: s.ID, Text: s.Name})
 	}
 
+	user, err := appContext.AuthenticatedUser(r)
+	if err != nil {
+		LogoutError(w, r, err)
+		return
+	}
+
 	data := struct {
 		Sidebar        []components.SidebarDest
 		StartDateInput components.Input
 		EndDateInput   components.Input
 		SupplierSelect components.Select
 	}{
-		Sidebar: currentSidebar(0),
+		Sidebar: currentSidebar(0, user.RoleID == database.RoleIDAdministrator),
 		StartDateInput: components.Input{
 			Label:        "Da",
 			Name:         keyOrderSelectionStart,
@@ -100,20 +101,32 @@ func GetAllOrders(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetProducts(w http.ResponseWriter, r *http.Request) {
+	user, err := appContext.AuthenticatedUser(r)
+	if err != nil {
+		LogoutError(w, r, err)
+		return
+	}
+
 	data := struct {
 		Sidebar []components.SidebarDest
 	}{
-		Sidebar: currentSidebar(1),
+		Sidebar: currentSidebar(1, user.RoleID == database.RoleIDAdministrator),
 	}
 
 	appContext.ExecuteTemplate(w, r, "products.html", data)
 }
 
 func GetSuppliers(w http.ResponseWriter, r *http.Request) {
+	user, err := appContext.AuthenticatedUser(r)
+	if err != nil {
+		LogoutError(w, r, err)
+		return
+	}
+
 	data := struct {
 		Sidebar []components.SidebarDest
 	}{
-		Sidebar: currentSidebar(2),
+		Sidebar: currentSidebar(2, user.RoleID == database.RoleIDAdministrator),
 	}
 
 	appContext.ExecuteTemplate(w, r, "suppliers.html", data)
@@ -132,7 +145,7 @@ func GetUsers(w http.ResponseWriter, r *http.Request) {
 	data := struct {
 		Sidebar []components.SidebarDest
 	}{
-		Sidebar: adminSidebar(user),
+		Sidebar: currentSidebar(3, true),
 	}
 
 	appContext.ExecuteTemplate(w, r, "users.html", data)
