@@ -17,10 +17,11 @@ func PostOrderSelection(w http.ResponseWriter, r *http.Request) {
 
 	orders, err := getFilteredOrders(r, start, end, supplierId)
 	if err != nil {
-		ShowError(w, r, err)
+		ShowDatabaseQueryError(w, r, err)
 		return
 	}
 
+	// TODO: Move this to exporters
 	filename := "ordini_" + start.Format("2006-01-02") + "_" + end.Format("2006-01-02")
 	if !allSuppliers {
 		supplier, _ := appContext.Database(r).FindSupplier(supplierId)
@@ -43,11 +44,14 @@ func PostOrderSelectionCount(w http.ResponseWriter, r *http.Request) {
 
 	orders, err := getFilteredOrders(r, start, end, supplierId)
 	if err != nil {
+		logError(r, err)
 		return
 	}
 
 	w.Write([]byte(strconv.Itoa(len(orders))))
 }
+
+// TODO: Add parseOrderSelection function
 
 func getFilteredOrders(r *http.Request, start time.Time, end time.Time, supplierId int) ([]database.Order, error) {
 	orders, err := appContext.Database(r).FindAllOrdersWithExpiresAtBetween(start, end)

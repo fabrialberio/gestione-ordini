@@ -51,7 +51,8 @@ func GetAllOrders(w http.ResponseWriter, r *http.Request) {
 
 	suppliers, err := appContext.Database(r).FindAllSuppliers(database.OrderSupplierByID, true)
 	if err != nil {
-		LogError(r, err)
+		ShowDatabaseQueryError(w, r, err)
+		return
 	}
 
 	supplierOptions := []components.SelectOption{{

@@ -17,7 +17,7 @@ func GetProductsTable(w http.ResponseWriter, r *http.Request) {
 
 	products, err := appContext.Database(r).FindAllProducts(orderBy, orderDesc)
 	if err != nil {
-		LogError(r, err)
+		logError(r, err)
 	}
 
 	data := components.ProductsTable{
@@ -49,14 +49,14 @@ func GetProduct(w http.ResponseWriter, r *http.Request) {
 	} else {
 		defaultProduct, err = appContext.Database(r).FindProduct(id)
 		if err != nil {
-			ShowError(w, r, err)
+			ShowItemNotAllowedError(w, r, err)
 			return
 		}
 	}
 
 	productTypes, err := appContext.Database(r).FindAllProductTypes()
 	if err != nil {
-		ShowError(w, r, err)
+		ShowDatabaseQueryError(w, r, err)
 		return
 	}
 
@@ -67,7 +67,7 @@ func GetProduct(w http.ResponseWriter, r *http.Request) {
 
 	suppliers, err := appContext.Database(r).FindAllSuppliers(database.OrderSupplierByID, true)
 	if err != nil {
-		ShowError(w, r, err)
+		ShowDatabaseQueryError(w, r, err)
 		return
 	}
 
@@ -78,7 +78,7 @@ func GetProduct(w http.ResponseWriter, r *http.Request) {
 
 	unitsOfMeasure, err := appContext.Database(r).FindAllUnitsOfMeasure()
 	if err != nil {
-		ShowError(w, r, err)
+		ShowDatabaseQueryError(w, r, err)
 		return
 	}
 
@@ -143,20 +143,20 @@ func PostProduct(w http.ResponseWriter, r *http.Request) {
 			Name:            name,
 		})
 		if err != nil {
-			ShowError(w, r, err)
+			ShowDatabaseQueryError(w, r, err)
 			return
 		}
 	} else {
 		id, err := strconv.Atoi(r.FormValue(keyProductID))
 		if err != nil {
-			ShowError(w, r, err)
+			ShowItemInvalidFormError(w, r, err)
 			return
 		}
 
 		if delete {
 			err = appContext.Database(r).DeleteProduct(id)
 			if err != nil {
-				ShowError(w, r, err)
+				ShowItemNotDeletableError(w, r, err)
 				return
 			}
 		} else {
@@ -168,7 +168,7 @@ func PostProduct(w http.ResponseWriter, r *http.Request) {
 				Name:            name,
 			})
 			if err != nil {
-				ShowError(w, r, err)
+				ShowDatabaseQueryError(w, r, err)
 				return
 			}
 		}

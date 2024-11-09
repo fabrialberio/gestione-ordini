@@ -48,12 +48,12 @@ func WithUserCheck(checker UserCheckerFunc, next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		user, err := appContext.AuthenticatedUser(r)
 		if err != nil {
-			handlers.ShowError(w, r, auth.ErrNoCookie)
+			handlers.LogoutError(w, r, auth.ErrNoCookie)
 			return
 		}
 
 		if !checker(user) {
-			handlers.ShowError(w, r, auth.ErrInvalidRole)
+			handlers.LogoutError(w, r, auth.ErrInvalidRole)
 			return
 		}
 

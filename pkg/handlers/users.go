@@ -18,7 +18,7 @@ func GetUsersTable(w http.ResponseWriter, r *http.Request) {
 
 	users, err := appContext.Database(r).FindAllUsers(orderBy, orderDesc)
 	if err != nil {
-		LogError(r, err)
+		logError(r, err)
 	}
 
 	data := components.UsersTable{
@@ -50,14 +50,14 @@ func GetUser(w http.ResponseWriter, r *http.Request) {
 	} else {
 		defaultUser, err = appContext.Database(r).FindUser(id)
 		if err != nil {
-			ShowError(w, r, err)
+			ShowItemNotAllowedError(w, r, err)
 			return
 		}
 	}
 
 	roles, err := appContext.Database(r).FindAllRoles()
 	if err != nil {
-		ShowError(w, r, err)
+		ShowDatabaseQueryError(w, r, err)
 		return
 	}
 
@@ -116,7 +116,7 @@ func PostUser(w http.ResponseWriter, r *http.Request) {
 
 	roleId, err := strconv.Atoi(r.FormValue(keyUserRoleID))
 	if err != nil {
-		ShowError(w, r, err)
+		ShowItemInvalidFormError(w, r, err)
 		return
 	}
 	username := r.FormValue(keyUserUsername)
@@ -128,7 +128,7 @@ func PostUser(w http.ResponseWriter, r *http.Request) {
 	if password != "" {
 		passwordHash, err = auth.HashPassword(password)
 		if err != nil {
-			ShowError(w, r, err)
+			ShowItemInvalidFormError(w, r, err)
 			return
 		}
 	}
@@ -142,20 +142,20 @@ func PostUser(w http.ResponseWriter, r *http.Request) {
 			Surname:      surname,
 		})
 		if err != nil {
-			ShowError(w, r, err)
+			ShowDatabaseQueryError(w, r, err)
 			return
 		}
 	} else {
 		id, err := strconv.Atoi(r.FormValue(keyUserID))
 		if err != nil {
-			ShowError(w, r, err)
+			ShowItemInvalidFormError(w, r, err)
 			return
 		}
 
 		if delete {
 			err := appContext.Database(r).DeleteUser(id)
 			if err != nil {
-				ShowError(w, r, err)
+				ShowItemNotDeletableError(w, r, err)
 				return
 			}
 		} else {
@@ -168,7 +168,7 @@ func PostUser(w http.ResponseWriter, r *http.Request) {
 				Surname:      surname,
 			})
 			if err != nil {
-				ShowError(w, r, err)
+				ShowDatabaseQueryError(w, r, err)
 				return
 			}
 		}

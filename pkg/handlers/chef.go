@@ -11,7 +11,8 @@ import (
 func GetChef(w http.ResponseWriter, r *http.Request) {
 	productTypes, err := appContext.Database(r).FindAllProductTypes()
 	if err != nil {
-		LogError(r, err)
+		ShowDatabaseQueryError(w, r, err)
+		return
 	}
 
 	data := struct {
@@ -46,27 +47,35 @@ func PostOrderAmountInput(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			amount = 1
 		} else {
-			order, _ := appContext.Database(r).FindOrder(id)
+			order, err := appContext.Database(r).FindOrder(id)
+			if err != nil {
+				logError(r, err)
+			}
+
 			amount = order.Amount
 		}
 	}
 
+	baseLabel := "Quantità"
+	label, err := composeLabel(r, baseLabel)
+	if err != nil {
+		label = baseLabel
+	}
+
 	appContext.ExecuteTemplate(w, r, "input", components.Input{
-		Label:        composeLabel(r),
+		Label:        label,
 		Name:         keyOrderAmount,
 		Type:         "number",
 		DefaultValue: strconv.Itoa(amount),
 	})
 }
 
-func composeLabel(r *http.Request) string {
-	baseLabel := "Quantità"
+func composeLabel(r *http.Request, baseLabel string) (string, error) {
 	var productId int
 
 	parsedOrder, err := parseOrderFromForm(r)
 	if err != nil {
-		LogError(r, err)
-		return baseLabel
+		return "", err
 	}
 
 	if parsedOrder.ProductID != 0 {
@@ -75,7 +84,7 @@ func composeLabel(r *http.Request) string {
 		if parsedOrder.ID != 0 {
 			order, err := appContext.Database(r).FindOrder(parsedOrder.ID)
 			if err != nil {
-				return baseLabel
+				return "", err
 			}
 
 			productId = order.ProductID
@@ -84,8 +93,8 @@ func composeLabel(r *http.Request) string {
 
 	product, err := appContext.Database(r).FindProduct(productId)
 	if err != nil {
-		return baseLabel
+		return "", err
 	}
 
-	return baseLabel + " (" + product.UnitOfMeasure.Symbol + ")"
+	return baseLabel + " (" + product.UnitOfMeasure.Symbol + ")", nil
 }

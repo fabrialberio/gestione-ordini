@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"gestione-ordini/pkg/appContext"
-	"gestione-ordini/pkg/auth"
 	"gestione-ordini/pkg/components"
 	"gestione-ordini/pkg/database"
 	"net/http"
@@ -23,9 +22,9 @@ var weekdayNames = map[time.Weekday]string{
 }
 
 func GetChefOrder(w http.ResponseWriter, r *http.Request) {
-	user, err := auth.GetAuthenticatedUser(r)
+	user, err := appContext.AuthenticatedUser(r)
 	if err != nil {
-		ShowError(w, r, err)
+		LogoutError(w, r, err)
 		return
 	}
 
@@ -41,19 +40,20 @@ func GetChefOrder(w http.ResponseWriter, r *http.Request) {
 	} else {
 		defaultOrder, err = appContext.Database(r).FindOrder(id)
 		if err != nil {
-			ShowError(w, r, err)
+			ShowItemNotAllowedError(w, r, err)
 			return
 		}
 
 		if defaultOrder.UserID != user.ID {
-			ShowError(w, r, auth.ErrInvalidPerm)
+			ShowItemNotAllowedError(w, r, err)
 			return
 		}
 	}
 
 	productTypes, err := appContext.Database(r).FindAllProductTypes()
 	if err != nil {
-		LogError(r, err)
+		ShowDatabaseQueryError(w, r, err)
+		return
 	}
 
 	data := struct {
@@ -94,27 +94,27 @@ func PostChefOrder(w http.ResponseWriter, r *http.Request) {
 
 	order, err := parseOrderFromForm(r)
 	if err != nil {
-		ShowError(w, r, err)
+		ShowItemInvalidFormError(w, r, err)
 		return
 	}
 
 	if isNew {
 		err := appContext.Database(r).CreateOrder(order)
 		if err != nil {
-			ShowError(w, r, err)
+			ShowDatabaseQueryError(w, r, err)
 			return
 		}
 	} else {
 		if delete {
 			err = appContext.Database(r).DeleteOrder(order.ID)
 			if err != nil {
-				ShowError(w, r, err)
+				ShowItemNotDeletableError(w, r, err)
 				return
 			}
 		} else {
 			err = appContext.Database(r).UpdateOrder(order)
 			if err != nil {
-				ShowError(w, r, err)
+				ShowDatabaseQueryError(w, r, err)
 				return
 			}
 		}
@@ -136,7 +136,7 @@ func parseOrderFromForm(r *http.Request) (database.Order, error) {
 		// If no userId value is found, use authenticated user ID
 		user, err := appContext.AuthenticatedUser(r)
 		if err != nil {
-			return database.Order{}, err
+			return order, err
 		}
 
 		order.UserID = user.ID
@@ -144,9 +144,20 @@ func parseOrderFromForm(r *http.Request) (database.Order, error) {
 		order.UserID = userId
 	}
 
-	order.ProductID, _ = strconv.Atoi(r.FormValue(keyOrderProductID))
-	order.Amount, _ = strconv.Atoi(r.FormValue(keyOrderAmount))
-	order.ExpiresAt, _ = time.Parse(dateFormat, r.FormValue(keyOrderRequestedAt))
+	order.ProductID, err = strconv.Atoi(r.FormValue(keyOrderProductID))
+	if err != nil {
+		return order, err
+	}
+
+	order.Amount, err = strconv.Atoi(r.FormValue(keyOrderAmount))
+	if err != nil {
+		return order, err
+	}
+
+	order.ExpiresAt, err = time.Parse(dateFormat, r.FormValue(keyOrderRequestedAt))
+	if err != nil {
+		return order, err
+	}
 
 	return order, nil
 }
@@ -156,12 +167,13 @@ func GetChefOrdersView(w http.ResponseWriter, r *http.Request) {
 
 	user, err := appContext.AuthenticatedUser(r)
 	if err != nil {
-		LogError(r, err)
+		LogoutError(w, r, err)
+		return
 	}
 
 	orders, err := appContext.Database(r).FindAllOrdersWithUserID(user.ID)
 	if err != nil {
-		LogError(r, err)
+		logError(r, err)
 	}
 
 	data := calculateOrdersView(offset, orders)
@@ -174,7 +186,7 @@ func GetChefOrdersView(w http.ResponseWriter, r *http.Request) {
 func GetAllOrdersView(w http.ResponseWriter, r *http.Request) {
 	orders, err := appContext.Database(r).FindAllOrders()
 	if err != nil {
-		LogError(r, err)
+		logError(r, err)
 	}
 
 	offset, _ := strconv.Atoi(r.URL.Query().Get("offset"))

@@ -17,7 +17,7 @@ func GetSuppliersTable(w http.ResponseWriter, r *http.Request) {
 
 	suppliers, err := appContext.Database(r).FindAllSuppliers(orderBy, orderDesc)
 	if err != nil {
-		LogError(r, err)
+		logError(r, err)
 	}
 
 	data := components.SuppliersTable{
@@ -47,7 +47,7 @@ func GetSupplier(w http.ResponseWriter, r *http.Request) {
 	} else {
 		defaultSupplier, err = appContext.Database(r).FindSupplier(id)
 		if err != nil {
-			ShowError(w, r, err)
+			ShowItemNotAllowedError(w, r, err)
 			return
 		}
 	}
@@ -90,20 +90,20 @@ func PostSupplier(w http.ResponseWriter, r *http.Request) {
 			Name:  name,
 		})
 		if err != nil {
-			ShowError(w, r, err)
+			ShowDatabaseQueryError(w, r, err)
 			return
 		}
 	} else {
 		id, err := strconv.Atoi(r.FormValue(keySupplierID))
 		if err != nil {
-			ShowError(w, r, err)
+			ShowItemInvalidFormError(w, r, err)
 			return
 		}
 
 		if delete {
 			err := appContext.Database(r).DeleteSupplier(id)
 			if err != nil {
-				ShowError(w, r, err)
+				ShowItemNotDeletableError(w, r, err)
 				return
 			}
 		} else {
@@ -113,7 +113,7 @@ func PostSupplier(w http.ResponseWriter, r *http.Request) {
 				Name:  name,
 			})
 			if err != nil {
-				ShowError(w, r, err)
+				ShowDatabaseQueryError(w, r, err)
 				return
 			}
 		}
