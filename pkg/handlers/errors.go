@@ -1,19 +1,9 @@
 package handlers
 
 import (
-	"errors"
 	"gestione-ordini/pkg/appContext"
 	"log"
 	"net/http"
-)
-
-var (
-	ErrItemNotFound     = errors.New("item not found")
-	ErrItemNotAllowed   = errors.New("item access restricted")
-	ErrItemNotDeletable = errors.New("item cannot be deleted")
-	ErrItemInvalidForm  = errors.New("item form data is invalid")
-	ErrLogout           = errors.New("authentication error")
-	ErrDatabaseQuery    = errors.New("database query error")
 )
 
 func ShowItemNotAllowedError(w http.ResponseWriter, r *http.Request, err error) {
