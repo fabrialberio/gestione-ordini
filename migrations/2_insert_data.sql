@@ -22,7 +22,8 @@ INSERT INTO tipologie_prodotto (nome) VALUES
 INSERT INTO unita_di_misura (simbolo) VALUES
     ("pz"),
     ("Kg"),
-    ("Lt");
+    ("Lt"),
+    ("Scatole");
 
 INSERT INTO fornitori (email, nome) VALUES
     ('info@botegadalpan.it', 'Botegadalpan'),
