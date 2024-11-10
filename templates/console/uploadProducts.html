@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+  {{ template "head.html" }} 
+  <body>
+    <header>
+      {{ template "backButton" }}
+    </header>
+
+    <main>
+      <h2>
+        Importa prodotti
+      </h2>
+      <form class="card" method="post" action="/console/products/">
+        <input type="file">
+      </form>
+    </main>
+  </body>
+</html>

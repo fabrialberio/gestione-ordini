@@ -103,6 +103,8 @@ func setupRoutes(mux *http.ServeMux) {
 	consoleMux.HandleFunc("GET "+handlers.DestProducts, handlers.GetProducts)
 	consoleMux.HandleFunc("GET "+handlers.DestProducts+"{id}", handlers.GetProduct)
 	consoleMux.HandleFunc("POST "+handlers.DestProducts, handlers.PostProduct)
+	consoleMux.HandleFunc("GET "+handlers.DestUploadProducts, handlers.GetUploadProducts)
+	consoleMux.HandleFunc("POST "+handlers.DestUploadProducts, handlers.PostUploadProducts)
 	consoleMux.HandleFunc("GET "+handlers.DestProductsTable, handlers.GetProductsTable)
 	consoleMux.HandleFunc("GET "+handlers.DestSuppliers, handlers.GetSuppliers)
 	consoleMux.HandleFunc("GET "+handlers.DestSuppliers+"{id}", handlers.GetSupplier)
