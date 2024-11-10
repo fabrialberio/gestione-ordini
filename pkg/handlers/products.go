@@ -27,7 +27,8 @@ func GetProductsTable(w http.ResponseWriter, r *http.Request) {
 			OrderDesc: orderDesc,
 			Headings: []components.TableHeading{
 				{Index: database.OrderProductByID, Name: "ID"},
-				{Index: database.OrderProductByName, Name: "Nome"},
+				{Index: database.OrderProductByDescription, Name: "Descrizione"},
+				{Index: database.OrderProductByCode, Name: "Codice"},
 				{Index: database.OrderProductByProductType, Name: "Tipologia"},
 				{Index: database.OrderProductBySupplier, Name: "Fornitore"},
 				{Index: database.OrderProductByUnitOfMeasure, Name: "Unità"},
@@ -90,18 +91,25 @@ func GetProduct(w http.ResponseWriter, r *http.Request) {
 	data := struct {
 		IsNew               bool
 		Product             database.Product
-		NameInput           components.Input
+		DescriptionInput    components.Input
+		CodeInput           components.Input
 		ProductTypeSelect   components.Select
 		SupplierSelect      components.Select
 		UnitOfMeasureSelect components.Select
 	}{
 		IsNew:   isNew,
 		Product: defaultProduct,
-		NameInput: components.Input{
-			Label:        "Nome",
-			Name:         keyProductName,
+		DescriptionInput: components.Input{
+			Label:        "Descrizione",
+			Name:         keyProductDescription,
 			Type:         "text",
-			DefaultValue: defaultProduct.Name,
+			DefaultValue: defaultProduct.Description,
+		},
+		CodeInput: components.Input{
+			Label:        "Codice",
+			Name:         keyProductCode,
+			Type:         "text",
+			DefaultValue: defaultProduct.Code,
 		},
 		ProductTypeSelect: components.Select{
 			Label:    "Tipologia di prodotto",
@@ -133,14 +141,16 @@ func PostProduct(w http.ResponseWriter, r *http.Request) {
 	productTypeId, _ := strconv.Atoi(r.FormValue(keyProductProductTypeID))
 	supplierId, _ := strconv.Atoi(r.FormValue(keyProductSupplierID))
 	unitOfMeasureId, _ := strconv.Atoi(r.FormValue(keyProductUnitOfMeasureID))
-	name := r.FormValue(keyProductName)
+	description := r.FormValue(keyProductDescription)
+	code := r.FormValue(keyProductCode)
 
 	if isNew {
 		err := appContext.Database(r).CreateProduct(database.Product{
 			ProductTypeID:   productTypeId,
 			SupplierID:      supplierId,
 			UnitOfMeasureID: unitOfMeasureId,
-			Name:            name,
+			Description:     description,
+			Code:            code,
 		})
 		if err != nil {
 			ShowDatabaseQueryError(w, r, err)
@@ -165,7 +175,8 @@ func PostProduct(w http.ResponseWriter, r *http.Request) {
 				ProductTypeID:   productTypeId,
 				SupplierID:      supplierId,
 				UnitOfMeasureID: unitOfMeasureId,
-				Name:            name,
+				Description:     description,
+				Code:            code,
 			})
 			if err != nil {
 				ShowDatabaseQueryError(w, r, err)

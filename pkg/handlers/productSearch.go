@@ -29,7 +29,7 @@ func PostProductSearch(w http.ResponseWriter, r *http.Request) {
 		selectedProductId = order.ProductID
 	}
 
-	allProducts, err := appContext.Database(r).FindAllProducts(database.OrderProductByName, false)
+	allProducts, err := appContext.Database(r).FindAllProducts(database.OrderProductByDescription, false)
 	if err != nil {
 		logError(r, err)
 	}
@@ -39,7 +39,7 @@ func PostProductSearch(w http.ResponseWriter, r *http.Request) {
 			return true
 		}
 
-		return strings.Contains(strings.ToLower(p.Name), strings.ToLower(q))
+		return strings.Contains(strings.ToLower(p.Description), strings.ToLower(q))
 	}
 
 	matchesProductTypeIds := func(p database.Product, ids []string) bool {

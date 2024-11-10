@@ -56,12 +56,12 @@ func GetChefOrder(w http.ResponseWriter, r *http.Request) {
 		IsNew: isNew,
 		Order: defaultOrder,
 		ProductInput: components.ProductInput{
-			InitialProductName: defaultOrder.Product.Name,
-			ProductSelectName:  keyOrderProductID,
-			ProductSearchURL:   DestProductSearch,
-			SearchInputName:    keyProductSearchQuery,
-			ProductTypesName:   keyProductSearchProductTypes,
-			ProductTypes:       productTypes,
+			InitialProductDescription: defaultOrder.Product.Description,
+			ProductSelectName:         keyOrderProductID,
+			ProductSearchURL:          DestProductSearch,
+			SearchInputName:           keyProductSearchQuery,
+			ProductTypesName:          keyProductSearchProductTypes,
+			ProductTypes:              productTypes,
 		},
 		AmountInputURL: DestOrderAmountInput,
 		ExpiresAtInput: components.Input{

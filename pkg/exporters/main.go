@@ -15,8 +15,8 @@ func ExportToList(orders []database.Order) []byte {
 
 		for _, o := range supplierOrders {
 			builder.WriteString("  • ")
-			builder.WriteString(o.Product.Name)
-			builder.WriteString(" - ")
+			builder.WriteString(o.Product.Description)
+			builder.WriteString(" (" + o.Product.Code + ") - ")
 			builder.WriteString(o.AmountString)
 			builder.WriteString("\n")
 		}
@@ -32,11 +32,20 @@ func ExportToCSV(orders []database.Order) []byte {
 	writer := csv.NewWriter(&builder)
 	writer.Comma = ';'
 
-	writer.Write([]string{"Prodotto", "Quantità", "Unità di misura", "Fornitore", "Data di consegna richiesta", "Richiesto da"})
+	writer.Write([]string{
+		"Descrizione prodotto",
+		"Codice",
+		"Quantità",
+		"Unità di misura",
+		"Fornitore",
+		"Data di consegna richiesta",
+		"Richiesto da",
+	})
 	for _, supplierOrders := range splitOrdersBySupplier(orders) {
 		for _, order := range supplierOrders {
 			writer.Write([]string{
-				order.Product.Name,
+				order.Product.Description,
+				order.Product.Code,
 				strconv.Itoa(order.Amount),
 				order.Product.UnitOfMeasure.Symbol,
 				order.Product.Supplier.Name,

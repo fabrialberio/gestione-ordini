@@ -20,7 +20,8 @@ const (
 	keyProductProductTypeID   = "product.productTypeId"
 	keyProductSupplierID      = "product.supplierId"
 	keyProductUnitOfMeasureID = "product.unitOfMeasureId"
-	keyProductName            = "product.name"
+	keyProductDescription     = "product.description"
+	keyProductCode            = "product.code"
 
 	keySupplierID    = "supplier.id"
 	keySupplierEmail = "supplier.email"

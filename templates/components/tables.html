@@ -47,8 +47,9 @@
       <tr>
         <td>{{ .ID }}</td>
         <td>
-          <div class="line-clamp-2">{{ .Name }}</div>
+          <span class="line-clamp-2">{{ .Description }}</span>
         </td>
+        <td>{{ .Code }}</td>
         <td>{{ .ProductType.Name }}</td>
         <td>
           <a class="link" href="/console/suppliers/{{ .Supplier.ID }}">{{ .Supplier.Name }}</a>

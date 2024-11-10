@@ -45,7 +45,8 @@ CREATE TABLE prodotti (
     id_tipologia BIGINT,
     id_fornitore BIGINT,
     id_unita_di_misura BIGINT,
-    nome VARCHAR(1023)
+    descrizione VARCHAR(1023),
+    codice VARCHAR(255)
 );
 ALTER TABLE prodotti ADD CONSTRAINT prodotti_id_fornitore_foreign FOREIGN KEY(id_fornitore) REFERENCES fornitori(id);
 ALTER TABLE prodotti ADD CONSTRAINT prodotti_id_tipologia_foreign FOREIGN KEY(id_tipologia) REFERENCES tipologie_prodotto(id);

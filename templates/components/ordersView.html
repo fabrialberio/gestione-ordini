@@ -25,7 +25,7 @@
           <a{{ if $.OrdersURL }} href="{{ $.OrdersURL }}{{ .ID }}"{{ end }}>
             <div class="{{ if $isPast }}bg-raised{{ else }}bg-secondary{{ end }} p-1 rounded-md text-sm{{ if $.OrdersURL }} clickable{{ end }}">
               <h4 class="line-clamp-2">
-                {{ .Product.Name }}
+                {{ .Product.Description }}
               </h4>
               {{ .AmountString }}
             </div>

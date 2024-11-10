@@ -18,7 +18,8 @@
         <input type="hidden" name="product.id" value="{{ .Product.ID }}">
         <input type="hidden" name="isNew" value="{{ .IsNew }}">
         
-        {{ template "input" .NameInput }}
+        {{ template "input" .DescriptionInput }}
+        {{ template "input" .CodeInput }}
         {{ template "select" .ProductTypeSelect }}
         {{ template "select" .SupplierSelect }}
         {{ template "select" .UnitOfMeasureSelect }}

@@ -28,7 +28,8 @@ type Product struct {
 	Supplier        Supplier      `gorm:"-:all"`
 	UnitOfMeasureID int           `gorm:"column:id_unita_di_misura"`
 	UnitOfMeasure   UnitOfMeasure `gorm:"-:all"`
-	Name            string        `gorm:"column:nome"`
+	Description     string        `gorm:"column:descrizione"`
+	Code            string        `gorm:"column:codice"`
 }
 
 func (Product) TableName() string { return "prodotti" }
@@ -38,7 +39,8 @@ const (
 	OrderProductByProductType
 	OrderProductBySupplier
 	OrderProductByUnitOfMeasure
-	OrderProductByName
+	OrderProductByDescription
+	OrderProductByCode
 )
 
 func (db *GormDB) completeProduct(product Product) Product {
@@ -89,8 +91,10 @@ func (db *GormDB) FindAllProducts(orderBy int, orderDesc bool) ([]Product, error
 		orderByString = "id_fornitore"
 	case OrderProductByUnitOfMeasure:
 		orderByString = "id_unita_di_misura"
-	case OrderProductByName:
-		orderByString = "nome"
+	case OrderProductByDescription:
+		orderByString = "descrizione"
+	case OrderProductByCode:
+		orderByString = "codice"
 	default:
 		return nil, fmt.Errorf("invalid orderBy value: %d", orderBy)
 	}
@@ -118,7 +122,7 @@ func (db *GormDB) CreateProduct(product Product) error {
 }
 
 func (db *GormDB) UpdateProduct(product Product) error {
-	columns := []string{"id_tipologia", "id_fornitore", "id_unita_di_misura", "nome"}
+	columns := []string{"id_tipologia", "id_fornitore", "id_unita_di_misura", "descrizione", "codice"}
 	return db.conn.Model(&product).Select(columns).Updates(product).Error
 }
 
