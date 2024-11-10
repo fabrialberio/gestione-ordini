@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+  {{ template "head.html" }} 
+  <body>
+    {{ template "sidebar" .Sidebar }}
+
+    <div class="content">
+      <header>
+        {{ template "sidebarButton" }}
+        {{ template "logoutButton" }}
+      </header>
+      
+      <main class="max-w-screen-md">
+        <h2>
+          Importa
+        </h2>
+        <form class="card" method="post" enctype="multipart/form-data"
+          hx-post="/console/upload"
+          hx-trigger="change">
+          <div>
+            <label>Tabella</label>
+            <select>
+              <option value="products">Prodotti</option>
+            </select>
+          </div>
+          <div>
+            <label>File</label>
+            <button type="button" class="justify-center w-full btn-md input"
+              onclick="document.getElementById('fileInput').click()">
+              <i class="fa-arrow-up-from-bracket fas"></i>
+              Seleziona un file CSV
+            </button>
+            <input tabindex="-1" id="fileInput" name="file" type="file" class="sr-only" accept="text/csv, .csv">
+          </div>
+          <div class="cardFooter">
+            <button type="submit" class="ml-auto btn-md suggested">
+              <i class="fa-arrow-up-from-bracket fas"></i>
+              Importa
+            </button>
+          </div>
+        </form>
+      </main>
+    </div>
+  </body>
+</html>

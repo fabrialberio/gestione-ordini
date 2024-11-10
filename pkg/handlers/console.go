@@ -29,11 +29,18 @@ func currentSidebar(selected int, isAdmin bool) []components.SidebarDest {
 	}
 
 	if isAdmin {
-		sidebar = append(sidebar, components.SidebarDest{
-			DestURL:     DestUsers,
-			FasIconName: "fa-users",
-			Label:       "Utenti",
-		})
+		sidebar = append(sidebar,
+			components.SidebarDest{
+				DestURL:     DestUsers,
+				FasIconName: "fa-users",
+				Label:       "Utenti",
+			},
+			components.SidebarDest{
+				DestURL:     DestUpload,
+				FasIconName: "fa-file-upload",
+				Label:       "Importa",
+			},
+		)
 	} else if selected >= 3 {
 		return sidebar
 	}

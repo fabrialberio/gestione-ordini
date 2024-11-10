@@ -45,7 +45,6 @@ const (
 	DestOrderSelection      = "/console/orderSelection/"
 	DestOrderSelectionCount = "/console/orderSelectionCount"
 	DestProducts            = "/console/products/"
-	DestUploadProducts      = "/console/uploadProducts"
 	DestProductsTable       = "/console/productsTable"
 	DestSuppliers           = "/console/suppliers/"
 	DestSuppliersTable      = "/console/suppliersTable"
@@ -53,4 +52,5 @@ const (
 	// admin
 	DestUsers      = "/console/users/"
 	DestUsersTable = "/console/usersTable"
+	DestUpload     = "/console/upload/"
 )
