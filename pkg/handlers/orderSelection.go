@@ -3,7 +3,7 @@ package handlers
 import (
 	"gestione-ordini/pkg/appContext"
 	"gestione-ordini/pkg/database"
-	"gestione-ordini/pkg/exporters"
+	"gestione-ordini/pkg/files"
 	"net/http"
 	"strconv"
 	"time"
@@ -29,10 +29,10 @@ func PostOrderSelection(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if r.Form.Has("csv") {
-		csv := exporters.ExportToCSV(orders)
+		csv := files.ExportToCSV(orders)
 		downloadFile(w, filename+".csv", "text/csv", csv)
 	} else if r.Form.Has("list") {
-		list := exporters.ExportToList(orders)
+		list := files.ExportToList(orders)
 		downloadFile(w, filename+".txt", "text/plain", list)
 	}
 }
