@@ -34,17 +34,6 @@ const (
 )
 
 const (
-	PermIDOrders int = iota + 1
-	PermIDOwnOrder
-	PermIDProductTypes
-	PermIDSuppliers
-	PermIDUnitsOfMeasure
-	PermIDProducts
-	PermIDUsers
-	PermIDOwnUser
-)
-
-const (
 	OrderUserByID int = iota + 1
 	OrderUserByRole
 	OrderUserByUsername
@@ -117,22 +106,4 @@ func (db *GormDB) UpdateUser(user User) error {
 
 func (db *GormDB) DeleteUser(id int) error {
 	return db.conn.Delete(&User{}, id).Error
-}
-
-func (db *GormDB) UserHasPerm(userId int, permId int) (bool, error) {
-	rows, err := db.conn.Model(&User{}).
-		Select("utenti.id").
-		Joins("JOIN ruoli ON utenti.id_ruolo = ruoli.id").
-		Joins("JOIN ruolo_permesso ON ruoli.id = ruolo_permesso.id_ruolo").
-		Joins("JOIN permessi ON ruolo_permesso.id_permesso = permessi.id").
-		Where("utenti.id = ? AND permessi.id = ?", userId, permId).
-		Rows()
-
-	if err != nil {
-		return false, err
-	} else if rows.Next() {
-		return true, nil
-	}
-
-	return false, nil
 }

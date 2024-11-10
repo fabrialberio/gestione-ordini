@@ -6,27 +6,12 @@ DROP TABLE IF EXISTS unita_di_misura;
 DROP TABLE IF EXISTS fornitori;
 DROP TABLE IF EXISTS tipologie_prodotto;
 DROP TABLE IF EXISTS utenti;
-DROP TABLE IF EXISTS ruolo_permesso;
-DROP TABLE IF EXISTS permessi;
 DROP TABLE IF EXISTS ruoli;
 
 CREATE TABLE ruoli (
     id BIGINT PRIMARY KEY,
     nome VARCHAR(255) UNIQUE
 );
-
-CREATE TABLE permessi (
-    id BIGINT PRIMARY KEY,
-    nome VARCHAR(255) UNIQUE
-);
-
-CREATE TABLE ruolo_permesso (
-    id_ruolo BIGINT,
-    id_permesso BIGINT,
-    PRIMARY KEY (id_ruolo, id_permesso)
-);
-ALTER TABLE ruolo_permesso ADD CONSTRAINT ruolo_permesso_id_ruolo_foreign FOREIGN KEY(id_ruolo) REFERENCES ruoli(id);
-ALTER TABLE ruolo_permesso ADD CONSTRAINT ruolo_permesso_id_permesso_foreign FOREIGN KEY(id_permesso) REFERENCES permessi(id);
 
 CREATE TABLE utenti (
     id BIGINT PRIMARY KEY AUTO_INCREMENT,
