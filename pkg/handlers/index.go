@@ -8,6 +8,8 @@ import (
 	"net/http"
 )
 
+const dateFormat = "2006-01-02"
+
 func loginRedirect(w http.ResponseWriter, r *http.Request, roleId int) {
 	var dest string
 	if roleId == database.RoleIDChef {
