@@ -1,11 +1,11 @@
 package files
 
 import (
-	"bytes"
 	"encoding/csv"
 	"errors"
 	"fmt"
 	"gestione-ordini/pkg/database"
+	"io"
 	"strconv"
 )
 
@@ -13,15 +13,17 @@ var ErrUnexpectedHeader = errors.New("unexpected CSV header")
 
 var productExpectedHeader = []string{"id", "id_tipologia", "id_fornitore", "id_unita_di_misura", "descrizione", "codice"}
 
-func ImportProductsFromCSV(data []byte) ([]database.Product, error) {
-	reader := csv.NewReader(bytes.NewReader(data))
+func ImportProductsFromCSV(reader io.Reader) ([]database.Product, error) {
+	csvReader := csv.NewReader(reader)
+	csvReader.Comma = csvComma
+	csvReader.LazyQuotes = true
 
-	header, err := reader.Read()
+	header, err := csvReader.Read()
 	if err != nil {
 		return nil, fmt.Errorf("%w: expected %v found %v", ErrUnexpectedHeader, productExpectedHeader, header)
 	}
 
-	records, err := reader.ReadAll()
+	records, err := csvReader.ReadAll()
 	if err != nil {
 		return nil, err
 	}
