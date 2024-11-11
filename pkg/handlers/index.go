@@ -67,7 +67,7 @@ func PostLogin(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = auth.SetAuthenticatedUser(w, user, password)
+	err = auth.SetAuthenticatedUser(w, &user, password)
 	if err != nil {
 		logoutRedirect(w, r, true)
 		return
