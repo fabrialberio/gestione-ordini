@@ -14,16 +14,19 @@
         <h2>
           Importa
         </h2>
-        <form class="card" method="post" enctype="multipart/form-data"
+        <form class="card" method="post" action="/console/upload/" enctype="multipart/form-data"
           hx-post="/console/uploadPreview"
           hx-target="#previewTable"
-          hx-trigger="change">
+          hx-trigger="change"
+          hx-encoding="multipart/form-data">
           <div>
             <label>Tabella</label>
             <select>
               <option value="products">Prodotti</option>
             </select>
           </div>
+          {{ template "select" .KeepIdsSelect }}
+
           <div>
             <label>File</label>
             <button type="button" class="justify-center w-full btn-md input"
@@ -33,18 +36,18 @@
             </button>
             <input tabindex="-1" id="fileInput" name="csvFile" type="file" class="sr-only" accept="text/csv, .csv">
           </div>
-        </form>
 
-        <h2>
-          Anteprima
-        </h2>
-        <div id="previewTable">
-          <div class="card">
-            <div class="text-center text-on-surface-dim italic">
-              Nessun file selezionato
-            </div>
+          <div id="previewTable">
+            {{ template "uploadPlaceholder" }}
           </div>
-        </div>
+
+          <div class="cardFooter">
+            <button type="submit" class="ml-auto btn-md suggested">
+              <i class="fa-check fas"></i>
+              Inserisci
+            </button>
+          </div>
+        </form>
       </main>
     </div>
   </body>

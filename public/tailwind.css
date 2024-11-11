@@ -578,20 +578,8 @@ video {
   top: 0px;
 }
 
-.col-span-full {
-  grid-column: 1 / -1;
-}
-
 .m-4 {
   margin: 1rem;
-}
-
-.m-1 {
-  margin: 0.25rem;
-}
-
-.m-2 {
-  margin: 0.5rem;
 }
 
 .mx-6 {
@@ -608,13 +596,6 @@ video {
   display: -webkit-box;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
-}
-
-.line-clamp-1 {
-  overflow: hidden;
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 1;
 }
 
 .flex {
@@ -639,10 +620,6 @@ video {
 
 .h-screen {
   height: 100vh;
-}
-
-.h-12 {
-  height: 3rem;
 }
 
 .max-h-\[29rem\] {
@@ -1038,7 +1015,7 @@ label {
   color: rgb(107 114 128 / var(--tw-text-opacity));
 }
 
-input:not([checkbox]), select {
+input:not([type="checkbox"]), select {
   width: 100%;
   padding-left: 0.75rem;
   padding-right: 0.75rem;
@@ -1055,17 +1032,17 @@ input:not([checkbox]), select {
   color: rgb(31 41 55 / var(--tw-text-opacity));
 }
 
-input:not([checkbox])::-moz-placeholder, select::-moz-placeholder {
+input:not([type="checkbox"])::-moz-placeholder, select::-moz-placeholder {
   --tw-placeholder-opacity: 1;
   color: rgb(107 114 128 / var(--tw-placeholder-opacity));
 }
 
-input:not([checkbox])::placeholder, select::placeholder {
+input:not([type="checkbox"])::placeholder, select::placeholder {
   --tw-placeholder-opacity: 1;
   color: rgb(107 114 128 / var(--tw-placeholder-opacity));
 }
 
-input:not([checkbox]):focus-visible, select:focus-visible {
+input:not([type="checkbox"]):focus-visible, select:focus-visible {
   --tw-border-opacity: 1;
   border-color: rgb(61 178 104 / var(--tw-border-opacity));
   --tw-ring-offset-shadow: var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);
@@ -1073,7 +1050,7 @@ input:not([checkbox]):focus-visible, select:focus-visible {
   box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000);
 }
 
-input.btn:not([checkbox]):focus-visible, select.btn:focus-visible {
+input.btn:not([type="checkbox"]):focus-visible, select.btn:focus-visible {
   --tw-border-opacity: 1;
   border-color: rgb(61 178 104 / var(--tw-border-opacity));
   --tw-ring-offset-shadow: var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);
