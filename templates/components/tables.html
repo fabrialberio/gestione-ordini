@@ -14,18 +14,6 @@
  </thead>
 {{ end }}
 
-{{ define "tableHead" }}
-<thead>
-  <tr>
-    {{ range .Headings }}
-    <th class="p-2 text-start truncate">
-      {{ .Name }}
-    </th>
-    {{ end }}
-   </tr>
- </thead>
-{{ end }}
-
 {{ define "suppliersTable" }}
 <div class="dataTable">
   <table>
@@ -97,24 +85,6 @@
             <i class="fa-pen fas"></i>
           </a>
         </td>
-      </tr>
-      {{ end }}
-    </tbody>
-  </table>
-</div>
-{{ end }}
-
-{{ define "previewTable" }}
-<div class="dataTable">
-  <table>
-    {{ template "tableHead" . }}
-
-    <tbody>
-      {{ range .Rows }}
-      <tr>
-        {{ range . }}
-        <td>{{ . }}</td>
-        {{ end }}
       </tr>
       {{ end }}
     </tbody>

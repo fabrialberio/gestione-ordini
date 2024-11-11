@@ -1,0 +1,40 @@
+{{ define "tableHead" }}
+<thead>
+  <tr>
+    {{ range .Headings }}
+    <th class="p-2 text-start truncate">
+      {{ .Name }}
+    </th>
+    {{ end }}
+   </tr>
+ </thead>
+{{ end }}
+
+{{ define "previewTable" }}
+<div class="dataTable">
+  <table>
+    {{ template "tableHead" . }}
+
+    <tbody>
+      {{ range slice .Rows 0 10 }}
+      <tr>
+        {{ range . }}
+        <td>{{ . }}</td>
+        {{ end }}
+      </tr>
+      {{ end }}
+      <tr>
+        <td colspan="{{ len .Headings }}">
+          <span class="justify-center h-12 text-on-surface-dim italic">{{ len .Rows }} risultati totali</span>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+{{ end }}
+
+{{ define "uploadError" }}
+<div class="font-mono text-sm card">
+  <p>{{ . }}</p>
+</div>
+{{ end }}
