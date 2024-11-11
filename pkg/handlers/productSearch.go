@@ -29,7 +29,7 @@ func PostProductSearch(w http.ResponseWriter, r *http.Request) {
 		selectedProductId = order.ProductID
 	}
 
-	allProducts, err := appContext.Database(r).FindAllProducts(database.OrderProductByDescription, false)
+	allProducts, err := appContext.Database(r).FindAllProducts(database.OrderProductByDescription, false, -1)
 	if err != nil {
 		logError(r, err)
 	}
