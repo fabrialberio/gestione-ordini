@@ -1,15 +1,27 @@
+{{ define "sortableTableHead" }}
+<thead>
+  <tr>
+    {{ range .Headings }}
+    <th class="py-1 last:pr-1 first:pl-1" hx-get="{{ $.TableURL }}?orderBy={{ .Index }}&orderDesc={{ if eq .Index $.OrderBy }}{{ not $.OrderDesc }}{{ else }}false{{ end }}" hx-target=".dataTable" hx-swap="outerHTML">
+      <button class="gap-1 px-1 py-2 rounded-lg w-full min-h-10 btn">
+        {{ .Name }}
+        <i class="{{ if $.OrderDesc }}fa-sort-up{{ else }}fa-sort{{ end }} fas{{ if ne $.OrderBy .Index }} opacity-0{{ end }}"></i>
+      </button>
+    </th>
+    {{ end }}
+    <th class="sr-only">Azioni</th>
+   </tr>
+ </thead>
+{{ end }}
+
 {{ define "tableHead" }}
 <thead>
   <tr>
-     {{ range .Headings }}
-     <th class="py-1 first:pl-1" hx-get="{{ $.TableURL }}?orderBy={{ .Index }}&orderDesc={{ if eq .Index $.OrderBy }}{{ not $.OrderDesc }}{{ else }}false{{ end }}" hx-target=".dataTable" hx-swap="outerHTML">
-        <button class="gap-1 px-1 py-2 rounded-lg w-full min-h-10 btn">
-          {{ .Name }}
-          <i class="{{ if $.OrderDesc }}fa-sort-up{{ else }}fa-sort{{ end }} fas{{ if ne $.OrderBy .Index }} opacity-0{{ end }}"></i>
-        </button>
-      </th>
-     {{ end }}
-     <th class="sr-only">Azioni</th>
+    {{ range .Headings }}
+    <th class="p-2 text-start truncate">
+      {{ .Name }}
+    </th>
+    {{ end }}
    </tr>
  </thead>
 {{ end }}
@@ -17,7 +29,7 @@
 {{ define "suppliersTable" }}
 <div class="dataTable">
   <table>
-    {{ template "tableHead" . }}
+    {{ template "sortableTableHead" . }}
 
     <tbody>
       {{ range .Suppliers }}
@@ -40,7 +52,7 @@
 {{ define "productsTable" }}
 <div class="dataTable">
   <table>
-    {{ template "tableHead" . }}
+    {{ template "sortableTableHead" . }}
 
     <tbody>
       {{ range .Products }} 
@@ -70,7 +82,7 @@
 {{ define "usersTable" }}
 <div class="dataTable">
   <table>
-    {{ template "tableHead" . }}
+    {{ template "sortableTableHead" . }}
 
     <tbody>
       {{ range .Users }}
@@ -85,6 +97,24 @@
             <i class="fa-pen fas"></i>
           </a>
         </td>
+      </tr>
+      {{ end }}
+    </tbody>
+  </table>
+</div>
+{{ end }}
+
+{{ define "previewTable" }}
+<div class="dataTable">
+  <table>
+    {{ template "tableHead" . }}
+
+    <tbody>
+      {{ range .Rows }}
+      <tr>
+        {{ range . }}
+        <td>{{ . }}</td>
+        {{ end }}
       </tr>
       {{ end }}
     </tbody>

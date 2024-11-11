@@ -15,7 +15,8 @@
           Importa
         </h2>
         <form class="card" method="post" enctype="multipart/form-data"
-          hx-post="/console/upload"
+          hx-post="/console/uploadPreview"
+          hx-target="#previewTable"
           hx-trigger="change">
           <div>
             <label>Tabella</label>
@@ -30,15 +31,20 @@
               <i class="fa-arrow-up-from-bracket fas"></i>
               Seleziona un file CSV
             </button>
-            <input tabindex="-1" id="fileInput" name="file" type="file" class="sr-only" accept="text/csv, .csv">
-          </div>
-          <div class="cardFooter">
-            <button type="submit" class="ml-auto btn-md suggested">
-              <i class="fa-arrow-up-from-bracket fas"></i>
-              Importa
-            </button>
+            <input tabindex="-1" id="fileInput" name="csvFile" type="file" class="sr-only" accept="text/csv, .csv">
           </div>
         </form>
+
+        <h2>
+          Anteprima
+        </h2>
+        <div id="previewTable">
+          <div class="card">
+            <div class="text-center text-on-surface-dim italic">
+              Nessun file selezionato
+            </div>
+          </div>
+        </div>
       </main>
     </div>
   </body>

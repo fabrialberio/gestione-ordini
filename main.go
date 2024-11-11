@@ -114,6 +114,7 @@ func setupRoutes(mux *http.ServeMux) {
 	consoleMux.HandleFunc("GET "+handlers.DestUsersTable, handlers.GetUsersTable)
 	consoleMux.HandleFunc("GET "+handlers.DestUpload, handlers.GetUpload)
 	consoleMux.HandleFunc("POST "+handlers.DestUpload, handlers.PostUpload)
+	consoleMux.HandleFunc("POST "+handlers.DestUploadPreview, handlers.PostUploadPreview)
 
 	mux.HandleFunc("/", handlers.GetIndex)
 	mux.HandleFunc("POST /login", handlers.PostLogin)

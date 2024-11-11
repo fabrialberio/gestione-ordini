@@ -50,7 +50,8 @@ const (
 	DestSuppliersTable      = "/console/suppliersTable"
 
 	// admin
-	DestUsers      = "/console/users/"
-	DestUsersTable = "/console/usersTable"
-	DestUpload     = "/console/upload/"
+	DestUsers         = "/console/users/"
+	DestUsersTable    = "/console/usersTable"
+	DestUpload        = "/console/upload/"
+	DestUploadPreview = "/console/uploadPreview"
 )
