@@ -31,6 +31,8 @@ const (
 	keyOrderSelectionEnd        = "orderSelection.end"
 	keyOrderSelectionSupplierID = "orderSelection.supplier"
 
+	DestFirstLogin = "/firstLogin"
+
 	// chef
 	DestChef             = "/chef/"
 	DestChefOrders       = "/chef/orders/"

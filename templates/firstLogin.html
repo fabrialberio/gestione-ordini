@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+  {{ template "head.html" }}
+  <body class="fixed place-items-center grid w-screen h-screen">
+    <main>
+      <div class="text-center">
+        <h2>Gestione ordini</h2>
+        <p>Primo accesso</p>
+      </div>
+      <form class="card" method="post" action="/firstLogin">
+        <div class="space-y-2">
+          <p>
+            Inserisci l'username che ti è stato fornito
+          </p>
+          {{ if .UsernameError }}
+          <p class="text-error">
+            Utente non valido.
+            Se hai già impostato una password, <a class="underline" href="/">vai al login</a>
+          </p>
+          {{ end }}
+
+          <input type="text" placeholder="Username" name="username" value="{{ .InitialUsername }}" autofocus >
+        </div>
+        <div class="space-y-2 border-outline mt-4 border-t">
+          <p>
+            Imposta la tua password. Se la perderai, per recuperarla dovrai contattare un amministratore
+          </p>
+          {{ if .PasswordConfirmError }}
+          <p class="text-error">
+            Le password inserite non coincidono
+          </p>
+          {{ end }}
+
+          <input type="password" placeholder="Password" name="password" value="{{ .InitialPassword }}" >
+          <input type="password" placeholder="Conferma password" name="passwordConfirm" >
+        </div>
+        <div class="cardFooter">
+          <button type="submit" class="ml-auto btn-md suggested">
+            <i class="fa-arrow-right fas"></i>
+            Vai al login
+          </button>
+        </div>
+      </form>
+    </main>
+  </body>
+</html>
