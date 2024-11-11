@@ -20,6 +20,7 @@ func PostUploadPreview(w http.ResponseWriter, r *http.Request) {
 	products, err := files.ImportProductsFromCSV(f)
 	if err != nil {
 		logError(r, err)
+		appContext.ExecuteTemplate(w, r, "uploadError", err.Error())
 		return
 	}
 
