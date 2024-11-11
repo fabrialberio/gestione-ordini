@@ -3,10 +3,12 @@ package components
 import "gestione-ordini/pkg/database"
 
 type Table struct {
-	TableURL  string
-	OrderBy   int
-	OrderDesc bool
-	Headings  []TableHeading
+	TableURL        string
+	OrderBy         int
+	OrderDesc       bool
+	MaxRowCount     int
+	NextMaxRowCount int
+	Headings        []TableHeading
 }
 
 type ProductsTable struct {

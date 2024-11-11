@@ -20,11 +20,18 @@ func GetProductsTable(w http.ResponseWriter, r *http.Request) {
 		logError(r, err)
 	}
 
+	maxRowCount, err := strconv.Atoi(r.URL.Query().Get("maxRowCount"))
+	if err != nil {
+		maxRowCount = min(len(products), 20)
+	}
+
 	data := components.ProductsTable{
 		Table: components.Table{
-			TableURL:  DestProductsTable,
-			OrderBy:   orderBy,
-			OrderDesc: orderDesc,
+			TableURL:        DestProductsTable,
+			OrderBy:         orderBy,
+			OrderDesc:       orderDesc,
+			MaxRowCount:     maxRowCount,
+			NextMaxRowCount: maxRowCount * 2,
 			Headings: []components.TableHeading{
 				{Index: database.OrderProductByID, Name: "ID"},
 				{Index: database.OrderProductByDescription, Name: "Descrizione"},
