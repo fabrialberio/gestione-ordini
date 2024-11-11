@@ -14,7 +14,7 @@ var ErrUnexpectedHeader = errors.New("unexpected CSV header")
 
 var productExpectedHeader = []string{"id", "id_tipologia", "id_fornitore", "id_unita_di_misura", "descrizione", "codice"}
 
-func ImportProductsFromCSV(reader io.Reader) ([]database.Product, error) {
+func ImportProductsFromCSV(reader io.Reader, keepIds bool) ([]database.Product, error) {
 	csvReader := csv.NewReader(reader)
 	csvReader.Comma = csvComma
 	csvReader.LazyQuotes = true
@@ -52,14 +52,19 @@ func ImportProductsFromCSV(reader io.Reader) ([]database.Product, error) {
 			return nil, err
 		}
 
-		products = append(products, database.Product{
-			ID:              id,
+		product := database.Product{
 			ProductTypeID:   productTypeId,
 			SupplierID:      supplierId,
 			UnitOfMeasureID: unitOfMeasureId,
 			Description:     r[4],
 			Code:            r[5],
-		})
+		}
+
+		if keepIds {
+			product.ID = id
+		}
+
+		products = append(products, product)
 	}
 
 	return products, nil
