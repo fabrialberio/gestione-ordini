@@ -121,6 +121,10 @@ func (db *GormDB) CreateProduct(product Product) error {
 	return db.conn.Create(&product).Error
 }
 
+func (db *GormDB) CreateAllProducts(products []Product) error {
+	return db.conn.Create(&products).Error
+}
+
 func (db *GormDB) UpdateProduct(product Product) error {
 	columns := []string{"id_tipologia", "id_fornitore", "id_unita_di_misura", "descrizione", "codice"}
 	return db.conn.Model(&product).Select(columns).Updates(product).Error
