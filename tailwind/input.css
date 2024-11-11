@@ -54,7 +54,7 @@ label {
     @apply text-on-surface-dim pl-2 text-sm
 }
 
-input:not([checkbox]), select {
+input:not([type="checkbox"]), select {
     @apply input w-full px-3 py-2
 }
 
