@@ -20,7 +20,7 @@ func GetProductsTable(w http.ResponseWriter, r *http.Request) {
 		maxRowCount = 20
 	}
 
-	products, err := appContext.Database(r).FindAllProducts(orderBy, orderDesc, maxRowCount)
+	products, err := appContext.Database(r).FindAllProducts(orderBy, orderDesc, maxRowCount+1)
 	if err != nil {
 		logError(r, err)
 	}
