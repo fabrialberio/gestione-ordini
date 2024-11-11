@@ -65,7 +65,7 @@
         </td>
       </tr>
       {{ end }}
-      {{ if gt (len .Products) .NextMaxRowCount }}
+      {{ if gt (len .Products) .MaxRowCount }}
       <tr
         hx-get="{{ .TableURL }}?orderBy={{ .OrderBy }}&orderDesc={{ .OrderDesc }}&maxRowCount={{ .NextMaxRowCount }}"
         hx-swap="outerHTML"
