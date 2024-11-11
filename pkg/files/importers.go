@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"gestione-ordini/pkg/database"
 	"io"
+	"slices"
 	"strconv"
 )
 
@@ -20,6 +21,10 @@ func ImportProductsFromCSV(reader io.Reader) ([]database.Product, error) {
 
 	header, err := csvReader.Read()
 	if err != nil {
+		return nil, err
+	}
+
+	if !slices.Equal(header, productExpectedHeader) {
 		return nil, fmt.Errorf("%w: expected %v found %v", ErrUnexpectedHeader, productExpectedHeader, header)
 	}
 
