@@ -1,5 +1,5 @@
 {{ define "tableHead" }}
-<thead>
+<thead class="bg-view">
   <tr>
     {{ range .Headings }}
     <th class="p-2 text-start truncate">
@@ -11,23 +11,43 @@
 {{ end }}
 
 {{ define "previewTable" }}
+<script>
+  function showAllRows() {
+    document.getElementById("previewTruncatedRows").classList.add("hidden");
+    document.getElementById("previewAllRows").classList.remove("hidden");
+  }
+</script>
 <div class="dataTable">
   <table>
     {{ template "tableHead" . }}
 
-    <tbody>
-      {{ range slice .Rows 0 10 }}
+    <tbody id="previewTruncatedRows">
+      {{ range slice .Rows 0 .MaxRowCount }}
       <tr>
         {{ range . }}
-        <td>{{ . }}</td>
+        <td class="truncate">{{ . }}</td>
         {{ end }}
       </tr>
       {{ end }}
+      {{ if gt (len .Rows) .MaxRowCount }}
       <tr>
         <td colspan="{{ len .Headings }}">
-          <span class="justify-center h-12 text-on-surface-dim italic">{{ len .Rows }} risultati totali</span>
+          <button type="button" class="btn-md" onclick="showAllRows()">
+            Mostra tutti ({{ len .Rows }})
+          </button>
         </td>
       </tr>
+      {{ end }}
+    </tbody>
+
+    <tbody id="previewAllRows" class="hidden">
+      {{ range .Rows }}
+      <tr>
+        {{ range . }}
+        <td class="truncate">{{ . }}</td>
+        {{ end }}
+      </tr>
+      {{ end }}
     </tbody>
   </table>
 </div>

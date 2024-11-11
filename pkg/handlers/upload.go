@@ -11,6 +11,11 @@ import (
 )
 
 func PostUploadPreview(w http.ResponseWriter, r *http.Request) {
+	maxRowCount, err := strconv.Atoi(r.URL.Query().Get("maxRowCount"))
+	if err != nil {
+		maxRowCount = 10
+	}
+
 	f, _, err := r.FormFile("csvFile")
 	if err != nil {
 		logError(r, err)
@@ -37,17 +42,15 @@ func PostUploadPreview(w http.ResponseWriter, r *http.Request) {
 	}
 
 	data := components.PreviewTable{
-		Table: components.Table{
-			TableURL: DestUploadPreview,
-			OrderBy:  -1,
-			Headings: []components.TableHeading{
-				{Name: "ID"},
-				{Name: "ID Tipologia"},
-				{Name: "ID Fornitore"},
-				{Name: "ID Unità di misura"},
-				{Name: "Descrizione"},
-				{Name: "Codice"},
-			},
+		TableURL:    DestUploadPreview,
+		MaxRowCount: maxRowCount,
+		Headings: []components.TableHeading{
+			{Name: "ID"},
+			{Name: "ID Tipologia"},
+			{Name: "ID Fornitore"},
+			{Name: "ID Unità di misura"},
+			{Name: "Descrizione"},
+			{Name: "Codice"},
 		},
 		Rows: rows,
 	}

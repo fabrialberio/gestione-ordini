@@ -25,8 +25,10 @@ type SuppliersTable struct {
 }
 
 type PreviewTable struct {
-	Table
-	Rows [][]string
+	TableURL    string
+	MaxRowCount int
+	Headings    []TableHeading
+	Rows        [][]string
 }
 
 type TableHeading struct {
