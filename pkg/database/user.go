@@ -87,7 +87,7 @@ func (db *GormDB) FindAllUsers(orderBy int, orderDesc bool) ([]User, error) {
 func (db *GormDB) FindUserWithUsername(username string) (User, error) {
 	var user User
 
-	err := db.conn.Model(&User{}).Take(&user, "username = ?", username).Error
+	err := db.conn.Take(&user, "username = ?", username).Error
 	return user, err
 }
 
