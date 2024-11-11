@@ -12,10 +12,13 @@ import (
 
 var ErrUnexpectedHeader = errors.New("unexpected CSV header")
 
-var productExpectedHeader = []string{"id", "id_tipologia", "id_fornitore", "id_unita_di_misura", "descrizione", "codice"}
+var (
+	productExpectedHeader = []string{"id", "id_tipologia", "id_fornitore", "id_unita_di_misura", "descrizione", "codice"}
+	userExpectedHeader    = []string{"id", "id_ruolo", "username", "password_hash", "nome", "cognome"}
+)
 
 func ImportProductsFromCSV(reader io.Reader, keepIds bool) ([]database.Product, error) {
-	csvReader := newCustomCsvReader(reader)
+	csvReader := newCustomizedCsvReader(reader)
 
 	header, err := csvReader.Read()
 	if err != nil {
@@ -69,15 +72,15 @@ func ImportProductsFromCSV(reader io.Reader, keepIds bool) ([]database.Product, 
 }
 
 func ImportUsersFromCSV(reader io.Reader, keepIds bool) ([]database.User, error) {
-	csvReader := newCustomCsvReader(reader)
+	csvReader := newCustomizedCsvReader(reader)
 
 	header, err := csvReader.Read()
 	if err != nil {
 		return nil, err
 	}
 
-	if !slices.Equal(header, productExpectedHeader) {
-		return nil, fmt.Errorf("%w: expected %v found %v", ErrUnexpectedHeader, productExpectedHeader, header)
+	if !slices.Equal(header, userExpectedHeader) {
+		return nil, fmt.Errorf("%w: expected %v found %v", ErrUnexpectedHeader, userExpectedHeader, header)
 	}
 
 	records, err := csvReader.ReadAll()
@@ -85,47 +88,40 @@ func ImportUsersFromCSV(reader io.Reader, keepIds bool) ([]database.User, error)
 		return nil, err
 	}
 
-	var products []database.Product
+	var users []database.User
 	for _, r := range records {
 		id, err := strconv.Atoi(r[0])
 		if err != nil {
 			return nil, err
 		}
-		productTypeId, err := strconv.Atoi(r[1])
-		if err != nil {
-			return nil, err
-		}
-		supplierId, err := strconv.Atoi(r[2])
-		if err != nil {
-			return nil, err
-		}
-		unitOfMeasureId, err := strconv.Atoi(r[3])
+		roleId, err := strconv.Atoi(r[1])
 		if err != nil {
 			return nil, err
 		}
 
-		product := database.Product{
-			ProductTypeID:   productTypeId,
-			SupplierID:      supplierId,
-			UnitOfMeasureID: unitOfMeasureId,
-			Description:     r[4],
-			Code:            r[5],
+		user := database.User{
+			RoleID:       roleId,
+			Username:     r[2],
+			PasswordHash: r[3],
+			Name:         r[4],
+			Surname:      r[5],
 		}
 
 		if keepIds {
-			product.ID = id
+			user.ID = id
 		}
 
-		products = append(products, product)
+		users = append(users, user)
 	}
 
-	return products, nil
+	return users, nil
 }
 
-func newCustomCsvReader(reader io.Reader) *csv.Reader {
+func newCustomizedCsvReader(reader io.Reader) *csv.Reader {
 	csvReader := csv.NewReader(reader)
 	csvReader.Comma = ';'
 	csvReader.LazyQuotes = true
+	csvReader.FieldsPerRecord = 0
 
 	return csvReader
 }

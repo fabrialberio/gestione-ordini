@@ -107,3 +107,7 @@ func (db *GormDB) UpdateUser(user User) error {
 func (db *GormDB) DeleteUser(id int) error {
 	return db.conn.Delete(&User{}, id).Error
 }
+
+func (db *GormDB) CreateAllUsers(users []User) error {
+	return db.conn.Create(&users).Error
+}

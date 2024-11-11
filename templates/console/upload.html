@@ -19,12 +19,8 @@
           hx-target="#previewTable"
           hx-trigger="change"
           hx-encoding="multipart/form-data">
-          <div>
-            <label>Tabella</label>
-            <select>
-              <option value="products">Prodotti</option>
-            </select>
-          </div>
+          
+          {{ template "select" .TableSelect }}
           {{ template "select" .KeepIdsSelect }}
 
           <div>
