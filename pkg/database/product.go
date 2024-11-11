@@ -71,7 +71,7 @@ func (db *GormDB) FindAllUnitsOfMeasure() ([]UnitOfMeasure, error) {
 	return unitsOfMeasure, err
 }
 
-func (db *GormDB) FindAllProducts(orderBy int, orderDesc bool) ([]Product, error) {
+func (db *GormDB) FindAllProducts(orderBy int, orderDesc bool, limit int) ([]Product, error) {
 	var orderByString string
 	var products []Product
 
@@ -92,10 +92,14 @@ func (db *GormDB) FindAllProducts(orderBy int, orderDesc bool) ([]Product, error
 		return nil, fmt.Errorf("invalid orderBy value: %d", orderBy)
 	}
 
-	err := db.conn.Preload(clause.Associations).Order(clause.OrderByColumn{
-		Column: clause.Column{Name: orderByString},
-		Desc:   orderDesc,
-	}).Find(&products).Error
+	err := db.conn.
+		Preload(clause.Associations).
+		Order(clause.OrderByColumn{
+			Column: clause.Column{Name: orderByString},
+			Desc:   orderDesc,
+		}).
+		Limit(limit).
+		Find(&products).Error
 
 	return products, err
 }

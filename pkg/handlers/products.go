@@ -15,14 +15,18 @@ func GetProductsTable(w http.ResponseWriter, r *http.Request) {
 	}
 	orderDesc := r.URL.Query().Get("orderDesc") == "true"
 
-	products, err := appContext.Database(r).FindAllProducts(orderBy, orderDesc)
+	maxRowCount, err := strconv.Atoi(r.URL.Query().Get("maxRowCount"))
+	if err != nil {
+		maxRowCount = 20
+	}
+
+	products, err := appContext.Database(r).FindAllProducts(orderBy, orderDesc, maxRowCount)
 	if err != nil {
 		logError(r, err)
 	}
 
-	maxRowCount, err := strconv.Atoi(r.URL.Query().Get("maxRowCount"))
-	if err != nil {
-		maxRowCount = min(len(products), 20)
+	if maxRowCount > len(products) {
+		maxRowCount = len(products)
 	}
 
 	data := components.ProductsTable{
