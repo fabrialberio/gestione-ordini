@@ -17,7 +17,7 @@ func GetProductsTable(w http.ResponseWriter, r *http.Request) {
 
 	maxRowCount, err := strconv.Atoi(r.URL.Query().Get("maxRowCount"))
 	if err != nil {
-		maxRowCount = 20
+		maxRowCount = 21
 	}
 
 	products, err := appContext.Database(r).FindAllProducts(orderBy, orderDesc, maxRowCount+1)
