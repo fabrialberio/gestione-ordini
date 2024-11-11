@@ -7,8 +7,6 @@ import (
 	"strconv"
 )
 
-const csvComma = ';'
-
 func ExportToList(orders []database.Order) []byte {
 	builder := bytes.Buffer{}
 
@@ -32,7 +30,7 @@ func ExportToList(orders []database.Order) []byte {
 func ExportToCSV(orders []database.Order) []byte {
 	builder := bytes.Buffer{}
 	writer := csv.NewWriter(&builder)
-	writer.Comma = csvComma
+	writer.Comma = ';'
 
 	writer.Write([]string{
 		"Descrizione prodotto",
