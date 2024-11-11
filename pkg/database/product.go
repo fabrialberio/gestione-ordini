@@ -23,11 +23,11 @@ func (UnitOfMeasure) TableName() string { return "unita_di_misura" }
 type Product struct {
 	ID              int           `gorm:"column:id;primaryKey"`
 	ProductTypeID   int           `gorm:"column:id_tipologia"`
-	ProductType     ProductType   `gorm:"-:all"`
+	ProductType     ProductType   `gorm:"foreignKey:ProductTypeID"`
 	SupplierID      int           `gorm:"column:id_fornitore"`
-	Supplier        Supplier      `gorm:"-:all"`
+	Supplier        Supplier      `gorm:"foreignKey:SupplierID"`
 	UnitOfMeasureID int           `gorm:"column:id_unita_di_misura"`
-	UnitOfMeasure   UnitOfMeasure `gorm:"-:all"`
+	UnitOfMeasure   UnitOfMeasure `gorm:"foreignKey:UnitOfMeasureID"`
 	Description     string        `gorm:"column:descrizione"`
 	Code            string        `gorm:"column:codice"`
 }
@@ -42,13 +42,6 @@ const (
 	OrderProductByDescription
 	OrderProductByCode
 )
-
-func (db *GormDB) completeProduct(product Product) Product {
-	product.ProductType, _ = db.FindProductType(product.ProductTypeID)
-	product.Supplier, _ = db.FindSupplier(product.SupplierID)
-	product.UnitOfMeasure, _ = db.FindUnitOfMeasure(product.UnitOfMeasureID)
-	return product
-}
 
 func (db *GormDB) FindProductType(id int) (ProductType, error) {
 	var productType ProductType
@@ -99,22 +92,19 @@ func (db *GormDB) FindAllProducts(orderBy int, orderDesc bool) ([]Product, error
 		return nil, fmt.Errorf("invalid orderBy value: %d", orderBy)
 	}
 
-	err := db.conn.Order(clause.OrderByColumn{
+	err := db.conn.Preload(clause.Associations).Order(clause.OrderByColumn{
 		Column: clause.Column{Name: orderByString},
 		Desc:   orderDesc,
 	}).Find(&products).Error
 
-	for i, p := range products {
-		products[i] = db.completeProduct(p)
-	}
 	return products, err
 }
 
 func (db *GormDB) FindProduct(id int) (Product, error) {
 	var product Product
 
-	err := db.conn.Take(&product, id).Error
-	return db.completeProduct(product), err
+	err := db.conn.Preload(clause.Associations).Take(&product, id).Error
+	return product, err
 }
 
 func (db *GormDB) CreateProduct(product Product) error {
