@@ -71,7 +71,7 @@ func PostOrderAmountInput(w http.ResponseWriter, r *http.Request) {
 func composeLabel(r *http.Request, baseLabel string) (string, error) {
 	var productId int
 
-	parsedOrder, err := parseOrderFromForm(r)
+	parsedOrder, err := parseOrderForm(r)
 	if err != nil {
 		return "", err
 	}

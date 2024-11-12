@@ -101,7 +101,7 @@ func postOrder(w http.ResponseWriter, r *http.Request) {
 	isNew := r.FormValue("isNew") == "true"
 	delete := r.Form.Has("delete")
 
-	order, err := parseOrderFromForm(r)
+	order, err := parseOrderForm(r)
 	if err != nil {
 		ShowItemInvalidFormError(w, r, err)
 		return
@@ -130,7 +130,7 @@ func postOrder(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func parseOrderFromForm(r *http.Request) (database.Order, error) {
+func parseOrderForm(r *http.Request) (database.Order, error) {
 	order := database.Order{}
 
 	id, err := strconv.Atoi(r.FormValue(keyOrderID))
