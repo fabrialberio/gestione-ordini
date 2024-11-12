@@ -13,7 +13,7 @@ func currentSidebar(selected int, isAdmin bool) []components.SidebarDest {
 	sidebar := []components.SidebarDest{
 		{
 			DestURL:     DestNewOrder,
-			FasIconName: "fa-add",
+			FasIconName: "fa-circle-plus",
 			Label:       "Nuovo ordine",
 		},
 		{
