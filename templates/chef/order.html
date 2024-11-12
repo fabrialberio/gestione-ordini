@@ -18,6 +18,15 @@
         <input type="hidden" name="order.userId" value="{{ .Order.UserID }}">
         <input type="hidden" name="isNew" value="false">
         
+        {{ if .UsersURL }}
+        <div>
+          <label>Richiesto da</label>
+          <div class="flex items-center px-3 input">
+            {{ .Order.User.Username }}
+          </div>
+        </div>
+        {{ end }}
+
         {{ template "productInput" .ProductInput }}
         <div id="amountInput"></div>
         {{ template "input" .ExpiresAtInput }}

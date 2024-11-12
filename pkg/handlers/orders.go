@@ -10,11 +10,11 @@ import (
 )
 
 func GetChefOrder(w http.ResponseWriter, r *http.Request) {
-	getOrder(w, r, DestChefOrders)
+	getOrder(w, r, DestChefOrders, "")
 }
 
 func GetConsoleOrder(w http.ResponseWriter, r *http.Request) {
-	getOrder(w, r, DestOrders)
+	getOrder(w, r, DestOrders, DestUsers)
 }
 
 func PostChefOrder(w http.ResponseWriter, r *http.Request) {
@@ -27,7 +27,7 @@ func PostConsoleOrder(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, DestNewOrder, http.StatusSeeOther)
 }
 
-func getOrder(w http.ResponseWriter, r *http.Request, ordersUrl string) {
+func getOrder(w http.ResponseWriter, r *http.Request, ordersUrl string, usersUrl string) {
 	user, err := appContext.AuthenticatedUser(r)
 	if err != nil {
 		LogoutError(w, r, err)
@@ -71,6 +71,7 @@ func getOrder(w http.ResponseWriter, r *http.Request, ordersUrl string) {
 		ExpiresAtInput components.Input
 		UserID         int
 		OrdersURL      string
+		UsersURL       string
 	}{
 		IsNew: isNew,
 		Order: defaultOrder,
@@ -91,6 +92,7 @@ func getOrder(w http.ResponseWriter, r *http.Request, ordersUrl string) {
 		},
 		UserID:    user.ID,
 		OrdersURL: ordersUrl,
+		UsersURL:  usersUrl,
 	}
 
 	appContext.ExecuteTemplate(w, r, "order.html", data)
