@@ -46,7 +46,7 @@ func currentSidebar(selected int, isAdmin bool) []components.SidebarDest {
 				Label:       "Importa",
 			},
 		)
-	} else if selected >= 3 {
+	} else if selected >= 4 {
 		return sidebar
 	}
 
