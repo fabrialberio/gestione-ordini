@@ -662,8 +662,20 @@ video {
   max-width: 24rem;
 }
 
+.max-w-12 {
+  max-width: 3rem;
+}
+
+.max-w-20 {
+  max-width: 5rem;
+}
+
 .flex-none {
   flex: none;
+}
+
+.flex-shrink {
+  flex-shrink: 1;
 }
 
 .flex-grow-0 {
@@ -694,12 +706,20 @@ video {
   place-items: center;
 }
 
+.items-end {
+  align-items: flex-end;
+}
+
 .items-center {
   align-items: center;
 }
 
 .justify-start {
   justify-content: flex-start;
+}
+
+.justify-end {
+  justify-content: flex-end;
 }
 
 .justify-center {
@@ -869,6 +889,10 @@ video {
 
 .text-center {
   text-align: center;
+}
+
+.text-right {
+  text-align: right;
 }
 
 .text-start {
@@ -1598,6 +1622,10 @@ input[type="date"] {
 @media (min-width: 640px) {
   .sm\:min-h-12 {
     min-height: 3rem;
+  }
+
+  .sm\:max-w-20 {
+    max-width: 5rem;
   }
 
   .sm\:flex-row {

@@ -12,7 +12,6 @@ type SidebarDest struct {
 type OrdersView struct {
 	OrdersURL     string
 	OrdersViewURL string
-	UsersURL      string
 	WeekTitle     string
 	NextOffset    int
 	PrevOffset    int
