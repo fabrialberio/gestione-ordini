@@ -33,6 +33,7 @@ const (
 
 	// common
 	DestFirstLogin       = "/firstLogin"
+	DestApi              = "/api/"
 	DestProductSearch    = "/api/productSearch"
 	DestOrderAmountInput = "/api/orderAmountInput"
 	DestOwnOrdersView    = "/api/ownOrdersView"

@@ -30,7 +30,7 @@ func main() {
 
 	server := http.Server{
 		Addr:    ":8080",
-		Handler: mw.WithLogging(mw.WithContext(db, tmpl, mux)),
+		Handler: mw.WithContext(db, tmpl, mux),
 	}
 
 	log.Println("Server started on port 8080.")
@@ -121,24 +121,30 @@ func setupRoutes(mux *http.ServeMux) {
 	consoleMux.HandleFunc("POST "+handlers.DestUpload, handlers.PostUpload)
 	consoleMux.HandleFunc("POST "+handlers.DestUploadPreview, handlers.PostUploadPreview)
 
+	apiMux := http.NewServeMux()
+	apiMux.HandleFunc("POST "+handlers.DestProductSearch, handlers.PostProductSearch)
+	apiMux.HandleFunc("POST "+handlers.DestOrderAmountInput, handlers.PostOrderAmountInput)
+	apiMux.HandleFunc("GET "+handlers.DestOwnOrdersView, handlers.GetOwnOrdersView)
+
 	mux.HandleFunc("/", handlers.GetIndex)
 	mux.HandleFunc("GET "+handlers.DestFirstLogin, handlers.GetFirstLogin)
 	mux.HandleFunc("POST "+handlers.DestFirstLogin, handlers.PostFirstLogin)
 	mux.HandleFunc("POST /login", handlers.PostLogin)
 	mux.HandleFunc("GET /logout", handlers.Logout)
 	mux.Handle("GET /public/", http.FileServerFS(publicFS))
-	mux.HandleFunc("POST "+handlers.DestProductSearch, handlers.PostProductSearch)
-	mux.HandleFunc("POST "+handlers.DestOrderAmountInput, handlers.PostOrderAmountInput)
-	mux.HandleFunc("GET "+handlers.DestOwnOrdersView, handlers.GetOwnOrdersView)
 
-	mux.Handle(handlers.DestChef, mw.WithUserCheck(
+	mux.Handle(handlers.DestChef, mw.WithLogging(mw.WithUserCheck(
 		func(u *database.User) bool { return u.RoleID == database.RoleIDChef },
 		chefMux,
-	))
-	mux.Handle(handlers.DestConsole, mw.WithUserCheck(
+	)))
+	mux.Handle(handlers.DestConsole, mw.WithLogging(mw.WithUserCheck(
 		func(u *database.User) bool {
 			return u.RoleID == database.RoleIDManager || u.RoleID == database.RoleIDAdministrator
 		},
 		consoleMux,
+	)))
+	mux.Handle(handlers.DestApi, mw.WithUserCheck(
+		func(user *database.User) bool { return true },
+		apiMux,
 	))
 }
