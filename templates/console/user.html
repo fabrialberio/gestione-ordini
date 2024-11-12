@@ -18,13 +18,13 @@
         <input type="hidden" name="user.id" value="{{ .User.ID }}">
         <input type="hidden" name="isNew" value="{{ .IsNew }}">
         
-        {{ template "input" .NameInput }}
-        {{ template "input" .SurnameInput }}
+        {{ template "textInput" .NameInput }}
+        {{ template "textInput" .SurnameInput }}
         {{ template "select" .RoleSelect }}
-        {{ template "input" .UsernameInput }}
-        
+        {{ template "textInput" .UsernameInput }}
+
         {{ if .IsNew }}
-        {{ template "input" .PasswordInput }}
+        {{ template "textInput" .PasswordInput }}
         {{ else }}
         {{ template "hiddenPasswordInput" .PasswordInput }}
         {{ end }}

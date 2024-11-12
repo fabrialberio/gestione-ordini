@@ -40,7 +40,6 @@ func GetNewOrder(w http.ResponseWriter, r *http.Request) {
 		ExpiresAtInput: components.Input{
 			Label:        "Data di consegna richiesta",
 			Name:         keyOrderRequestedAt,
-			Type:         "date",
 			DefaultValue: time.Now().Format(dateFormat),
 		},
 	}

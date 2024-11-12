@@ -87,7 +87,6 @@ func getOrder(w http.ResponseWriter, r *http.Request, ordersUrl string, usersUrl
 		ExpiresAtInput: components.Input{
 			Label:        "Data di consegna richiesta",
 			Name:         keyOrderRequestedAt,
-			Type:         "date",
 			DefaultValue: defaultOrder.ExpiresAt.Format(dateFormat),
 		},
 		UserID:    user.ID,

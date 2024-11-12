@@ -113,13 +113,11 @@ func GetProduct(w http.ResponseWriter, r *http.Request) {
 		DescriptionInput: components.Input{
 			Label:        "Descrizione",
 			Name:         keyProductDescription,
-			Type:         "text",
 			DefaultValue: defaultProduct.Description,
 		},
 		CodeInput: components.Input{
 			Label:        "Codice",
 			Name:         keyProductCode,
-			Type:         "text",
 			DefaultValue: defaultProduct.Code,
 		},
 		ProductTypeSelect: components.Select{

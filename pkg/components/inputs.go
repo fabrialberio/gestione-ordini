@@ -5,7 +5,6 @@ import "gestione-ordini/pkg/database"
 type Input struct {
 	Label        string
 	Name         string
-	Type         string
 	DefaultValue string
 }
 

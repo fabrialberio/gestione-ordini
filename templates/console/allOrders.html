@@ -28,8 +28,8 @@
           hx-trigger="change, load"
         >
           <div class="flex sm:flex-row flex-col gap-4">
-            <div class="w-full">{{ template "input" .StartDateInput }}</div>
-            <div class="w-full">{{ template "input" .EndDateInput }}</div>  
+            <div class="w-full">{{ template "dateInput" .StartDateInput }}</div>
+            <div class="w-full">{{ template "dateInput" .EndDateInput }}</div>  
           </div>
           
           {{ template "select" .SupplierSelect }}

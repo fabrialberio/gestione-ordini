@@ -89,19 +89,16 @@ func GetUser(w http.ResponseWriter, r *http.Request) {
 		NameInput: components.Input{
 			Label:        "Nome",
 			Name:         keyUserName,
-			Type:         "text",
 			DefaultValue: defaultUser.Name,
 		},
 		SurnameInput: components.Input{
 			Label:        "Cognome",
 			Name:         keyUserSurname,
-			Type:         "text",
 			DefaultValue: defaultUser.Surname,
 		},
 		UsernameInput: components.Input{
 			Label:        "Username",
 			Name:         keyUserUsername,
-			Type:         "text",
 			DefaultValue: defaultUser.Username,
 		},
 		PasswordInput: components.Input{

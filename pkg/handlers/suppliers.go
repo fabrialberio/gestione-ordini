@@ -63,13 +63,11 @@ func GetSupplier(w http.ResponseWriter, r *http.Request) {
 		NameInput: components.Input{
 			Label:        "Nome",
 			Name:         keySupplierName,
-			Type:         "text",
 			DefaultValue: defaultSupplier.Name,
 		},
 		EmailInput: components.Input{
 			Label:        "Email",
 			Name:         keySupplierEmail,
-			Type:         "text",
 			DefaultValue: defaultSupplier.Email,
 		},
 	}

@@ -92,13 +92,11 @@ func GetAllOrders(w http.ResponseWriter, r *http.Request) {
 		StartDateInput: components.Input{
 			Label:        "Da",
 			Name:         keyOrderSelectionStart,
-			Type:         "date",
 			DefaultValue: defaultStart.Format(dateFormat),
 		},
 		EndDateInput: components.Input{
 			Label:        "A",
 			Name:         keyOrderSelectionEnd,
-			Type:         "date",
 			DefaultValue: defaultStart.Add(weekDuration).Format(dateFormat),
 		},
 		SupplierSelect: components.Select{

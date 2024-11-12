@@ -1,7 +1,21 @@
-{{ define "input" }}
+{{ define "textInput" }}
 <div>
   <label for="{{ .Name }}-input">{{ .Label }}</label>
-  <input id="{{ .Name }}-input" type="{{ .Type }}" name="{{ .Name }}" value="{{ .DefaultValue }}" required>
+  <input id="{{ .Name }}-input" type="text" name="{{ .Name }}" value="{{ .DefaultValue }}" required>
+</div>
+{{ end }}
+
+{{ define "dateInput" }}
+<div>
+  <label for="{{ .Name }}-input">{{ .Label }}</label>
+  <input id="{{ .Name }}-input" type="date" name="{{ .Name }}" value="{{ .DefaultValue }}" required>
+</div>
+{{ end }}
+
+{{ define "amountInput" }}
+<div>
+  <label for="{{ .Name }}-input">{{ .Label }}</label>
+  <input id="{{ .Name }}-input" type="number" min="1" name="{{ .Name }}" value="{{ .DefaultValue }}" required>
 </div>
 {{ end }}
 

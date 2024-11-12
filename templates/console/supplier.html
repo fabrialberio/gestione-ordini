@@ -18,8 +18,8 @@
         <input type="hidden" name="supplier.id" value="{{ .Supplier.ID }}">
         <input type="hidden" name="isNew" value="{{ .IsNew }}">
         
-        {{ template "input" .NameInput }}
-        {{ template "input" .EmailInput }}
+        {{ template "textInput" .NameInput }}
+        {{ template "textInput" .EmailInput }}
 
         {{ template "formCreateSaveButtons" .IsNew }}
       </form>
