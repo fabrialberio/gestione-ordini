@@ -10,6 +10,13 @@ import (
 	"time"
 )
 
+type orderSelection struct {
+	Start        time.Time
+	End          time.Time
+	SupplierID   int
+	AllSuppliers bool
+}
+
 func GetAllOrders(w http.ResponseWriter, r *http.Request) {
 	defaultStart := currentWeekStart()
 	weekDuration := time.Hour * 24 * 6
@@ -63,21 +70,22 @@ func GetAllOrders(w http.ResponseWriter, r *http.Request) {
 }
 
 func PostOrderSelection(w http.ResponseWriter, r *http.Request) {
-	start, _ := time.Parse(dateFormat, r.FormValue(keyOrderSelectionStart))
-	end, _ := time.Parse(dateFormat, r.FormValue(keyOrderSelectionEnd))
-	supplierId, _ := strconv.Atoi(r.FormValue(keyOrderSelectionSupplierID))
-	allSuppliers := supplierId == 0
+	selection, err := parseOrderSelectionForm(r)
+	if err != nil {
+		ShowItemInvalidFormError(w, r, err)
+		return
+	}
 
-	orders, err := getFilteredOrders(r, start, end, supplierId)
+	orders, err := getFilteredOrders(r, selection)
 	if err != nil {
 		ShowDatabaseQueryError(w, r, err)
 		return
 	}
 
 	// TODO: Move this to exporters
-	filename := "ordini_" + start.Format("2006-01-02") + "_" + end.Format("2006-01-02")
-	if !allSuppliers {
-		supplier, _ := appContext.Database(r).FindSupplier(supplierId)
+	filename := "ordini_" + selection.Start.Format("2006-01-02") + "_" + selection.End.Format("2006-01-02")
+	if !selection.AllSuppliers {
+		supplier, _ := appContext.Database(r).FindSupplier(selection.SupplierID)
 		filename += "_" + supplier.Name
 	}
 
@@ -91,11 +99,9 @@ func PostOrderSelection(w http.ResponseWriter, r *http.Request) {
 }
 
 func PostOrderSelectionCount(w http.ResponseWriter, r *http.Request) {
-	start, _ := time.Parse(dateFormat, r.FormValue(keyOrderSelectionStart))
-	end, _ := time.Parse(dateFormat, r.FormValue(keyOrderSelectionEnd))
-	supplierId, _ := strconv.Atoi(r.FormValue(keyOrderSelectionSupplierID))
+	selection, _ := parseOrderSelectionForm(r)
 
-	orders, err := getFilteredOrders(r, start, end, supplierId)
+	orders, err := getFilteredOrders(r, selection)
 	if err != nil {
 		logError(r, err)
 		return
@@ -104,17 +110,33 @@ func PostOrderSelectionCount(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte(strconv.Itoa(len(orders))))
 }
 
-// TODO: Add parseOrderSelection function
+func parseOrderSelectionForm(r *http.Request) (sel orderSelection, err error) {
+	sel.Start, err = time.Parse(dateFormat, r.FormValue(keyOrderSelectionStart))
+	if err != nil {
+		return
+	}
+	sel.End, err = time.Parse(dateFormat, r.FormValue(keyOrderSelectionEnd))
+	if err != nil {
+		return
+	}
+	sel.SupplierID, err = strconv.Atoi(r.FormValue(keyOrderSelectionSupplierID))
+	if err != nil {
+		return
+	}
+	sel.AllSuppliers = sel.SupplierID == 0
 
-func getFilteredOrders(r *http.Request, start time.Time, end time.Time, supplierId int) ([]database.Order, error) {
-	orders, err := appContext.Database(r).FindAllOrdersWithExpiresAtBetween(start, end)
+	return
+}
+
+func getFilteredOrders(r *http.Request, sel orderSelection) ([]database.Order, error) {
+	orders, err := appContext.Database(r).FindAllOrdersWithExpiresAtBetween(sel.Start, sel.End)
 	if err != nil {
 		return nil, err
 	}
 
 	var filteredOrders []database.Order
 	for _, o := range orders {
-		if o.Product.SupplierID == supplierId || supplierId == 0 {
+		if o.Product.SupplierID == sel.SupplierID || sel.AllSuppliers {
 			filteredOrders = append(filteredOrders, o)
 		}
 	}
