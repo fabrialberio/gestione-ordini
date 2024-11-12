@@ -82,7 +82,6 @@ func PostOrderSelection(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// TODO: Move this to exporters
 	filename := "ordini_" + selection.Start.Format("2006-01-02") + "_" + selection.End.Format("2006-01-02")
 	if !selection.AllSuppliers {
 		supplier, _ := appContext.Database(r).FindSupplier(selection.SupplierID)
