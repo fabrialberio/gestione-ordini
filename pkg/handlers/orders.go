@@ -9,7 +9,7 @@ import (
 	"time"
 )
 
-func GetChefOrder(w http.ResponseWriter, r *http.Request) {
+func GetOrder(w http.ResponseWriter, r *http.Request) {
 	user, err := appContext.AuthenticatedUser(r)
 	if err != nil {
 		LogoutError(w, r, err)
@@ -32,7 +32,7 @@ func GetChefOrder(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		if defaultOrder.UserID != user.ID {
+		if user.RoleID == database.RoleIDChef && defaultOrder.UserID != user.ID {
 			ShowItemNotAllowedError(w, r, err)
 			return
 		}
@@ -77,6 +77,16 @@ func GetChefOrder(w http.ResponseWriter, r *http.Request) {
 }
 
 func PostChefOrder(w http.ResponseWriter, r *http.Request) {
+	postOrder(w, r)
+	http.Redirect(w, r, DestChef, http.StatusSeeOther)
+}
+
+func PostConsoleOrder(w http.ResponseWriter, r *http.Request) {
+	postOrder(w, r)
+	http.Redirect(w, r, DestNewOrder, http.StatusSeeOther)
+}
+
+func postOrder(w http.ResponseWriter, r *http.Request) {
 	isNew := r.FormValue("isNew") == "true"
 	delete := r.Form.Has("delete")
 
@@ -107,8 +117,6 @@ func PostChefOrder(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 	}
-
-	http.Redirect(w, r, DestChef, http.StatusSeeOther)
 }
 
 func parseOrderFromForm(r *http.Request) (database.Order, error) {

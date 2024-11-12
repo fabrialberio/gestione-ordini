@@ -88,14 +88,15 @@ func addAdminUserIfNotExists(db *database.GormDB) {
 func setupRoutes(mux *http.ServeMux) {
 	chefMux := http.NewServeMux()
 	chefMux.HandleFunc("GET "+handlers.DestChef, handlers.GetChef)
-	chefMux.HandleFunc("GET "+handlers.DestChefOrders+"{id}", handlers.GetChefOrder)
+	chefMux.HandleFunc("GET "+handlers.DestChefOrders+"{id}", handlers.GetOrder)
 	chefMux.HandleFunc("POST "+handlers.DestChefOrders, handlers.PostChefOrder)
 	chefMux.HandleFunc("GET "+handlers.DestChefOrdersView, handlers.GetChefOrdersView)
-	chefMux.HandleFunc("POST "+handlers.DestProductSearch, handlers.PostProductSearch)
-	chefMux.HandleFunc("POST "+handlers.DestOrderAmountInput, handlers.PostOrderAmountInput)
 
 	consoleMux := http.NewServeMux()
 	consoleMux.HandleFunc("GET "+handlers.DestConsole, handlers.GetConsole)
+	consoleMux.HandleFunc("GET "+handlers.DestNewOrder, handlers.GetNewOrder)
+	consoleMux.HandleFunc("GET "+handlers.DestOrders, handlers.GetOrder)
+	consoleMux.HandleFunc("POST "+handlers.DestOrders, handlers.PostConsoleOrder)
 	consoleMux.HandleFunc("GET "+handlers.DestAllOrders, handlers.GetAllOrders)
 	consoleMux.HandleFunc("GET "+handlers.DestAllOrdersView, handlers.GetAllOrdersView)
 	consoleMux.HandleFunc("POST "+handlers.DestOrderSelection, handlers.PostOrderSelection)
@@ -122,6 +123,9 @@ func setupRoutes(mux *http.ServeMux) {
 	mux.HandleFunc("POST /login", handlers.PostLogin)
 	mux.HandleFunc("GET /logout", handlers.Logout)
 	mux.Handle("GET /public/", http.FileServerFS(publicFS))
+	mux.HandleFunc("POST "+handlers.DestProductSearch, handlers.PostProductSearch)
+	mux.HandleFunc("POST "+handlers.DestOrderAmountInput, handlers.PostOrderAmountInput)
+
 	mux.Handle(handlers.DestChef, mw.WithUserCheck(
 		func(u *database.User) bool { return u.RoleID == database.RoleIDChef },
 		chefMux,
