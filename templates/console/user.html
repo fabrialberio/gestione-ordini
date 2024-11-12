@@ -24,7 +24,10 @@
         {{ template "textInput" .UsernameInput }}
 
         {{ if .IsNew }}
-        {{ template "textInput" .PasswordInput }}
+        <div>
+          <label for="passwordInput">Password</label>
+          <input id="passwordInput" type="text" name="{{ .PasswordInput.Name }}">
+        </div>
         {{ else }}
         {{ template "hiddenPasswordInput" .PasswordInput }}
         {{ end }}
