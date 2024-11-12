@@ -93,7 +93,7 @@ func getOrder(w http.ResponseWriter, r *http.Request, ordersUrl string) {
 		OrdersURL: ordersUrl,
 	}
 
-	appContext.ExecuteTemplate(w, r, "chefOrder.html", data)
+	appContext.ExecuteTemplate(w, r, "order.html", data)
 }
 
 func postOrder(w http.ResponseWriter, r *http.Request) {
