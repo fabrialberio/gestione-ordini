@@ -28,7 +28,7 @@ func GetNewOrder(w http.ResponseWriter, r *http.Request) {
 		AmountInput    components.Input
 		ExpiresAtInput components.Input
 	}{
-		Sidebar: currentSidebar(0, user.RoleID == database.RoleIDAdministrator),
+		Sidebar: currentSidebar(sidebarIndexNewOrder, user.RoleID == database.RoleIDAdministrator),
 		ProductInput: components.ProductInput{
 			ProductSelectName: keyOrderProductID,
 			ProductSearchURL:  DestProductSearch,

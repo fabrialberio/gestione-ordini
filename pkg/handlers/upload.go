@@ -37,7 +37,7 @@ func GetUpload(w http.ResponseWriter, r *http.Request) {
 		TableSelect   components.Select
 		KeepIdsSelect components.Select
 	}{
-		Sidebar: currentSidebar(5, true),
+		Sidebar: currentSidebar(sidebarIndexUpload, true),
 		TableSelect: components.Select{
 			Name:  "table",
 			Label: "Tabella",

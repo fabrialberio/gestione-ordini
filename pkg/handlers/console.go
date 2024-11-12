@@ -9,6 +9,15 @@ import (
 	"time"
 )
 
+const (
+	sidebarIndexNewOrder int = iota
+	sidebarIndexAllOrders
+	sidebarIndexProducts
+	sidebarIndexSuppliers
+	sidebarIndexUsers
+	sidebarIndexUpload
+)
+
 func currentSidebar(selected int, isAdmin bool) []components.SidebarDest {
 	sidebar := []components.SidebarDest{
 		{
@@ -46,7 +55,7 @@ func currentSidebar(selected int, isAdmin bool) []components.SidebarDest {
 				Label:       "Importa",
 			},
 		)
-	} else if selected >= 4 {
+	} else if selected > sidebarIndexSuppliers {
 		return sidebar
 	}
 
@@ -88,7 +97,7 @@ func GetAllOrders(w http.ResponseWriter, r *http.Request) {
 		EndDateInput   components.Input
 		SupplierSelect components.Select
 	}{
-		Sidebar: currentSidebar(1, user.RoleID == database.RoleIDAdministrator),
+		Sidebar: currentSidebar(sidebarIndexAllOrders, user.RoleID == database.RoleIDAdministrator),
 		StartDateInput: components.Input{
 			Label:        "Da",
 			Name:         keyOrderSelectionStart,
@@ -120,7 +129,7 @@ func GetProducts(w http.ResponseWriter, r *http.Request) {
 	data := struct {
 		Sidebar []components.SidebarDest
 	}{
-		Sidebar: currentSidebar(2, user.RoleID == database.RoleIDAdministrator),
+		Sidebar: currentSidebar(sidebarIndexProducts, user.RoleID == database.RoleIDAdministrator),
 	}
 
 	appContext.ExecuteTemplate(w, r, "products.html", data)
@@ -136,7 +145,7 @@ func GetSuppliers(w http.ResponseWriter, r *http.Request) {
 	data := struct {
 		Sidebar []components.SidebarDest
 	}{
-		Sidebar: currentSidebar(3, user.RoleID == database.RoleIDAdministrator),
+		Sidebar: currentSidebar(sidebarIndexSuppliers, user.RoleID == database.RoleIDAdministrator),
 	}
 
 	appContext.ExecuteTemplate(w, r, "suppliers.html", data)
@@ -155,7 +164,7 @@ func GetUsers(w http.ResponseWriter, r *http.Request) {
 	data := struct {
 		Sidebar []components.SidebarDest
 	}{
-		Sidebar: currentSidebar(4, true),
+		Sidebar: currentSidebar(sidebarIndexUsers, true),
 	}
 
 	appContext.ExecuteTemplate(w, r, "users.html", data)
