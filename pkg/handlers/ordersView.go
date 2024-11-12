@@ -19,7 +19,7 @@ var weekdayNames = map[time.Weekday]string{
 	time.Sunday:    "dom",
 }
 
-func GetChefOrdersView(w http.ResponseWriter, r *http.Request) {
+func GetOwnOrdersView(w http.ResponseWriter, r *http.Request) {
 	offset, _ := strconv.Atoi(r.URL.Query().Get("offset"))
 
 	user, err := appContext.AuthenticatedUser(r)
@@ -34,7 +34,7 @@ func GetChefOrdersView(w http.ResponseWriter, r *http.Request) {
 	}
 
 	data := calculateOrdersView(offset, orders)
-	data.OrdersViewURL = DestChefOrdersView
+	data.OrdersViewURL = DestOwnOrdersView
 	data.OrdersURL = DestChefOrders
 
 	appContext.ExecuteTemplate(w, r, "ordersView", data)
@@ -50,6 +50,8 @@ func GetAllOrdersView(w http.ResponseWriter, r *http.Request) {
 
 	data := calculateOrdersView(offset, orders)
 	data.OrdersViewURL = DestAllOrdersView
+	data.OrdersURL = DestOrders
+	data.UsersURL = DestUsers
 
 	appContext.ExecuteTemplate(w, r, "ordersView", data)
 }

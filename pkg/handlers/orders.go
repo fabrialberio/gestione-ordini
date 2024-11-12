@@ -10,6 +10,24 @@ import (
 )
 
 func GetChefOrder(w http.ResponseWriter, r *http.Request) {
+	getOrder(w, r, DestChefOrders)
+}
+
+func GetConsoleOrder(w http.ResponseWriter, r *http.Request) {
+	getOrder(w, r, DestOrders)
+}
+
+func PostChefOrder(w http.ResponseWriter, r *http.Request) {
+	postOrder(w, r)
+	http.Redirect(w, r, DestChef, http.StatusSeeOther)
+}
+
+func PostConsoleOrder(w http.ResponseWriter, r *http.Request) {
+	postOrder(w, r)
+	http.Redirect(w, r, DestNewOrder, http.StatusSeeOther)
+}
+
+func getOrder(w http.ResponseWriter, r *http.Request, ordersUrl string) {
 	user, err := appContext.AuthenticatedUser(r)
 	if err != nil {
 		LogoutError(w, r, err)
@@ -32,7 +50,7 @@ func GetChefOrder(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		if defaultOrder.UserID != user.ID {
+		if user.RoleID == database.RoleIDChef && defaultOrder.UserID != user.ID {
 			ShowItemNotAllowedError(w, r, err)
 			return
 		}
@@ -52,6 +70,7 @@ func GetChefOrder(w http.ResponseWriter, r *http.Request) {
 		AmountInput    components.Input
 		ExpiresAtInput components.Input
 		UserID         int
+		OrdersURL      string
 	}{
 		IsNew: isNew,
 		Order: defaultOrder,
@@ -70,13 +89,14 @@ func GetChefOrder(w http.ResponseWriter, r *http.Request) {
 			Type:         "date",
 			DefaultValue: defaultOrder.ExpiresAt.Format(dateFormat),
 		},
-		UserID: user.ID,
+		UserID:    user.ID,
+		OrdersURL: ordersUrl,
 	}
 
 	appContext.ExecuteTemplate(w, r, "chefOrder.html", data)
 }
 
-func PostChefOrder(w http.ResponseWriter, r *http.Request) {
+func postOrder(w http.ResponseWriter, r *http.Request) {
 	isNew := r.FormValue("isNew") == "true"
 	delete := r.Form.Has("delete")
 
@@ -107,8 +127,6 @@ func PostChefOrder(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 	}
-
-	http.Redirect(w, r, DestChef, http.StatusSeeOther)
 }
 
 func parseOrderFromForm(r *http.Request) (database.Order, error) {

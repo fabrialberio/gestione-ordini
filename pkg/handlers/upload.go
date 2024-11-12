@@ -37,7 +37,7 @@ func GetUpload(w http.ResponseWriter, r *http.Request) {
 		TableSelect   components.Select
 		KeepIdsSelect components.Select
 	}{
-		Sidebar: currentSidebar(4, true),
+		Sidebar: currentSidebar(5, true),
 		TableSelect: components.Select{
 			Name:  "table",
 			Label: "Tabella",
@@ -92,6 +92,8 @@ func PostUploadPreview(w http.ResponseWriter, r *http.Request) {
 		appContext.ExecuteTemplate(w, r, "uploadPlaceholder", nil)
 		return
 	}
+
+	// TODO: Tables with 1 row not shown??
 
 	data := components.PreviewTable{
 		TableURL:    DestUploadPreview,

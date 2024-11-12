@@ -12,9 +12,14 @@ import (
 func currentSidebar(selected int, isAdmin bool) []components.SidebarDest {
 	sidebar := []components.SidebarDest{
 		{
+			DestURL:     DestNewOrder,
+			FasIconName: "fa-circle-plus",
+			Label:       "Nuovo ordine",
+		},
+		{
 			DestURL:     DestAllOrders,
 			FasIconName: "fa-calendar-check",
-			Label:       "Ordini",
+			Label:       "Tutti gli ordini",
 		},
 		{
 			DestURL:     DestProducts,
@@ -41,7 +46,7 @@ func currentSidebar(selected int, isAdmin bool) []components.SidebarDest {
 				Label:       "Importa",
 			},
 		)
-	} else if selected >= 3 {
+	} else if selected >= 4 {
 		return sidebar
 	}
 
@@ -83,7 +88,7 @@ func GetAllOrders(w http.ResponseWriter, r *http.Request) {
 		EndDateInput   components.Input
 		SupplierSelect components.Select
 	}{
-		Sidebar: currentSidebar(0, user.RoleID == database.RoleIDAdministrator),
+		Sidebar: currentSidebar(1, user.RoleID == database.RoleIDAdministrator),
 		StartDateInput: components.Input{
 			Label:        "Da",
 			Name:         keyOrderSelectionStart,
@@ -117,7 +122,7 @@ func GetProducts(w http.ResponseWriter, r *http.Request) {
 	data := struct {
 		Sidebar []components.SidebarDest
 	}{
-		Sidebar: currentSidebar(1, user.RoleID == database.RoleIDAdministrator),
+		Sidebar: currentSidebar(2, user.RoleID == database.RoleIDAdministrator),
 	}
 
 	appContext.ExecuteTemplate(w, r, "products.html", data)
@@ -133,7 +138,7 @@ func GetSuppliers(w http.ResponseWriter, r *http.Request) {
 	data := struct {
 		Sidebar []components.SidebarDest
 	}{
-		Sidebar: currentSidebar(2, user.RoleID == database.RoleIDAdministrator),
+		Sidebar: currentSidebar(3, user.RoleID == database.RoleIDAdministrator),
 	}
 
 	appContext.ExecuteTemplate(w, r, "suppliers.html", data)
@@ -152,7 +157,7 @@ func GetUsers(w http.ResponseWriter, r *http.Request) {
 	data := struct {
 		Sidebar []components.SidebarDest
 	}{
-		Sidebar: currentSidebar(3, true),
+		Sidebar: currentSidebar(4, true),
 	}
 
 	appContext.ExecuteTemplate(w, r, "users.html", data)

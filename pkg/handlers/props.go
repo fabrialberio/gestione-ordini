@@ -31,17 +31,21 @@ const (
 	keyOrderSelectionEnd        = "orderSelection.end"
 	keyOrderSelectionSupplierID = "orderSelection.supplier"
 
-	DestFirstLogin = "/firstLogin"
+	// common
+	DestFirstLogin       = "/firstLogin"
+	DestApi              = "/api/"
+	DestProductSearch    = "/api/productSearch"
+	DestOrderAmountInput = "/api/orderAmountInput"
+	DestOwnOrdersView    = "/api/ownOrdersView"
 
 	// chef
-	DestChef             = "/chef/"
-	DestChefOrders       = "/chef/orders/"
-	DestChefOrdersView   = "/chef/ordersView"
-	DestProductSearch    = "/chef/productSearch"
-	DestOrderAmountInput = "/chef/orderAmountInput"
+	DestChef       = "/chef/"
+	DestChefOrders = "/chef/orders/"
 
 	// admin and manager
 	DestConsole             = "/console/"
+	DestNewOrder            = "/console/newOrder/"
+	DestOrders              = "/console/orders/"
 	DestAllOrders           = "/console/allOrders/"
 	DestAllOrdersView       = "/console/allOrdersView"
 	DestOrderSelection      = "/console/orderSelection/"

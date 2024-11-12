@@ -30,7 +30,7 @@ func main() {
 
 	server := http.Server{
 		Addr:    ":8080",
-		Handler: mw.WithLogging(mw.WithContext(db, tmpl, mux)),
+		Handler: mw.WithContext(db, tmpl, mux),
 	}
 
 	log.Println("Server started on port 8080.")
@@ -90,31 +90,41 @@ func setupRoutes(mux *http.ServeMux) {
 	chefMux.HandleFunc("GET "+handlers.DestChef, handlers.GetChef)
 	chefMux.HandleFunc("GET "+handlers.DestChefOrders+"{id}", handlers.GetChefOrder)
 	chefMux.HandleFunc("POST "+handlers.DestChefOrders, handlers.PostChefOrder)
-	chefMux.HandleFunc("GET "+handlers.DestChefOrdersView, handlers.GetChefOrdersView)
-	chefMux.HandleFunc("POST "+handlers.DestProductSearch, handlers.PostProductSearch)
-	chefMux.HandleFunc("POST "+handlers.DestOrderAmountInput, handlers.PostOrderAmountInput)
 
 	consoleMux := http.NewServeMux()
 	consoleMux.HandleFunc("GET "+handlers.DestConsole, handlers.GetConsole)
+	consoleMux.HandleFunc("GET "+handlers.DestNewOrder, handlers.GetNewOrder)
+	consoleMux.HandleFunc("GET "+handlers.DestOrders+"{id}", handlers.GetConsoleOrder)
+	consoleMux.HandleFunc("POST "+handlers.DestOrders, handlers.PostConsoleOrder)
+
 	consoleMux.HandleFunc("GET "+handlers.DestAllOrders, handlers.GetAllOrders)
 	consoleMux.HandleFunc("GET "+handlers.DestAllOrdersView, handlers.GetAllOrdersView)
 	consoleMux.HandleFunc("POST "+handlers.DestOrderSelection, handlers.PostOrderSelection)
 	consoleMux.HandleFunc("POST "+handlers.DestOrderSelectionCount, handlers.PostOrderSelectionCount)
+
 	consoleMux.HandleFunc("GET "+handlers.DestProducts, handlers.GetProducts)
 	consoleMux.HandleFunc("GET "+handlers.DestProducts+"{id}", handlers.GetProduct)
 	consoleMux.HandleFunc("POST "+handlers.DestProducts, handlers.PostProduct)
 	consoleMux.HandleFunc("GET "+handlers.DestProductsTable, handlers.GetProductsTable)
+
 	consoleMux.HandleFunc("GET "+handlers.DestSuppliers, handlers.GetSuppliers)
 	consoleMux.HandleFunc("GET "+handlers.DestSuppliers+"{id}", handlers.GetSupplier)
 	consoleMux.HandleFunc("POST "+handlers.DestSuppliers, handlers.PostSupplier)
 	consoleMux.HandleFunc("GET "+handlers.DestSuppliersTable, handlers.GetSuppliersTable)
+
 	consoleMux.HandleFunc("GET "+handlers.DestUsers, handlers.GetUsers)
 	consoleMux.HandleFunc("GET "+handlers.DestUsers+"{id}", handlers.GetUser)
 	consoleMux.HandleFunc("POST "+handlers.DestUsers, handlers.PostUser)
 	consoleMux.HandleFunc("GET "+handlers.DestUsersTable, handlers.GetUsersTable)
+
 	consoleMux.HandleFunc("GET "+handlers.DestUpload, handlers.GetUpload)
 	consoleMux.HandleFunc("POST "+handlers.DestUpload, handlers.PostUpload)
 	consoleMux.HandleFunc("POST "+handlers.DestUploadPreview, handlers.PostUploadPreview)
+
+	apiMux := http.NewServeMux()
+	apiMux.HandleFunc("POST "+handlers.DestProductSearch, handlers.PostProductSearch)
+	apiMux.HandleFunc("POST "+handlers.DestOrderAmountInput, handlers.PostOrderAmountInput)
+	apiMux.HandleFunc("GET "+handlers.DestOwnOrdersView, handlers.GetOwnOrdersView)
 
 	mux.HandleFunc("/", handlers.GetIndex)
 	mux.HandleFunc("GET "+handlers.DestFirstLogin, handlers.GetFirstLogin)
@@ -122,14 +132,19 @@ func setupRoutes(mux *http.ServeMux) {
 	mux.HandleFunc("POST /login", handlers.PostLogin)
 	mux.HandleFunc("GET /logout", handlers.Logout)
 	mux.Handle("GET /public/", http.FileServerFS(publicFS))
-	mux.Handle(handlers.DestChef, mw.WithUserCheck(
+
+	mux.Handle(handlers.DestChef, mw.WithLogging(mw.WithUserCheck(
 		func(u *database.User) bool { return u.RoleID == database.RoleIDChef },
 		chefMux,
-	))
-	mux.Handle(handlers.DestConsole, mw.WithUserCheck(
+	)))
+	mux.Handle(handlers.DestConsole, mw.WithLogging(mw.WithUserCheck(
 		func(u *database.User) bool {
 			return u.RoleID == database.RoleIDManager || u.RoleID == database.RoleIDAdministrator
 		},
 		consoleMux,
+	)))
+	mux.Handle(handlers.DestApi, mw.WithUserCheck(
+		func(user *database.User) bool { return true },
+		apiMux,
 	))
 }
