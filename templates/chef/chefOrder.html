@@ -15,6 +15,7 @@
       hx-target="#amountInput"
       hx-trigger="change, load">
         <input type="hidden" name="order.id" value="{{ .Order.ID }}">
+        <input type="hidden" name="order.userId" value="{{ .Order.UserID }}">
         <input type="hidden" name="isNew" value="false">
         
         {{ template "productInput" .ProductInput }}
