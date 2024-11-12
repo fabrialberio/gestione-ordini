@@ -662,6 +662,14 @@ video {
   max-width: 24rem;
 }
 
+.flex-none {
+  flex: none;
+}
+
+.flex-grow-0 {
+  flex-grow: 0;
+}
+
 .basis-1\/2 {
   flex-basis: 50%;
 }
