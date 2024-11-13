@@ -17,7 +17,7 @@
         <form class="card" method="post" action="/console/upload/" enctype="multipart/form-data"
           hx-post="/console/uploadPreview"
           hx-target="#previewTable"
-          hx-trigger="change"
+          hx-trigger="change, load"
           hx-encoding="multipart/form-data">
           
           {{ template "select" .TableSelect }}
