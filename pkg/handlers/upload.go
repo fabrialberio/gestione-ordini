@@ -48,11 +48,12 @@ func GetUpload(w http.ResponseWriter, r *http.Request) {
 		},
 		KeepIdsSelect: components.Select{
 			Name:  "keepIds",
-			Label: "Mantieni ID",
+			Label: "Comportamento",
 			Options: []components.SelectOption{
-				{Value: 1, Text: "Sì"},
-				{Value: 0, Text: "No"},
+				{Value: 0, Text: "Aggiungi"},
+				{Value: 1, Text: "Aggiorna in base all'ID"},
 			},
+			Selected: 0,
 		},
 	}
 
@@ -120,7 +121,11 @@ func PostUpload(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		err = appContext.Database(r).CreateAllProducts(products)
+		if form.KeepIds {
+			err = appContext.Database(r).UpdateAllProducts(products)
+		} else {
+			err = appContext.Database(r).CreateAllProducts(products)
+		}
 		if err != nil {
 			ShowDatabaseQueryError(w, r, err)
 			return
@@ -132,7 +137,11 @@ func PostUpload(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		err = appContext.Database(r).CreateAllUsers(users)
+		if form.KeepIds {
+			err = appContext.Database(r).CreateAllUsers(users)
+		} else {
+			err = appContext.Database(r).UpdateAllUsers(users)
+		}
 		if err != nil {
 			ShowDatabaseQueryError(w, r, err)
 			return
