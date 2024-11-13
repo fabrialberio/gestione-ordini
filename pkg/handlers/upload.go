@@ -63,7 +63,7 @@ func GetUpload(w http.ResponseWriter, r *http.Request) {
 func PostUploadPreview(w http.ResponseWriter, r *http.Request) {
 	form, err := parseUploadForm(r)
 	if err != nil {
-		appContext.ExecuteTemplate(w, r, "uploadPlaceholder", nil)
+		appContext.ExecuteTemplate(w, r, "infoCard", "Nessun file selezionato")
 		return
 	}
 
@@ -89,9 +89,6 @@ func PostUploadPreview(w http.ResponseWriter, r *http.Request) {
 		}
 
 		headings, rows = composeUsersPreview(form, users)
-	default:
-		appContext.ExecuteTemplate(w, r, "uploadPlaceholder", nil)
-		return
 	}
 
 	data := components.PreviewTable{
