@@ -3,6 +3,7 @@ package database
 import (
 	"fmt"
 
+	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 )
 
@@ -122,6 +123,21 @@ func (db *GormDB) CreateAllProducts(products []Product) error {
 func (db *GormDB) UpdateProduct(product Product) error {
 	columns := []string{"id_tipologia", "id_fornitore", "id_unita_di_misura", "descrizione", "codice"}
 	return db.conn.Model(&product).Select(columns).Updates(product).Error
+}
+
+func (db *GormDB) UpdateAllProducts(products []Product) error {
+	return db.conn.Transaction(func(tx *gorm.DB) error {
+		db := GormDB{conn: tx}
+
+		for _, p := range products {
+			err := db.UpdateProduct(p)
+			if err != nil {
+				return err
+			}
+		}
+
+		return nil
+	})
 }
 
 func (db *GormDB) DeleteProduct(id int) error {

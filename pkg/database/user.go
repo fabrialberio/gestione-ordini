@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"time"
 
+	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 )
 
@@ -102,6 +103,21 @@ func (db *GormDB) UpdateUser(user User) error {
 	}
 
 	return db.conn.Model(&user).Select(columns).Updates(user).Error
+}
+
+func (db *GormDB) UpdateAllUsers(users []User) error {
+	return db.conn.Transaction(func(tx *gorm.DB) error {
+		db := GormDB{conn: tx}
+
+		for _, u := range users {
+			err := db.UpdateUser(u)
+			if err != nil {
+				return err
+			}
+		}
+
+		return nil
+	})
 }
 
 func (db *GormDB) DeleteUser(id int) error {
