@@ -94,11 +94,9 @@ func PostUploadPreview(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// TODO: Tables with 1 row not shown??
-
 	data := components.PreviewTable{
 		TableURL:    DestUploadPreview,
-		MaxRowCount: 8,
+		MaxRowCount: min(len(rows), 8),
 		Headings:    headings,
 		Rows:        rows,
 	}
