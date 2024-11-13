@@ -9,9 +9,7 @@
     
     <main>
       <h2>{{ .Title }}</h2>
-      <div class="font-mono text-sm card">
-        <p>{{ .ErrorMsg }}</p>
-      </div>
+      {{ template "errorCard" .ErrorMsg }}
     </main>
   </body>
 </html>

@@ -75,7 +75,7 @@ func PostUploadPreview(w http.ResponseWriter, r *http.Request) {
 		products, err := files.ImportProductsFromCSV(form.CSVFile, form.KeepIds)
 		if err != nil {
 			logError(r, err)
-			appContext.ExecuteTemplate(w, r, "uploadError", err.Error())
+			appContext.ExecuteTemplate(w, r, "errorCard", err.Error())
 			return
 		}
 
@@ -84,7 +84,7 @@ func PostUploadPreview(w http.ResponseWriter, r *http.Request) {
 		users, err := files.ImportUsersFromCSV(form.CSVFile, form.KeepIds)
 		if err != nil {
 			logError(r, err)
-			appContext.ExecuteTemplate(w, r, "uploadError", err.Error())
+			appContext.ExecuteTemplate(w, r, "errorCard", err.Error())
 			return
 		}
 
