@@ -8,7 +8,24 @@ import (
 	"strconv"
 )
 
+type ProductsTableQuery struct {
+	OrderBy     int
+	OrderDesc   bool
+	MaxRowCount int
+}
+
 func GetProductsTable(w http.ResponseWriter, r *http.Request) {
+	query := parseProductsTableQuery(r)
+
+	products, err := appContext.Database(r).FindAllProducts(query.OrderBy, query.OrderDesc, query.MaxRowCount+1)
+	if err != nil {
+		logError(r, err)
+	}
+
+	appContext.ExecuteTemplate(w, r, "productsTable", composeProductsTable(query, products))
+}
+
+func parseProductsTableQuery(r *http.Request) ProductsTableQuery {
 	orderBy, err := strconv.Atoi(r.URL.Query().Get("orderBy"))
 	if err != nil {
 		orderBy = database.OrderProductByID
@@ -20,22 +37,21 @@ func GetProductsTable(w http.ResponseWriter, r *http.Request) {
 		maxRowCount = 21
 	}
 
-	products, err := appContext.Database(r).FindAllProducts(orderBy, orderDesc, maxRowCount+1)
-	if err != nil {
-		logError(r, err)
+	return ProductsTableQuery{
+		OrderBy:     orderBy,
+		OrderDesc:   orderDesc,
+		MaxRowCount: maxRowCount,
 	}
+}
 
-	if maxRowCount > len(products) {
-		maxRowCount = len(products)
-	}
-
-	data := components.ProductsTable{
+func composeProductsTable(query ProductsTableQuery, products []database.Product) components.ProductsTable {
+	return components.ProductsTable{
 		Table: components.Table{
 			TableURL:        DestProductsTable,
-			OrderBy:         orderBy,
-			OrderDesc:       orderDesc,
-			MaxRowCount:     maxRowCount,
-			NextMaxRowCount: maxRowCount * 2,
+			OrderBy:         query.OrderBy,
+			OrderDesc:       query.OrderDesc,
+			MaxRowCount:     query.MaxRowCount,
+			NextMaxRowCount: query.MaxRowCount * 2,
 			Headings: []components.TableHeading{
 				{Index: database.OrderProductByID, Name: "ID"},
 				{Index: database.OrderProductByDescription, Name: "Descrizione"},
@@ -47,8 +63,6 @@ func GetProductsTable(w http.ResponseWriter, r *http.Request) {
 		},
 		Products: products,
 	}
-
-	appContext.ExecuteTemplate(w, r, "productsTable", data)
 }
 
 func GetProduct(w http.ResponseWriter, r *http.Request) {

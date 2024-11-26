@@ -12,7 +12,14 @@ import (
 
 func PostProductSearch(w http.ResponseWriter, r *http.Request) {
 	query := r.FormValue(keyProductSearchQuery)
-	productTypeIds := r.Form[keyProductSearchProductTypes]
+
+	productTypeIds := make([]int, 0)
+	for _, s := range r.Form[keyProductSearchProductTypes] {
+		id, err := strconv.Atoi(s)
+		if err == nil {
+			productTypeIds = append(productTypeIds, id)
+		}
+	}
 
 	selectedProductId := 0
 	orderId, err := strconv.Atoi(r.FormValue(keyOrderID))
@@ -29,33 +36,12 @@ func PostProductSearch(w http.ResponseWriter, r *http.Request) {
 		selectedProductId = order.ProductID
 	}
 
-	allProducts, err := appContext.Database(r).FindAllProducts(database.OrderProductByDescription, false, -1)
+	products, err := appContext.Database(r).FindAllProducts(database.OrderProductByDescription, false, -1)
 	if err != nil {
 		logError(r, err)
 	}
 
-	matchesQuery := func(p database.Product, q string) bool {
-		if q == "" {
-			return true
-		}
-
-		return strings.Contains(strings.ToLower(p.Description), strings.ToLower(q))
-	}
-
-	matchesProductTypeIds := func(p database.Product, ids []string) bool {
-		if len(ids) == 0 {
-			return true
-		}
-
-		return slices.Contains(ids, strconv.Itoa(p.ProductTypeID))
-	}
-
-	products := make([]database.Product, 0)
-	for _, p := range allProducts {
-		if matchesQuery(p, query) && matchesProductTypeIds(p, productTypeIds) {
-			products = append(products, p)
-		}
-	}
+	products = filterProducts(products, query, productTypeIds)
 
 	if len(products) > 0 {
 		for _, p := range products {
@@ -68,4 +54,31 @@ func PostProductSearch(w http.ResponseWriter, r *http.Request) {
 	} else {
 		appContext.ExecuteTemplate(w, r, "productSearchNoResults", nil)
 	}
+}
+
+func filterProducts(allProducts []database.Product, query string, productTypeIds []int) []database.Product {
+	matchesQuery := func(p database.Product, q string) bool {
+		if q == "" {
+			return true
+		}
+
+		return strings.Contains(strings.ToLower(p.Description), strings.ToLower(q))
+	}
+
+	matchesProductTypeIds := func(p database.Product, ids []int) bool {
+		if len(ids) == 0 {
+			return true
+		}
+
+		return slices.Contains(ids, p.ProductTypeID)
+	}
+
+	products := make([]database.Product, 0)
+	for _, p := range allProducts {
+		if matchesQuery(p, query) && matchesProductTypeIds(p, productTypeIds) {
+			products = append(products, p)
+		}
+	}
+
+	return products
 }
