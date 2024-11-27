@@ -10,34 +10,35 @@ import (
 )
 
 func GetUsersTable(w http.ResponseWriter, r *http.Request) {
-	orderBy, err := strconv.Atoi(r.URL.Query().Get("orderBy"))
-	if err != nil {
-		orderBy = database.OrderUserByID
-	}
-	orderDesc := r.URL.Query().Get("orderDesc") == "true"
+	query := components.ParseTableQuery(r, 0)
 
-	users, err := appContext.Database(r).FindAllUsers(orderBy, orderDesc)
+	users, err := appContext.Database(r).FindAllUsers(query.OrderBy, query.OrderDesc)
 	if err != nil {
 		logError(r, err)
 	}
 
-	data := components.UsersTable{
-		Table: components.Table{
-			TableURL:  DestUsersTable,
-			OrderBy:   orderBy,
-			OrderDesc: orderDesc,
-			Headings: []components.TableHeading{
-				{Index: database.OrderUserByID, Name: "ID"},
-				{Index: database.OrderUserByRole, Name: "Ruolo"},
-				{Index: database.OrderUserByUsername, Name: "Username"},
-				{Index: database.OrderUserByName, Name: "Nome"},
-				{Index: database.OrderUserBySurname, Name: "Cognome"},
-			},
-		},
-		Users: users,
+	headings := []components.TableHeading{
+		{Index: database.OrderUserByID, Name: "ID"},
+		{Index: database.OrderUserByRole, Name: "Ruolo"},
+		{Index: database.OrderUserByUsername, Name: "Username"},
+		{Index: database.OrderUserByName, Name: "Nome"},
+		{Index: database.OrderUserBySurname, Name: "Cognome"},
 	}
 
-	appContext.ExecuteTemplate(w, r, "usersTable", data)
+	rowFunc := func(user database.User) components.TableRow {
+		return components.TableRow{
+			EditURL: DestUsers + "/" + strconv.Itoa(user.ID),
+			Cells: []string{
+				strconv.Itoa(user.ID),
+				user.Role.Name,
+				user.Username,
+				user.Name,
+				user.Surname,
+			},
+		}
+	}
+
+	appContext.ExecuteTemplate(w, r, "table", components.ComposeTable(query, headings, rowFunc, users))
 }
 
 func GetUser(w http.ResponseWriter, r *http.Request) {

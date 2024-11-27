@@ -9,32 +9,31 @@ import (
 )
 
 func GetSuppliersTable(w http.ResponseWriter, r *http.Request) {
-	orderBy, err := strconv.Atoi(r.URL.Query().Get("orderBy"))
-	if err != nil {
-		orderBy = database.OrderSupplierByID
-	}
-	orderDesc := r.URL.Query().Get("orderDesc") == "true"
+	query := components.ParseTableQuery(r, 0)
 
-	suppliers, err := appContext.Database(r).FindAllSuppliers(orderBy, orderDesc)
+	suppliers, err := appContext.Database(r).FindAllSuppliers(query.OrderBy, query.OrderDesc)
 	if err != nil {
 		logError(r, err)
 	}
 
-	data := components.SuppliersTable{
-		Table: components.Table{
-			TableURL:  DestSuppliersTable,
-			OrderBy:   orderBy,
-			OrderDesc: orderDesc,
-			Headings: []components.TableHeading{
-				{Index: database.OrderSupplierByID, Name: "ID"},
-				{Index: database.OrderSupplierByName, Name: "Nome"},
-				{Index: database.OrderSupplierByEmail, Name: "Email"},
-			},
-		},
-		Suppliers: suppliers,
+	headings := []components.TableHeading{
+		{Index: database.OrderSupplierByID, Name: "ID"},
+		{Index: database.OrderSupplierByName, Name: "Nome"},
+		{Index: database.OrderSupplierByEmail, Name: "Email"},
 	}
 
-	appContext.ExecuteTemplate(w, r, "suppliersTable", data)
+	rowFunc := func(supplier database.Supplier) components.TableRow {
+		return components.TableRow{
+			EditURL: DestSuppliers + "/" + strconv.Itoa(supplier.ID),
+			Cells: []string{
+				strconv.Itoa(supplier.ID),
+				supplier.Name,
+				supplier.Email,
+			},
+		}
+	}
+
+	appContext.ExecuteTemplate(w, r, "table", components.ComposeTable(query, headings, rowFunc, suppliers))
 }
 
 func GetSupplier(w http.ResponseWriter, r *http.Request) {

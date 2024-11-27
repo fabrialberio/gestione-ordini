@@ -1,3 +1,36 @@
+{{ define "table" }}
+<div class="dataTable">
+  <table>
+    {{ template "sortableTableHead" . }}
+
+    {{ if .MaxRowCount }}
+    <tbody>
+      {{ range slice .Rows 0 .MaxRowCount }} 
+      {{ template "tableRow" . }}
+      {{ end }}
+      {{ if gt (len .Rows) .MaxRowCount }}
+      <tr
+        hx-get="{{ .TableURL }}?orderBy={{ .OrderBy }}&orderDesc={{ .OrderDesc }}&maxRowCount={{ .NextMaxRowCount }}"
+        hx-swap="outerHTML"
+        hx-target=".dataTable"
+        hx-trigger="revealed">
+        <td colspan="{{ len .Headings }}" class="text-on-surface-dim italic">
+          Caricamento…
+        </td>
+      </tr>
+      {{ end }}
+    </tbody>
+    {{ else }}
+    <tbody>
+      {{ range .Rows }}
+      {{ template "tableRow" . }}
+      {{ end }}
+    </tbody>
+    {{ end }}
+  </table>
+</div>
+{{ end }}
+
 {{ define "sortableTableHead" }}
 <thead>
   <tr>
@@ -17,91 +50,18 @@
 </thead>
 {{ end }}
 
-{{ define "suppliersTable" }}
-<div class="dataTable">
-  <table>
-    {{ template "sortableTableHead" . }}
+{{ define "tableRow" }}
+<tr>
+  {{ range .Cells }}
+  <td>
+    <span class="line-clamp-2">{{ . }}</span>
+  </td>
+  {{ end }}
 
-    <tbody>
-      {{ range .Suppliers }}
-      <tr>
-        <td>{{ .ID }}</td>
-        <td>{{ .Name }}</td>
-        <td>{{ .Email }}</td>
-        <td>
-          <a class="btn-md" href="/console/suppliers/{{ .ID }}">
-            <i class="fa-pen fas"></i>
-          </a>
-        </td>
-      </tr>
-      {{ end }}
-    </tbody>
-  </table>
-</div>
-{{ end }}
-
-{{ define "productsTable" }}
-<div class="dataTable">
-  <table>
-    {{ template "sortableTableHead" . }}
-
-    <tbody>
-      {{ range slice .Products 0 .MaxRowCount }} 
-      <tr>
-        <td>{{ .ID }}</td>
-        <td>
-          <span class="line-clamp-2">{{ .Description }}</span>
-        </td>
-        <td>{{ .Code }}</td>
-        <td>{{ .ProductType.Name }}</td>
-        <td>
-          <a class="link" href="/console/suppliers/{{ .Supplier.ID }}">{{ .Supplier.Name }}</a>
-        </td>
-        <td>{{ .UnitOfMeasure.Symbol }}</td>
-        <td>
-          <a class="btn-md" href="/console/products/{{ .ID }}">
-            <i class="fa-pen fas"></i>
-          </a>
-        </td>
-      </tr>
-      {{ end }}
-      {{ if gt (len .Products) .MaxRowCount }}
-      <tr
-        hx-get="{{ .TableURL }}?orderBy={{ .OrderBy }}&orderDesc={{ .OrderDesc }}&maxRowCount={{ .NextMaxRowCount }}"
-        hx-swap="outerHTML"
-        hx-target=".dataTable"
-        hx-trigger="revealed">
-        <td colspan="{{ len .Headings }}" class="text-on-surface-dim italic">
-          Caricamento altri prodotti...
-        </td>
-      </tr>
-      {{ end }}
-    </tbody>
-  </table>
-</div>
-{{ end }}
-
-{{ define "usersTable" }}
-<div class="dataTable">
-  <table>
-    {{ template "sortableTableHead" . }}
-
-    <tbody>
-      {{ range .Users }}
-      <tr>
-        <td>{{ .ID }}</td>
-        <td class="max-w-14 text-ellipsis overflow-clip">{{ .Role.Name }}</td>
-        <td>{{ .Username }}</td>
-        <td>{{ .Name }}</td>
-        <td>{{ .Surname }}</td>
-        <td>
-          <a class="btn-md" href="/console/users/{{ .ID }}">
-            <i class="fa-pen fas"></i>
-          </a>
-        </td>
-      </tr>
-      {{ end }}
-    </tbody>
-  </table>
-</div>
+  <td>
+    <a class="btn-md" href="{{ .EditURL }}">
+      <i class="fa-pen fas"></i>
+    </a>
+  </td>
+</tr>
 {{ end }}

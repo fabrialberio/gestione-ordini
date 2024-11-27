@@ -35,7 +35,7 @@ const (
 )
 
 const (
-	OrderUserByID int = iota + 1
+	OrderUserByID int = iota
 	OrderUserByRole
 	OrderUserByUsername
 	OrderUserByName

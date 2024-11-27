@@ -8,60 +8,35 @@ import (
 	"strconv"
 )
 
-type ProductsTableQuery struct {
-	OrderBy     int
-	OrderDesc   bool
-	MaxRowCount int
-}
-
 func GetProductsTable(w http.ResponseWriter, r *http.Request) {
-	query := parseProductsTableQuery(r)
+	query := components.ParseTableQuery(r, 21)
 
 	products, err := appContext.Database(r).FindAllProducts(query.OrderBy, query.OrderDesc, query.MaxRowCount+1)
 	if err != nil {
 		logError(r, err)
 	}
 
-	appContext.ExecuteTemplate(w, r, "productsTable", composeProductsTable(query, products))
+	headings := []components.TableHeading{
+		{Index: database.OrderProductByID, Name: "ID"},
+		{Index: database.OrderProductByDescription, Name: "Descrizione"},
+		{Index: database.OrderProductByCode, Name: "Codice"},
+		{Index: database.OrderProductByProductType, Name: "Tipologia"},
+		{Index: database.OrderProductBySupplier, Name: "Fornitore"},
+	}
+
+	appContext.ExecuteTemplate(w, r, "table", components.ComposeTable(query, headings, productRowFunc, products))
 }
 
-func parseProductsTableQuery(r *http.Request) ProductsTableQuery {
-	orderBy, err := strconv.Atoi(r.URL.Query().Get("orderBy"))
-	if err != nil {
-		orderBy = database.OrderProductByID
-	}
-	orderDesc := r.URL.Query().Get("orderDesc") == "true"
-
-	maxRowCount, err := strconv.Atoi(r.URL.Query().Get("maxRowCount"))
-	if err != nil {
-		maxRowCount = 21
-	}
-
-	return ProductsTableQuery{
-		OrderBy:     orderBy,
-		OrderDesc:   orderDesc,
-		MaxRowCount: maxRowCount,
-	}
-}
-
-func composeProductsTable(query ProductsTableQuery, products []database.Product) components.ProductsTable {
-	return components.ProductsTable{
-		Table: components.Table{
-			TableURL:        DestProductsTable,
-			OrderBy:         query.OrderBy,
-			OrderDesc:       query.OrderDesc,
-			MaxRowCount:     query.MaxRowCount,
-			NextMaxRowCount: query.MaxRowCount * 2,
-			Headings: []components.TableHeading{
-				{Index: database.OrderProductByID, Name: "ID"},
-				{Index: database.OrderProductByDescription, Name: "Descrizione"},
-				{Index: database.OrderProductByCode, Name: "Codice"},
-				{Index: database.OrderProductByProductType, Name: "Tipologia"},
-				{Index: database.OrderProductBySupplier, Name: "Fornitore"},
-				{Index: database.OrderProductByUnitOfMeasure, Name: "Unità"},
-			},
+func productRowFunc(product database.Product) components.TableRow {
+	return components.TableRow{
+		EditURL: DestProducts + "/" + strconv.Itoa(product.ID),
+		Cells: []string{
+			strconv.Itoa(product.ID),
+			product.Description,
+			product.Code,
+			product.ProductType.Name,
+			product.Supplier.Name,
 		},
-		Products: products,
 	}
 }
 
