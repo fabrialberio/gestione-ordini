@@ -26,13 +26,6 @@ type TableRow struct {
 	Cells   []string
 }
 
-type PreviewTable struct {
-	TableURL    string
-	MaxRowCount int
-	Headings    []TableHeading
-	Rows        [][]string
-}
-
 type TableQuery struct {
 	TableURL    string
 	OrderBy     int

@@ -68,37 +68,79 @@ func PostUploadPreview(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var headings []components.TableHeading
-	var rows [][]string
+	query := components.TableQuery{MaxRowCount: 10}
 
 	switch form.Table {
 	case tableProducts:
-		products, err := files.ImportProductsFromCSV(form.CSVFile, form.KeepIds)
-		if err != nil {
-			logError(r, err)
-			appContext.ExecuteTemplate(w, r, "errorCard", err.Error())
-			return
+		headings = []components.TableHeading{
+			{Name: "ID Tipologia"},
+			{Name: "ID Fornitore"},
+			{Name: "ID Unità di misura"},
+			{Name: "Descrizione"},
+			{Name: "Codice"},
 		}
-
-		headings, rows = composeProductsPreview(form, products)
 	case tableUsers:
-		users, err := files.ImportUsersFromCSV(form.CSVFile, form.KeepIds)
+		headings = []components.TableHeading{
+			{Name: "ID Ruolo"},
+			{Name: "Username"},
+			{Name: "Password hash"},
+			{Name: "Nome"},
+			{Name: "Cognome"},
+		}
+	}
+
+	if form.KeepIds {
+		headings = append([]components.TableHeading{{Name: "ID"}}, headings...)
+	}
+
+	var table components.Table
+	switch form.Table {
+	case tableProducts:
+		items, err := files.ImportProductsFromCSV(form.CSVFile, form.KeepIds)
 		if err != nil {
 			logError(r, err)
 			appContext.ExecuteTemplate(w, r, "errorCard", err.Error())
 			return
 		}
 
-		headings, rows = composeUsersPreview(form, users)
+		rowFunc := func(p database.Product) components.TableRow {
+			return components.TableRow{
+				Cells: []string{
+					strconv.Itoa(p.ProductTypeID),
+					strconv.Itoa(p.SupplierID),
+					strconv.Itoa(p.UnitOfMeasureID),
+					p.Description,
+					p.Code,
+				},
+			}
+		}
+
+		table = components.ComposeTable(query, headings, rowFunc, items)
+
+	case tableUsers:
+		items, err := files.ImportUsersFromCSV(form.CSVFile, form.KeepIds)
+		if err != nil {
+			logError(r, err)
+			appContext.ExecuteTemplate(w, r, "errorCard", err.Error())
+			return
+		}
+
+		rowFunc := func(u database.User) components.TableRow {
+			return components.TableRow{
+				Cells: []string{
+					strconv.Itoa(u.RoleID),
+					u.Username,
+					u.PasswordHash,
+					u.Name,
+					u.Surname,
+				},
+			}
+		}
+
+		table = components.ComposeTable(query, headings, rowFunc, items)
 	}
 
-	data := components.PreviewTable{
-		TableURL:    DestUploadPreview,
-		MaxRowCount: min(len(rows), 8),
-		Headings:    headings,
-		Rows:        rows,
-	}
-
-	appContext.ExecuteTemplate(w, r, "previewTable", data)
+	appContext.ExecuteTemplate(w, r, "previewTable", table)
 }
 
 func PostUpload(w http.ResponseWriter, r *http.Request) {
@@ -167,70 +209,4 @@ func parseUploadForm(r *http.Request) (uploadForm, error) {
 		KeepIds: keepIds,
 		CSVFile: f,
 	}, nil
-}
-
-func composeProductsPreview(form uploadForm, products []database.Product) (headings []components.TableHeading, rows [][]string) {
-	rows = [][]string{}
-	for _, p := range products {
-		row := []string{
-			strconv.Itoa(p.ProductTypeID),
-			strconv.Itoa(p.SupplierID),
-			strconv.Itoa(p.UnitOfMeasureID),
-			p.Description,
-			p.Code,
-		}
-
-		if form.KeepIds {
-			row = append([]string{strconv.Itoa(p.ID)}, row...)
-		}
-
-		rows = append(rows, row)
-	}
-
-	headings = []components.TableHeading{
-		{Name: "ID Tipologia"},
-		{Name: "ID Fornitore"},
-		{Name: "ID Unità di misura"},
-		{Name: "Descrizione"},
-		{Name: "Codice"},
-	}
-
-	if form.KeepIds {
-		headings = append([]components.TableHeading{{Name: "ID"}}, headings...)
-	}
-
-	return headings, rows
-}
-
-func composeUsersPreview(form uploadForm, users []database.User) (headings []components.TableHeading, rows [][]string) {
-	rows = [][]string{}
-	for _, u := range users {
-		row := []string{
-			strconv.Itoa(u.RoleID),
-			u.Username,
-			u.PasswordHash,
-			u.Name,
-			u.Surname,
-		}
-
-		if form.KeepIds {
-			row = append([]string{strconv.Itoa(u.ID)}, row...)
-		}
-
-		rows = append(rows, row)
-	}
-
-	headings = []components.TableHeading{
-		{Name: "ID Ruolo"},
-		{Name: "Username"},
-		{Name: "Password hash"},
-		{Name: "Nome"},
-		{Name: "Cognome"},
-	}
-
-	if form.KeepIds {
-		headings = append([]components.TableHeading{{Name: "ID"}}, headings...)
-	}
-
-	return headings, rows
 }

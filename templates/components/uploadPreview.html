@@ -24,7 +24,7 @@
     <tbody id="previewTruncatedRows">
       {{ range slice .Rows 0 .MaxRowCount }}
       <tr>
-        {{ range . }}
+        {{ range .Cells }}
         <td class="truncate">{{ . }}</td>
         {{ end }}
       </tr>
@@ -43,7 +43,7 @@
     <tbody id="previewAllRows" class="hidden">
       {{ range .Rows }}
       <tr>
-        {{ range . }}
+        {{ range .Cells }}
         <td class="truncate">{{ . }}</td>
         {{ end }}
       </tr>

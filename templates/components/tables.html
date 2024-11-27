@@ -58,10 +58,12 @@
   </td>
   {{ end }}
 
+  {{ if .EditURL }}
   <td>
     <a class="btn-md" href="{{ .EditURL }}">
       <i class="fa-pen fas"></i>
     </a>
   </td>
+  {{ end }}
 </tr>
 {{ end }}
