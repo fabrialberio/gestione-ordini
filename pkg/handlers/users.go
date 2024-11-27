@@ -28,12 +28,12 @@ func GetUsersTable(w http.ResponseWriter, r *http.Request) {
 	rowFunc := func(user database.User) components.TableRow {
 		return components.TableRow{
 			EditURL: DestUsers + "/" + strconv.Itoa(user.ID),
-			Cells: []string{
-				strconv.Itoa(user.ID),
-				user.Role.Name,
-				user.Username,
-				user.Name,
-				user.Surname,
+			Cells: []components.TableCell{
+				{Value: strconv.Itoa(user.ID)},
+				{Value: user.Role.Name},
+				{Value: user.Username},
+				{Value: user.Name},
+				{Value: user.Surname},
 			},
 		}
 	}

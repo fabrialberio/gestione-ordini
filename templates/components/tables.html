@@ -54,7 +54,11 @@
 <tr>
   {{ range .Cells }}
   <td>
-    <span class="line-clamp-2">{{ . }}</span>
+    {{ if .URL }}
+    <a class="line-clamp-2 link" href="{{ .URL }}">{{ .Value }}</a>
+    {{ else }}
+    <span class="line-clamp-2">{{ .Value }}</span>
+    {{ end }}
   </td>
   {{ end }}
 

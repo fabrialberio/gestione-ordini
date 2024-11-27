@@ -23,7 +23,12 @@ type TableHeading struct {
 
 type TableRow struct {
 	EditURL string
-	Cells   []string
+	Cells   []TableCell
+}
+
+type TableCell struct {
+	Value string
+	URL   string
 }
 
 type TableQuery struct {

@@ -30,12 +30,12 @@ func GetProductsTable(w http.ResponseWriter, r *http.Request) {
 func productRowFunc(product database.Product) components.TableRow {
 	return components.TableRow{
 		EditURL: DestProducts + "/" + strconv.Itoa(product.ID),
-		Cells: []string{
-			strconv.Itoa(product.ID),
-			product.Description,
-			product.Code,
-			product.ProductType.Name,
-			product.Supplier.Name,
+		Cells: []components.TableCell{
+			{Value: strconv.Itoa(product.ID)},
+			{Value: product.Description},
+			{Value: product.Code},
+			{Value: product.ProductType.Name},
+			{Value: product.Supplier.Name, URL: DestSuppliers + "/" + strconv.Itoa(product.Supplier.ID)},
 		},
 	}
 }

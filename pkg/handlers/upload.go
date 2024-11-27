@@ -105,12 +105,12 @@ func PostUploadPreview(w http.ResponseWriter, r *http.Request) {
 
 		rowFunc := func(p database.Product) components.TableRow {
 			return components.TableRow{
-				Cells: []string{
-					strconv.Itoa(p.ProductTypeID),
-					strconv.Itoa(p.SupplierID),
-					strconv.Itoa(p.UnitOfMeasureID),
-					p.Description,
-					p.Code,
+				Cells: []components.TableCell{
+					{Value: strconv.Itoa(p.ProductTypeID)},
+					{Value: strconv.Itoa(p.SupplierID)},
+					{Value: strconv.Itoa(p.UnitOfMeasureID)},
+					{Value: p.Description},
+					{Value: p.Code},
 				},
 			}
 		}
@@ -127,12 +127,12 @@ func PostUploadPreview(w http.ResponseWriter, r *http.Request) {
 
 		rowFunc := func(u database.User) components.TableRow {
 			return components.TableRow{
-				Cells: []string{
-					strconv.Itoa(u.RoleID),
-					u.Username,
-					u.PasswordHash,
-					u.Name,
-					u.Surname,
+				Cells: []components.TableCell{
+					{Value: strconv.Itoa(u.RoleID)},
+					{Value: u.Username},
+					{Value: u.PasswordHash},
+					{Value: u.Name},
+					{Value: u.Surname},
 				},
 			}
 		}

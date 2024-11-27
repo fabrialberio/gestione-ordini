@@ -25,10 +25,10 @@ func GetSuppliersTable(w http.ResponseWriter, r *http.Request) {
 	rowFunc := func(supplier database.Supplier) components.TableRow {
 		return components.TableRow{
 			EditURL: DestSuppliers + "/" + strconv.Itoa(supplier.ID),
-			Cells: []string{
-				strconv.Itoa(supplier.ID),
-				supplier.Name,
-				supplier.Email,
+			Cells: []components.TableCell{
+				{Value: strconv.Itoa(supplier.ID)},
+				{Value: supplier.Name},
+				{Value: supplier.Email},
 			},
 		}
 	}
