@@ -13,6 +13,7 @@ type Order struct {
 	User             User      `gorm:"-:all"`
 	Amount           int       `gorm:"column:quantita"`
 	AmountString     string    `gorm:"-:all"`
+	CreatedAt        time.Time `gorm:"column:creato_il"`
 	ExpiresAt        time.Time `gorm:"column:richiesto_il"`
 	ExpirationString string    `gorm:"-:all"`
 }
