@@ -21,8 +21,9 @@
   <label>Prodotto</label>
   <button type="button" class="px-3 w-full btn input" onclick="searchDialog.showModal()">
     <span id="productSearchButtonLabel" class="truncate">
-      {{ if .InitialProductDescription }}
-      {{ .InitialProductDescription }}
+      {{ if .InitialProduct.Description }}
+      <input type="hidden" name="{{ .ProductSelectName }}" value="{{ .InitialProduct.ID }}">
+      {{ .InitialProduct.Description }}
       {{ else }}
       <span class="text-on-surface-dim">Seleziona prodotto</span>
       {{ end }}

@@ -28,7 +28,9 @@
         {{ end }}
 
         {{ template "productInput" .ProductInput }}
-        <div id="amountInput"></div>
+        <div id="amountInput">
+          <input type="hidden" name="order.amount" value="{{ .Order.Amount }}">
+        </div>
         {{ template "dateInput" .ExpiresAtInput }}
         
         {{ template "formCreateSaveDeleteButtons" .IsNew }}

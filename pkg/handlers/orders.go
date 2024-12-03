@@ -76,12 +76,12 @@ func getOrder(w http.ResponseWriter, r *http.Request, ordersUrl string, usersUrl
 		IsNew: isNew,
 		Order: defaultOrder,
 		ProductInput: components.ProductInput{
-			InitialProductDescription: defaultOrder.Product.Description,
-			ProductSelectName:         keyOrderProductID,
-			ProductSearchURL:          DestProductSearch,
-			SearchInputName:           keyProductSearchQuery,
-			ProductTypesName:          keyProductSearchProductTypes,
-			ProductTypes:              productTypes,
+			InitialProduct:    defaultOrder.Product,
+			ProductSelectName: keyOrderProductID,
+			ProductSearchURL:  DestProductSearch,
+			SearchInputName:   keyProductSearchQuery,
+			ProductTypesName:  keyProductSearchProductTypes,
+			ProductTypes:      productTypes,
 		},
 		AmountInputURL: DestOrderAmountInput,
 		ExpiresAtInput: components.Input{
@@ -153,12 +153,12 @@ func parseOrderForm(r *http.Request) (database.Order, error) {
 
 	order.ProductID, err = strconv.Atoi(r.FormValue(keyOrderProductID))
 	if err != nil {
-		return order, err
+		//return order, err
 	}
 
 	order.Amount, err = strconv.Atoi(r.FormValue(keyOrderAmount))
 	if err != nil {
-		return order, err
+		//return order, err
 	}
 
 	order.ExpiresAt, err = time.Parse(dateFormat, r.FormValue(keyOrderRequestedAt))
