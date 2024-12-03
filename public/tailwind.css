@@ -107,7 +107,7 @@
 }
 
 /*
-! tailwindcss v3.4.14 | MIT License | https://tailwindcss.com
+! tailwindcss v3.4.15 | MIT License | https://tailwindcss.com
 */
 
 /*
@@ -642,6 +642,18 @@ video {
   width: 100vw;
 }
 
+.w-40 {
+  width: 10rem;
+}
+
+.w-32 {
+  width: 8rem;
+}
+
+.w-28 {
+  width: 7rem;
+}
+
 .min-w-20 {
   min-width: 5rem;
 }
@@ -660,26 +672,6 @@ video {
 
 .max-w-sm {
   max-width: 24rem;
-}
-
-.max-w-12 {
-  max-width: 3rem;
-}
-
-.max-w-20 {
-  max-width: 5rem;
-}
-
-.flex-none {
-  flex: none;
-}
-
-.flex-shrink {
-  flex-shrink: 1;
-}
-
-.flex-grow-0 {
-  flex-grow: 0;
 }
 
 .basis-1\/2 {
@@ -706,20 +698,12 @@ video {
   place-items: center;
 }
 
-.items-end {
-  align-items: flex-end;
-}
-
 .items-center {
   align-items: center;
 }
 
 .justify-start {
   justify-content: flex-start;
-}
-
-.justify-end {
-  justify-content: flex-end;
 }
 
 .justify-center {
@@ -764,7 +748,7 @@ video {
 
 .divide-outline > :not([hidden]) ~ :not([hidden]) {
   --tw-divide-opacity: 1;
-  border-color: rgb(209 213 219 / var(--tw-divide-opacity));
+  border-color: rgb(209 213 219 / var(--tw-divide-opacity, 1));
 }
 
 .overflow-hidden {
@@ -810,6 +794,10 @@ video {
   border-width: 0px;
 }
 
+.border {
+  border-width: 1px;
+}
+
 .border-b {
   border-bottom-width: 1px;
 }
@@ -824,27 +812,32 @@ video {
 
 .border-outline {
   --tw-border-opacity: 1;
-  border-color: rgb(209 213 219 / var(--tw-border-opacity));
+  border-color: rgb(209 213 219 / var(--tw-border-opacity, 1));
+}
+
+.border-t-on-primary {
+  --tw-border-opacity: 1;
+  border-top-color: rgb(255 255 255 / var(--tw-border-opacity, 1));
 }
 
 .bg-raised {
   --tw-bg-opacity: 1;
-  background-color: rgb(227 227 227 / var(--tw-bg-opacity));
+  background-color: rgb(227 227 227 / var(--tw-bg-opacity, 1));
 }
 
 .bg-secondary {
   --tw-bg-opacity: 1;
-  background-color: rgb(197 232 210 / var(--tw-bg-opacity));
+  background-color: rgb(197 232 210 / var(--tw-bg-opacity, 1));
 }
 
 .bg-surface {
   --tw-bg-opacity: 1;
-  background-color: rgb(255 255 255 / var(--tw-bg-opacity));
+  background-color: rgb(255 255 255 / var(--tw-bg-opacity, 1));
 }
 
 .bg-view {
   --tw-bg-opacity: 1;
-  background-color: rgb(248 249 250 / var(--tw-bg-opacity));
+  background-color: rgb(248 249 250 / var(--tw-bg-opacity, 1));
 }
 
 .p-1 {
@@ -891,20 +884,12 @@ video {
   text-align: center;
 }
 
-.text-right {
-  text-align: right;
-}
-
 .text-start {
   text-align: start;
 }
 
 .align-top {
   vertical-align: top;
-}
-
-.align-middle {
-  vertical-align: middle;
 }
 
 .font-mono {
@@ -922,20 +907,12 @@ video {
 
 .text-error {
   --tw-text-opacity: 1;
-  color: rgb(192 28 40 / var(--tw-text-opacity));
+  color: rgb(192 28 40 / var(--tw-text-opacity, 1));
 }
 
 .text-on-surface-dim {
   --tw-text-opacity: 1;
-  color: rgb(107 114 128 / var(--tw-text-opacity));
-}
-
-.text-opacity-60 {
-  --tw-text-opacity: 0.6;
-}
-
-.text-opacity-40 {
-  --tw-text-opacity: 0.4;
+  color: rgb(107 114 128 / var(--tw-text-opacity, 1));
 }
 
 .underline {
@@ -952,6 +929,12 @@ video {
   box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
 }
 
+.shadow-sm {
+  --tw-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --tw-shadow-colored: 0 1px 2px 0 var(--tw-shadow-color);
+  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+}
+
 *:focus-visible {
   z-index: 10;
   outline: 2px solid transparent;
@@ -960,15 +943,15 @@ video {
   --tw-ring-shadow: var(--tw-ring-inset) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color);
   box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000);
   --tw-ring-opacity: 1;
-  --tw-ring-color: rgb(61 178 104 / var(--tw-ring-opacity));
+  --tw-ring-color: rgb(61 178 104 / var(--tw-ring-opacity, 1));
 }
 
 body {
   overflow-x: hidden;
   --tw-bg-opacity: 1;
-  background-color: rgb(248 249 250 / var(--tw-bg-opacity));
+  background-color: rgb(248 249 250 / var(--tw-bg-opacity, 1));
   --tw-text-opacity: 1;
-  color: rgb(31 41 55 / var(--tw-text-opacity));
+  color: rgb(31 41 55 / var(--tw-text-opacity, 1));
 }
 
 h2 {
@@ -1017,11 +1000,11 @@ main {
 dialog {
   overflow: hidden;
   --tw-bg-opacity: 1;
-  background-color: rgb(255 255 255 / var(--tw-bg-opacity));
+  background-color: rgb(255 255 255 / var(--tw-bg-opacity, 1));
   border-radius: 0.75rem;
   border-width: 1px;
   --tw-border-opacity: 1;
-  border-color: rgb(209 213 219 / var(--tw-border-opacity));
+  border-color: rgb(209 213 219 / var(--tw-border-opacity, 1));
   --tw-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
   --tw-shadow-colored: 0 4px 6px -1px var(--tw-shadow-color), 0 2px 4px -2px var(--tw-shadow-color);
   box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
@@ -1043,7 +1026,7 @@ dialog {
 
 dialog::backdrop {
   position: fixed;
-  background-color: rgb(0 0 0 / var(--tw-bg-opacity));
+  background-color: rgb(0 0 0 / var(--tw-bg-opacity, 1));
   --tw-bg-opacity: 0.1;
 }
 
@@ -1064,7 +1047,7 @@ label {
   font-size: 0.875rem;
   line-height: 1.25rem;
   --tw-text-opacity: 1;
-  color: rgb(107 114 128 / var(--tw-text-opacity));
+  color: rgb(107 114 128 / var(--tw-text-opacity, 1));
 }
 
 input:not([type="checkbox"]), select {
@@ -1077,26 +1060,26 @@ input:not([type="checkbox"]), select {
   border-radius: 0.5rem;
   border-width: 1px;
   --tw-border-opacity: 1;
-  border-color: rgb(209 213 219 / var(--tw-border-opacity));
+  border-color: rgb(209 213 219 / var(--tw-border-opacity, 1));
   --tw-bg-opacity: 1;
-  background-color: rgb(255 255 255 / var(--tw-bg-opacity));
+  background-color: rgb(255 255 255 / var(--tw-bg-opacity, 1));
   --tw-text-opacity: 1;
-  color: rgb(31 41 55 / var(--tw-text-opacity));
+  color: rgb(31 41 55 / var(--tw-text-opacity, 1));
 }
 
 input:not([type="checkbox"])::-moz-placeholder, select::-moz-placeholder {
   --tw-placeholder-opacity: 1;
-  color: rgb(107 114 128 / var(--tw-placeholder-opacity));
+  color: rgb(107 114 128 / var(--tw-placeholder-opacity, 1));
 }
 
 input:not([type="checkbox"])::placeholder, select::placeholder {
   --tw-placeholder-opacity: 1;
-  color: rgb(107 114 128 / var(--tw-placeholder-opacity));
+  color: rgb(107 114 128 / var(--tw-placeholder-opacity, 1));
 }
 
 input:not([type="checkbox"]):focus-visible, select:focus-visible {
   --tw-border-opacity: 1;
-  border-color: rgb(61 178 104 / var(--tw-border-opacity));
+  border-color: rgb(61 178 104 / var(--tw-border-opacity, 1));
   --tw-ring-offset-shadow: var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);
   --tw-ring-shadow: var(--tw-ring-inset) 0 0 0 calc(1px + var(--tw-ring-offset-width)) var(--tw-ring-color);
   box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000);
@@ -1104,7 +1087,7 @@ input:not([type="checkbox"]):focus-visible, select:focus-visible {
 
 input.btn:not([type="checkbox"]):focus-visible, select.btn:focus-visible {
   --tw-border-opacity: 1;
-  border-color: rgb(61 178 104 / var(--tw-border-opacity));
+  border-color: rgb(61 178 104 / var(--tw-border-opacity, 1));
   --tw-ring-offset-shadow: var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);
   --tw-ring-shadow: var(--tw-ring-inset) 0 0 0 calc(1px + var(--tw-ring-offset-width)) var(--tw-ring-color);
   box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000);
@@ -1126,26 +1109,26 @@ input[type="date"] {
   border-radius: 0.5rem;
   border-width: 1px;
   --tw-border-opacity: 1;
-  border-color: rgb(209 213 219 / var(--tw-border-opacity));
+  border-color: rgb(209 213 219 / var(--tw-border-opacity, 1));
   --tw-bg-opacity: 1;
-  background-color: rgb(255 255 255 / var(--tw-bg-opacity));
+  background-color: rgb(255 255 255 / var(--tw-bg-opacity, 1));
   --tw-text-opacity: 1;
-  color: rgb(31 41 55 / var(--tw-text-opacity));
+  color: rgb(31 41 55 / var(--tw-text-opacity, 1));
 }
 
 .input::-moz-placeholder {
   --tw-placeholder-opacity: 1;
-  color: rgb(107 114 128 / var(--tw-placeholder-opacity));
+  color: rgb(107 114 128 / var(--tw-placeholder-opacity, 1));
 }
 
 .input::placeholder {
   --tw-placeholder-opacity: 1;
-  color: rgb(107 114 128 / var(--tw-placeholder-opacity));
+  color: rgb(107 114 128 / var(--tw-placeholder-opacity, 1));
 }
 
 .input:focus-visible {
   --tw-border-opacity: 1;
-  border-color: rgb(61 178 104 / var(--tw-border-opacity));
+  border-color: rgb(61 178 104 / var(--tw-border-opacity, 1));
   --tw-ring-offset-shadow: var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);
   --tw-ring-shadow: var(--tw-ring-inset) 0 0 0 calc(1px + var(--tw-ring-offset-width)) var(--tw-ring-color);
   box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000);
@@ -1156,7 +1139,7 @@ input[type="date"] {
   border-radius: 0.75rem;
   border-width: 1px;
   --tw-border-opacity: 1;
-  border-color: rgb(209 213 219 / var(--tw-border-opacity));
+  border-color: rgb(209 213 219 / var(--tw-border-opacity, 1));
   --tw-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
   --tw-shadow-colored: 0 4px 6px -1px var(--tw-shadow-color), 0 2px 4px -2px var(--tw-shadow-color);
   box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
@@ -1171,7 +1154,7 @@ input[type="date"] {
   border-top-width: calc(1px * calc(1 - var(--tw-divide-y-reverse)));
   border-bottom-width: calc(1px * var(--tw-divide-y-reverse));
   --tw-divide-opacity: 1;
-  border-color: rgb(209 213 219 / var(--tw-divide-opacity));
+  border-color: rgb(209 213 219 / var(--tw-divide-opacity, 1));
 }
 
 .dataTable tbody > :not([hidden]) ~ :not([hidden]) {
@@ -1179,12 +1162,12 @@ input[type="date"] {
   border-top-width: calc(1px * calc(1 - var(--tw-divide-y-reverse)));
   border-bottom-width: calc(1px * var(--tw-divide-y-reverse));
   --tw-divide-opacity: 1;
-  border-color: rgb(209 213 219 / var(--tw-divide-opacity));
+  border-color: rgb(209 213 219 / var(--tw-divide-opacity, 1));
 }
 
 .dataTable tbody {
   --tw-bg-opacity: 1;
-  background-color: rgb(255 255 255 / var(--tw-bg-opacity));
+  background-color: rgb(255 255 255 / var(--tw-bg-opacity, 1));
 }
 
 .dataTable td {
@@ -1244,7 +1227,7 @@ input[type="date"] {
 
 .btn.input:focus-visible {
   --tw-border-opacity: 1;
-  border-color: rgb(61 178 104 / var(--tw-border-opacity));
+  border-color: rgb(61 178 104 / var(--tw-border-opacity, 1));
   --tw-ring-offset-shadow: var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);
   --tw-ring-shadow: var(--tw-ring-inset) 0 0 0 calc(1px + var(--tw-ring-offset-width)) var(--tw-ring-color);
   box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000);
@@ -1289,7 +1272,7 @@ input[type="date"] {
 
 .btn-md.input:focus-visible {
   --tw-border-opacity: 1;
-  border-color: rgb(61 178 104 / var(--tw-border-opacity));
+  border-color: rgb(61 178 104 / var(--tw-border-opacity, 1));
   --tw-ring-offset-shadow: var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);
   --tw-ring-shadow: var(--tw-ring-inset) 0 0 0 calc(1px + var(--tw-ring-offset-width)) var(--tw-ring-color);
   box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000);
@@ -1298,7 +1281,7 @@ input[type="date"] {
 
 .btn-md.destructive {
   --tw-ring-opacity: 1;
-  --tw-ring-color: rgb(192 28 40 / var(--tw-ring-opacity));
+  --tw-ring-color: rgb(192 28 40 / var(--tw-ring-opacity, 1));
 }
 
 .btn-lg {
@@ -1339,7 +1322,7 @@ input[type="date"] {
 
 .btn-lg.input:focus-visible {
   --tw-border-opacity: 1;
-  border-color: rgb(61 178 104 / var(--tw-border-opacity));
+  border-color: rgb(61 178 104 / var(--tw-border-opacity, 1));
   --tw-ring-offset-shadow: var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);
   --tw-ring-shadow: var(--tw-ring-inset) 0 0 0 calc(1px + var(--tw-ring-offset-width)) var(--tw-ring-color);
   box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000);
@@ -1348,26 +1331,26 @@ input[type="date"] {
 
 .btn-lg.destructive {
   --tw-ring-opacity: 1;
-  --tw-ring-color: rgb(192 28 40 / var(--tw-ring-opacity));
+  --tw-ring-color: rgb(192 28 40 / var(--tw-ring-opacity, 1));
 }
 
 .suggested {
   --tw-bg-opacity: 1;
-  background-color: rgb(61 178 104 / var(--tw-bg-opacity));
+  background-color: rgb(61 178 104 / var(--tw-bg-opacity, 1));
   --tw-text-opacity: 1;
-  color: rgb(255 255 255 / var(--tw-text-opacity));
+  color: rgb(255 255 255 / var(--tw-text-opacity, 1));
 }
 
 .destructive {
   --tw-bg-opacity: 1;
-  background-color: rgb(192 28 40 / var(--tw-bg-opacity));
+  background-color: rgb(192 28 40 / var(--tw-bg-opacity, 1));
   --tw-text-opacity: 1;
-  color: rgb(255 255 255 / var(--tw-text-opacity));
+  color: rgb(255 255 255 / var(--tw-text-opacity, 1));
 }
 
 .btn.destructive {
   --tw-ring-opacity: 1;
-  --tw-ring-color: rgb(192 28 40 / var(--tw-ring-opacity));
+  --tw-ring-color: rgb(192 28 40 / var(--tw-ring-opacity, 1));
 }
 
 .sidebar {
@@ -1406,7 +1389,7 @@ input[type="date"] {
   z-index: 20;
   height: 100vh;
   width: 100vw;
-  background-color: rgb(0 0 0 / var(--tw-bg-opacity));
+  background-color: rgb(0 0 0 / var(--tw-bg-opacity, 1));
   --tw-bg-opacity: 0.1;
 }
 
@@ -1428,7 +1411,7 @@ input[type="date"] {
   border-radius: 0.75rem;
   border-width: 1px;
   --tw-border-opacity: 1;
-  border-color: rgb(209 213 219 / var(--tw-border-opacity));
+  border-color: rgb(209 213 219 / var(--tw-border-opacity, 1));
   --tw-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
   --tw-shadow-colored: 0 4px 6px -1px var(--tw-shadow-color), 0 2px 4px -2px var(--tw-shadow-color);
   box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
@@ -1437,11 +1420,11 @@ input[type="date"] {
 .card {
   overflow: hidden;
   --tw-bg-opacity: 1;
-  background-color: rgb(255 255 255 / var(--tw-bg-opacity));
+  background-color: rgb(255 255 255 / var(--tw-bg-opacity, 1));
   border-radius: 0.75rem;
   border-width: 1px;
   --tw-border-opacity: 1;
-  border-color: rgb(209 213 219 / var(--tw-border-opacity));
+  border-color: rgb(209 213 219 / var(--tw-border-opacity, 1));
   --tw-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
   --tw-shadow-colored: 0 4px 6px -1px var(--tw-shadow-color), 0 2px 4px -2px var(--tw-shadow-color);
   box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
@@ -1463,9 +1446,9 @@ input[type="date"] {
   gap: 0.5rem;
   border-top-width: 1px;
   --tw-border-opacity: 1;
-  border-color: rgb(209 213 219 / var(--tw-border-opacity));
+  border-color: rgb(209 213 219 / var(--tw-border-opacity, 1));
   --tw-bg-opacity: 1;
-  background-color: rgb(248 249 250 / var(--tw-bg-opacity));
+  background-color: rgb(248 249 250 / var(--tw-bg-opacity, 1));
 }
 
 .chipBox {
@@ -1479,7 +1462,7 @@ input[type="date"] {
   border-radius: 0.375rem;
   border-width: 1px;
   --tw-border-opacity: 1;
-  border-color: rgb(209 213 219 / var(--tw-border-opacity));
+  border-color: rgb(209 213 219 / var(--tw-border-opacity, 1));
   padding-left: 0.5rem;
   padding-right: 0.5rem;
   font-size: 0.875rem;
@@ -1511,7 +1494,7 @@ input[type="date"] {
 
 .chipBox > *.input:focus-visible {
   --tw-border-opacity: 1;
-  border-color: rgb(61 178 104 / var(--tw-border-opacity));
+  border-color: rgb(61 178 104 / var(--tw-border-opacity, 1));
   --tw-ring-offset-shadow: var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);
   --tw-ring-shadow: var(--tw-ring-inset) 0 0 0 calc(1px + var(--tw-ring-offset-width)) var(--tw-ring-color);
   box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000);
@@ -1520,7 +1503,7 @@ input[type="date"] {
 
 .chipBox > *.destructive {
   --tw-ring-opacity: 1;
-  --tw-ring-color: rgb(192 28 40 / var(--tw-ring-opacity));
+  --tw-ring-color: rgb(192 28 40 / var(--tw-ring-opacity, 1));
 }
 
 .chipBox > * > input {
@@ -1538,7 +1521,7 @@ input[type="date"] {
 .chipBox > *:has(input:checked) {
   border-style: none;
   --tw-bg-opacity: 1;
-  background-color: rgb(197 232 210 / var(--tw-bg-opacity));
+  background-color: rgb(197 232 210 / var(--tw-bg-opacity, 1));
 }
 
 .chipBox > * > input:not(:checked) ~ i {
@@ -1578,7 +1561,7 @@ input[type="date"] {
 
 .selectList > *.input:focus-visible {
   --tw-border-opacity: 1;
-  border-color: rgb(61 178 104 / var(--tw-border-opacity));
+  border-color: rgb(61 178 104 / var(--tw-border-opacity, 1));
   --tw-ring-offset-shadow: var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);
   --tw-ring-shadow: var(--tw-ring-inset) 0 0 0 calc(1px + var(--tw-ring-offset-width)) var(--tw-ring-color);
   box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000);
@@ -1587,12 +1570,12 @@ input[type="date"] {
 
 .selectList > *.destructive {
   --tw-ring-opacity: 1;
-  --tw-ring-color: rgb(192 28 40 / var(--tw-ring-opacity));
+  --tw-ring-color: rgb(192 28 40 / var(--tw-ring-opacity, 1));
 }
 
 .selectList > *:has(input:checked) {
   --tw-bg-opacity: 1;
-  background-color: rgb(227 227 227 / var(--tw-bg-opacity));
+  background-color: rgb(227 227 227 / var(--tw-bg-opacity, 1));
 }
 
 .first\:pl-1:first-child {
@@ -1634,10 +1617,6 @@ input[type="date"] {
 @media (min-width: 640px) {
   .sm\:min-h-12 {
     min-height: 3rem;
-  }
-
-  .sm\:max-w-20 {
-    max-width: 5rem;
   }
 
   .sm\:flex-row {
