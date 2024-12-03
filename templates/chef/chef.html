@@ -12,12 +12,11 @@
       </h2>
 
       <form class="card" method="post" action="/chef/orders/"
-      hx-post="{{ .AmountInputURL }}"
-      hx-target="#amountInput"
-      hx-trigger="change, load">
-      <input type="hidden" name="isNew" value="true">
+        hx-post="{{ .AmountInputURL }}"
+        hx-target="#amountInput"
+        hx-trigger="change, load">
+        <input type="hidden" name="isNew" value="true">
         {{ template "productInput" .ProductInput }}
-        <!-- TODO: HTMX updates this when it is edited, causing weird behaviour -->
         <div id="amountInput"></div>
         {{ template "dateInput" .ExpiresAtInput }}
         <div class="cardFooter">
