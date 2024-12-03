@@ -153,12 +153,12 @@ func parseOrderForm(r *http.Request) (database.Order, error) {
 
 	order.ProductID, err = strconv.Atoi(r.FormValue(keyOrderProductID))
 	if err != nil {
-		//return order, err
+		return order, err
 	}
 
 	order.Amount, err = strconv.Atoi(r.FormValue(keyOrderAmount))
 	if err != nil {
-		//return order, err
+		return order, err
 	}
 
 	order.ExpiresAt, err = time.Parse(dateFormat, r.FormValue(keyOrderRequestedAt))
