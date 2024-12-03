@@ -40,6 +40,7 @@ func ExportToCSV(orders []database.Order) []byte {
 		"Fornitore",
 		"Data di consegna richiesta",
 		"Richiesto da",
+		"Richiesto il",
 	})
 	for _, supplierOrders := range splitOrdersBySupplier(orders) {
 		for _, order := range supplierOrders {
@@ -51,6 +52,7 @@ func ExportToCSV(orders []database.Order) []byte {
 				order.Product.Supplier.Name,
 				order.ExpiresAt.Format("02/01/2006"),
 				order.User.Username,
+				order.CreatedAt.Format("02/01/2006"),
 			})
 		}
 	}
