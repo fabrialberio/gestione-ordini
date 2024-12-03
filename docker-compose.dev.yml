@@ -44,9 +44,19 @@ services:
 
   tailwind:
     build: ./tailwind
-    container_name: gestione-ordini-tailwind
     volumes:
       - .:/app
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    env_file:
+      - .env
+    ports:
+      - "8080:80"
+    environment:
+      - PMA_HOST=${MYSQL_CONTAINER_NAME}
+    networks:
+      - gestione-ordini-network
 
 volumes:
   mysql-data:
