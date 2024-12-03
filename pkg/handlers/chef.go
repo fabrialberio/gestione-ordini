@@ -40,25 +40,35 @@ func GetChef(w http.ResponseWriter, r *http.Request) {
 }
 
 func PostOrderAmountInput(w http.ResponseWriter, r *http.Request) {
-	amount, err := strconv.Atoi(r.FormValue(keyOrderAmount))
-	if err != nil {
-		id, err := strconv.Atoi(r.FormValue(keyOrderID))
-		if err != nil {
-			amount = 1
-		} else {
-			order, err := appContext.Database(r).FindOrder(id)
-			if err != nil {
-				logError(r, err)
-			}
+	amount := 1
+	productId := 0
 
-			amount = order.Amount
+	formOrder, err := parseOrderForm(r)
+	formOrderIsValid := err == nil && formOrder.ProductID != 0
+
+	if formOrderIsValid {
+		amount = formOrder.Amount
+		productId = formOrder.ProductID
+	} else if r.FormValue("isNew") != "true" {
+		dbOrder, err := appContext.Database(r).FindOrder(formOrder.ID)
+		if err != nil {
+			logError(r, err)
+			return
 		}
+
+		amount = dbOrder.Amount
+		productId = dbOrder.ProductID
 	}
 
-	baseLabel := "Quantità"
-	label, err := composeLabel(r, baseLabel)
-	if err != nil {
-		label = baseLabel
+	label := "Quantità"
+	if productId != 0 {
+		product, err := appContext.Database(r).FindProduct(productId)
+		if err != nil {
+			logError(r, err)
+			return
+		}
+
+		label += " (" + product.UnitOfMeasure.Symbol + ")"
 	}
 
 	appContext.ExecuteTemplate(w, r, "amountInput", components.Input{
@@ -66,33 +76,4 @@ func PostOrderAmountInput(w http.ResponseWriter, r *http.Request) {
 		Name:         keyOrderAmount,
 		DefaultValue: strconv.Itoa(amount),
 	})
-}
-
-func composeLabel(r *http.Request, baseLabel string) (string, error) {
-	var productId int
-
-	parsedOrder, err := parseOrderForm(r)
-	if err != nil {
-		return "", err
-	}
-
-	if parsedOrder.ProductID != 0 {
-		productId = parsedOrder.ProductID
-	} else {
-		if parsedOrder.ID != 0 {
-			order, err := appContext.Database(r).FindOrder(parsedOrder.ID)
-			if err != nil {
-				return "", err
-			}
-
-			productId = order.ProductID
-		}
-	}
-
-	product, err := appContext.Database(r).FindProduct(productId)
-	if err != nil {
-		return "", err
-	}
-
-	return baseLabel + " (" + product.UnitOfMeasure.Symbol + ")", nil
 }
