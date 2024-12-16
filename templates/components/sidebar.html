@@ -13,7 +13,7 @@
     document.querySelector("#hideButton").toggleAttribute("hidden");
   }
 
-  document.addEventListener("DOMContentLoaded", function() {
+  document.addEventListener("DOMContentLoaded", function () {
     if (window.innerWidth < 800) {
       toggleSidebar();
     }
@@ -28,7 +28,8 @@
     <ul class="space-y-1">
       {{ range . }}
       <li>
-        <a {{ if not .Selected }}href="{{ .DestURL }}"{{ end }} class="{{ if .Selected }}bg-secondary {{ end }}btn-lg w-full">
+        <a {{ if not .Selected }}href="{{ .DestURL }}" {{ end }}
+          class="{{ if .Selected }}bg-secondary {{ end }}btn-lg w-full">
           <div class="justify-start w-full">
             <i class="{{ .FasIconName }} fas pr-2"></i>
             {{ .Label }}

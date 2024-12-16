@@ -1,36 +1,36 @@
 <!DOCTYPE html>
 <html>
-  {{ template "head.html" }}
-  <body>
-    {{ template "sidebar" .Sidebar }}
+{{ template "head.html" }}
 
-    <div class="content">
-      <header>
-        {{ template "sidebarButton" }}
-        {{ template "logoutButton" }}
-      </header>
+<body>
+  {{ template "sidebar" .Sidebar }}
 
-      <main class="max-w-screen-md">
-        <h2>
-          Nuovo<a href="https://youtu.be/9GMjH1nR0ds"> </a>ordine
-        </h2>
+  <div class="content">
+    <header>
+      {{ template "sidebarButton" }}
+      {{ template "logoutButton" }}
+    </header>
 
-        <form class="card" method="post" action="/console/orders/"
-          hx-post="{{ .AmountInputURL }}"
-          hx-target="#amountInput"
-          hx-trigger="change, load">
-          <input type="hidden" name="isNew" value="true">
-          {{ template "productInput" .ProductInput }}
-          <div id="amountInput"></div>
-          {{ template "dateInput" .ExpiresAtInput }}
-          <div class="cardFooter">
-            <button class="ml-auto btn-md suggested">
-              <i class="fa-add fas"></i>
-              Aggiungi
-            </button>
-          </div>
-        </form>
-      </div>
-    </main>
-  </body>
+    <main class="max-w-screen-md">
+      <h2>
+        Nuovo<a href="https://youtu.be/9GMjH1nR0ds"> </a>ordine
+      </h2>
+
+      <form class="card" method="post" action="/console/orders/" hx-post="{{ .AmountInputURL }}"
+        hx-target="#amountInput" hx-trigger="change, load">
+        <input type="hidden" name="isNew" value="true">
+        {{ template "productInput" .ProductInput }}
+        <div id="amountInput"></div>
+        {{ template "dateInput" .ExpiresAtInput }}
+        <div class="cardFooter">
+          <button class="ml-auto btn-md suggested">
+            <i class="fa-add fas"></i>
+            Aggiungi
+          </button>
+        </div>
+      </form>
+  </div>
+  </main>
+</body>
+
 </html>

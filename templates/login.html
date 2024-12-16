@@ -1,31 +1,35 @@
 <!DOCTYPE html>
 <html>
-  {{ template "head.html" }}
-  <body class="place-items-center grid h-screen w-screen fixed">
-    <form class="space-y-6 p-4 w-full max-w-sm text-center" action="login" method="POST">
-      <div class="space-y-2">
-        <h2>
-          Gestione ordini
-        </h2>
-        {{ if .ErrorMsg }}
-        <p class="text-error">{{ .ErrorMsg }}</p>
-        {{ else }}
-        <p class="">Inserisci le tue credenziali</p>
-        {{ end }}
+{{ template "head.html" }}
+
+<body class="fixed place-items-center grid w-screen h-screen">
+  <form class="space-y-6 p-4 w-full max-w-sm text-center" action="login" method="POST">
+    <div class="space-y-2">
+      <h2>
+        Gestione ordini
+      </h2>
+      {{ if .ErrorMsg }}
+      <p class="text-error">{{ .ErrorMsg }}</p>
+      {{ else }}
+      <p class="">Inserisci le tue credenziali</p>
+      {{ end }}
+    </div>
+    <div class="space-y-2">
+      <div>
+        <label for="username" class="sr-only">Username</label>
+        <input id="username" name="username" type="username" autocomplete="username"
+          placeholder="Username" />
       </div>
-      <div class="space-y-2">
-        <div>
-          <label for="username" class="sr-only">Username</label>
-          <input id="username" name="username" type="username" autocomplete="username" placeholder="Username" />
-        </div>
-        <div>
-          <label for="password" class="sr-only">Password</label>
-          <input id="password" name="password" type="password" autocomplete="current-password" placeholder="Password" />
-        </div>
+      <div>
+        <label for="password" class="sr-only">Password</label>
+        <input id="password" name="password" type="password" autocomplete="current-password"
+          placeholder="Password" />
       </div>
-      <button type="submit" class="w-full btn-lg suggested">
-        Accedi
-      </button>
-    </form>
-  </body>
+    </div>
+    <button type="submit" class="w-full btn-lg suggested">
+      Accedi
+    </button>
+  </form>
+</body>
+
 </html>

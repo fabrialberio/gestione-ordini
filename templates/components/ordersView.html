@@ -12,7 +12,8 @@
       <i class="fa-chevron-right fas"></i>
     </button>
   </div>
-  <div class="flex flex-row max-sm:flex-col border-outline bg-surface border-t sm:divide-x max-sm:divide-y divide-outline overflow-x-auto">
+  <div
+    class="flex flex-row max-sm:flex-col border-outline bg-surface border-t sm:divide-x max-sm:divide-y divide-outline overflow-x-auto">
     {{ range .Days }}
     <div class="flex max-sm:flex-row flex-col basis-1/2">
       {{ $isPast := .IsPast }}
@@ -22,15 +23,16 @@
       <div class="flex flex-col gap-1 p-1 w-full sm:min-h-12">
         <td class="align-top h-full">
           {{ range .Orders }}
-          <a{{ if $.OrdersURL }} href="{{ $.OrdersURL }}{{ .ID }}"{{ end }}>
-            <div class="{{ if $isPast }}bg-raised{{ else }}bg-secondary{{ end }} p-1 rounded-md text-sm{{ if $.OrdersURL }} clickable{{ end }}">
+          <a{{ if $.OrdersURL }} href="{{ $.OrdersURL }}{{ .ID }}" {{ end }}>
+            <div
+              class="{{ if $isPast }}bg-raised{{ else }}bg-secondary{{ end }} p-1 rounded-md text-sm{{ if $.OrdersURL }} clickable{{ end }}">
               <h4 class="line-clamp-2">
                 {{ .Product.Description }}
               </h4>
               {{ .AmountString }}
             </div>
-          </a>
-          {{ end }}
+            </a>
+            {{ end }}
         </td>
       </div>
     </div>

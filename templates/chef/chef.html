@@ -1,38 +1,38 @@
 <!DOCTYPE html>
 <html>
-  {{ template "head.html" }}
-  <body>
-    <header>
-      {{ template "logoutButton" }}
-    </header>
+{{ template "head.html" }}
 
-    <main class="max-w-screen-md">
-      <h2>
-        Nuovo ordine
-      </h2>
+<body>
+  <header>
+    {{ template "logoutButton" }}
+  </header>
 
-      <form class="card" method="post" action="/chef/orders/"
-        hx-post="{{ .AmountInputURL }}"
-        hx-target="#amountInput"
-        hx-trigger="change, load">
-        <input type="hidden" name="isNew" value="true">
-        {{ template "productInput" .ProductInput }}
-        <div id="amountInput"></div>
-        {{ template "dateInput" .ExpiresAtInput }}
-        <div class="cardFooter">
-          <button class="ml-auto btn-md suggested">
-            <i class="fa-add fas"></i>
-            Aggiungi
-          </button>
-        </div>
-      </form>
-    
-      <h2>
-        I tuoi ordini
-      </h2>
+  <main class="max-w-screen-md">
+    <h2>
+      Nuovo ordine
+    </h2>
 
-      <div hx-get="/api/ownOrdersView" hx-trigger="load" hx-target="this">
+    <form class="card" method="post" action="/chef/orders/" hx-post="{{ .AmountInputURL }}"
+      hx-target="#amountInput" hx-trigger="change, load">
+      <input type="hidden" name="isNew" value="true">
+      {{ template "productInput" .ProductInput }}
+      <div id="amountInput"></div>
+      {{ template "dateInput" .ExpiresAtInput }}
+      <div class="cardFooter">
+        <button class="ml-auto btn-md suggested">
+          <i class="fa-add fas"></i>
+          Aggiungi
+        </button>
       </div>
-    </main>
-  </body>
+    </form>
+
+    <h2>
+      I tuoi ordini
+    </h2>
+
+    <div hx-get="/api/ownOrdersView" hx-trigger="load" hx-target="this">
+    </div>
+  </main>
+</body>
+
 </html>

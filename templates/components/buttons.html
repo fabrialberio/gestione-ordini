@@ -16,10 +16,10 @@
 <div class="cardFooter">
   {{ if not . }}
   <script>
-    document.addEventListener("DOMContentLoaded", function() {
+    document.addEventListener("DOMContentLoaded", function () {
       deleteDialog = document.getElementById("confirmDeleteDialog")
 
-      deleteDialog.addEventListener("click" , function(event) {
+      deleteDialog.addEventListener("click", function (event) {
         if (event.target === deleteDialog) {
           deleteDialog.close()
         }
@@ -40,7 +40,7 @@
         </button>
         <button class="btn-md destructive" type="submit" name="delete">
           Elimina
-        </button>    
+        </button>
       </div>
     </div>
   </dialog>

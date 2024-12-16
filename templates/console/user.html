@@ -1,39 +1,41 @@
 <!DOCTYPE html>
 <html>
-  {{ template "head.html" }} 
-  <body>
-    <header>
-        {{ template "backButton" }}
-    </header>
+{{ template "head.html" }}
 
-    <main>
-      <h2>
-        {{ if .IsNew }}
-        Nuovo utente
-        {{ else }}
-        Modifica utente
-        {{ end }}
-      </h2>
-      <form class="card" method="post" action="/console/users/">
-        <input type="hidden" name="user.id" value="{{ .User.ID }}">
-        <input type="hidden" name="isNew" value="{{ .IsNew }}">
-        
-        {{ template "textInput" .NameInput }}
-        {{ template "textInput" .SurnameInput }}
-        {{ template "select" .RoleSelect }}
-        {{ template "textInput" .UsernameInput }}
+<body>
+  <header>
+    {{ template "backButton" }}
+  </header>
 
-        {{ if .IsNew }}
-        <div>
-          <label for="passwordInput">Password</label>
-          <input id="passwordInput" type="text" name="{{ .PasswordInput.Name }}">
-        </div>
-        {{ else }}
-        {{ template "hiddenPasswordInput" .PasswordInput }}
-        {{ end }}
+  <main>
+    <h2>
+      {{ if .IsNew }}
+      Nuovo utente
+      {{ else }}
+      Modifica utente
+      {{ end }}
+    </h2>
+    <form class="card" method="post" action="/console/users/">
+      <input type="hidden" name="user.id" value="{{ .User.ID }}">
+      <input type="hidden" name="isNew" value="{{ .IsNew }}">
 
-        {{ template "formCreateSaveDeleteButtons" .IsNew }}
-      </form>
-    </main>
-  </body>
+      {{ template "textInput" .NameInput }}
+      {{ template "textInput" .SurnameInput }}
+      {{ template "select" .RoleSelect }}
+      {{ template "textInput" .UsernameInput }}
+
+      {{ if .IsNew }}
+      <div>
+        <label for="passwordInput">Password</label>
+        <input id="passwordInput" type="text" name="{{ .PasswordInput.Name }}">
+      </div>
+      {{ else }}
+      {{ template "hiddenPasswordInput" .PasswordInput }}
+      {{ end }}
+
+      {{ template "formCreateSaveDeleteButtons" .IsNew }}
+    </form>
+  </main>
+</body>
+
 </html>

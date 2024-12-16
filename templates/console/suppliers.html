@@ -1,30 +1,31 @@
 <!DOCTYPE html>
 <html>
-  {{ template "head.html" }}
-  <body>
-    {{ template "sidebar" .Sidebar }}
+{{ template "head.html" }}
 
-    <div class="content">
-      <header>
-        {{ template "sidebarButton" }}
-        {{ template "logoutButton" }}
-      </header>
-      
-      <main class="max-w-screen-md">
-        <div class="flex items-center">
-          <h2>
-            Fornitori
-          </h2>
-          <a class="ml-auto btn-md suggested" href="/console/suppliers/new">
-            <i class="fa-add fas"></i>
-            Aggiungi
-          </a>
-        </div>
-    
-        <div hx-get="/console/suppliersTable" hx-trigger="load" hx-target="this">
-        </div>
-      </main>
-    </div>
-  </body>
+<body>
+  {{ template "sidebar" .Sidebar }}
+
+  <div class="content">
+    <header>
+      {{ template "sidebarButton" }}
+      {{ template "logoutButton" }}
+    </header>
+
+    <main class="max-w-screen-md">
+      <div class="flex items-center">
+        <h2>
+          Fornitori
+        </h2>
+        <a class="ml-auto btn-md suggested" href="/console/suppliers/new">
+          <i class="fa-add fas"></i>
+          Aggiungi
+        </a>
+      </div>
+
+      <div hx-get="/console/suppliersTable" hx-trigger="load" hx-target="this">
+      </div>
+    </main>
+  </div>
+</body>
+
 </html>
-  

@@ -1,15 +1,17 @@
 <!DOCTYPE html>
 <html>
-  {{ template "head.html" }}
-  <body>
-    <header>
-      {{ template "backButton" }}
-      {{ template "logoutButton" }}
-    </header>
-    
-    <main>
-      <h2>{{ .Title }}</h2>
-      {{ template "errorCard" .ErrorMsg }}
-    </main>
-  </body>
+{{ template "head.html" }}
+
+<body>
+  <header>
+    {{ template "backButton" }}
+    {{ template "logoutButton" }}
+  </header>
+
+  <main>
+    <h2>{{ .Title }}</h2>
+    {{ template "errorCard" .ErrorMsg }}
+  </main>
+</body>
+
 </html>

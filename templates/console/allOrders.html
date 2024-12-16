@@ -1,56 +1,55 @@
 <!DOCTYPE html>
 <html>
-  {{ template "head.html" }}
-  <body>
-    {{ template "sidebar" .Sidebar }}
+{{ template "head.html" }}
 
-    <div class="content">
-      <header>
-        {{ template "sidebarButton" }}
-        {{ template "logoutButton" }}
-      </header>
+<body>
+  {{ template "sidebar" .Sidebar }}
 
-      <main class="max-w-screen-md">
-        <h2>
-          Tutti gli ordini
-        </h2>
+  <div class="content">
+    <header>
+      {{ template "sidebarButton" }}
+      {{ template "logoutButton" }}
+    </header>
 
-        <div hx-get="/console/allOrdersView" hx-trigger="load" hx-target="this">
+    <main class="max-w-screen-md">
+      <h2>
+        Tutti gli ordini
+      </h2>
+
+      <div hx-get="/console/allOrdersView" hx-trigger="load" hx-target="this">
+      </div>
+
+      <h2>
+        Seleziona ordini
+      </h2>
+
+      <form class="card" method="post" action="/console/orderSelection/"
+        hx-post="/console/orderSelectionCount" hx-target="#count" hx-trigger="change, load">
+        <div class="flex sm:flex-row flex-col gap-4">
+          <div class="w-full">{{ template "dateInput" .StartDateInput }}</div>
+          <div class="w-full">{{ template "dateInput" .EndDateInput }}</div>
         </div>
 
-        <h2>
-          Seleziona ordini
-        </h2>
+        {{ template "select" .SupplierSelect }}
 
-        <form class="card" method="post" action="/console/orderSelection/"
-          hx-post="/console/orderSelectionCount"
-          hx-target="#count"
-          hx-trigger="change, load"
-        >
-          <div class="flex sm:flex-row flex-col gap-4">
-            <div class="w-full">{{ template "dateInput" .StartDateInput }}</div>
-            <div class="w-full">{{ template "dateInput" .EndDateInput }}</div>  
+        <div class="max-sm:flex-col items-center cardFooter">
+          <p class="w-full text-on-surface-dim max-sm:text-center">
+            <span id="count">0</span> ordini selezionati
+          </p>
+          <div class="flex gap-2 max-sm:w-full">
+            <button type="submit" class="ml-auto btn-md" name="list">
+              <i class="fa-list fas"></i>
+              Scarica lista
+            </button>
+            <button type="submit" class="btn-md suggested" name="csv">
+              <i class="fa-table fas"></i>
+              Scarica CSV
+            </button>
           </div>
-          
-          {{ template "select" .SupplierSelect }}
-          
-          <div class="max-sm:flex-col items-center cardFooter">
-            <p class="w-full text-on-surface-dim max-sm:text-center">
-              <span id="count">0</span> ordini selezionati
-            </p>
-            <div class="flex gap-2 max-sm:w-full">
-              <button type="submit" class="ml-auto btn-md" name="list">
-                <i class="fa-list fas"></i>
-                Scarica lista
-              </button>
-              <button type="submit" class="btn-md suggested" name="csv">
-                <i class="fa-table fas"></i>
-                Scarica CSV
-              </button>
-            </div>
-          </div>
-        </form>
-      </main>
-    </div>
-  </body>
+        </div>
+      </form>
+    </main>
+  </div>
+</body>
+
 </html>

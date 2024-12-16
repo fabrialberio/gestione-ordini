@@ -1,31 +1,33 @@
 <!DOCTYPE html>
 <html>
-  {{ template "head.html" }} 
-  <body>
-    <header>
-      {{ template "backButton" }}
-    </header>
+{{ template "head.html" }}
 
-    <main>
-      <h2>
+<body>
+  <header>
+    {{ template "backButton" }}
+  </header>
+
+  <main>
+    <h2>
       {{ if .IsNew }}
-        Nuovo prodotto
+      Nuovo prodotto
       {{ else }}
-        Modifica prodotto
+      Modifica prodotto
       {{ end }}
-      </h2>
-      <form class="card" method="post" action="/console/products/">
-        <input type="hidden" name="product.id" value="{{ .Product.ID }}">
-        <input type="hidden" name="isNew" value="{{ .IsNew }}">
-        
-        {{ template "textInput" .DescriptionInput }}
-        {{ template "textInput" .CodeInput }}
-        {{ template "select" .ProductTypeSelect }}
-        {{ template "select" .SupplierSelect }}
-        {{ template "select" .UnitOfMeasureSelect }}
-        
-        {{ template "formCreateSaveDeleteButtons" .IsNew }}
-      </form>
-    </main>
-  </body>
+    </h2>
+    <form class="card" method="post" action="/console/products/">
+      <input type="hidden" name="product.id" value="{{ .Product.ID }}">
+      <input type="hidden" name="isNew" value="{{ .IsNew }}">
+
+      {{ template "textInput" .DescriptionInput }}
+      {{ template "textInput" .CodeInput }}
+      {{ template "select" .ProductTypeSelect }}
+      {{ template "select" .SupplierSelect }}
+      {{ template "select" .UnitOfMeasureSelect }}
+
+      {{ template "formCreateSaveDeleteButtons" .IsNew }}
+    </form>
+  </main>
+</body>
+
 </html>

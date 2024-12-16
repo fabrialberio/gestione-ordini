@@ -1,28 +1,30 @@
 <!DOCTYPE html>
 <html>
-  {{ template "head.html" }} 
-  <body>
-    <header>
-      {{ template "backButton" }}
-    </header>
+{{ template "head.html" }}
 
-    <main>
-      <h2>
+<body>
+  <header>
+    {{ template "backButton" }}
+  </header>
+
+  <main>
+    <h2>
       {{ if .IsNew }}
-        Nuovo fornitore
+      Nuovo fornitore
       {{ else }}
-        Modifica fornitore
+      Modifica fornitore
       {{ end }}
-      </h2>
-      <form class="card" method="post" action="/console/suppliers/">
-        <input type="hidden" name="supplier.id" value="{{ .Supplier.ID }}">
-        <input type="hidden" name="isNew" value="{{ .IsNew }}">
-        
-        {{ template "textInput" .NameInput }}
-        {{ template "textInput" .EmailInput }}
+    </h2>
+    <form class="card" method="post" action="/console/suppliers/">
+      <input type="hidden" name="supplier.id" value="{{ .Supplier.ID }}">
+      <input type="hidden" name="isNew" value="{{ .IsNew }}">
 
-        {{ template "formCreateSaveDeleteButtons" .IsNew }}
-      </form>
-    </main>
-  </body>
+      {{ template "textInput" .NameInput }}
+      {{ template "textInput" .EmailInput }}
+
+      {{ template "formCreateSaveDeleteButtons" .IsNew }}
+    </form>
+  </main>
+</body>
+
 </html>

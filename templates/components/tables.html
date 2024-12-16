@@ -5,15 +5,13 @@
 
     {{ if .MaxRowCount }}
     <tbody>
-      {{ range slice .Rows 0 .MaxRowCount }} 
+      {{ range slice .Rows 0 .MaxRowCount }}
       {{ template "tableRow" . }}
       {{ end }}
       {{ if gt (len .Rows) .MaxRowCount }}
       <tr
         hx-get="{{ .TableURL }}?orderBy={{ .OrderBy }}&orderDesc={{ .OrderDesc }}&maxRowCount={{ .NextMaxRowCount }}"
-        hx-swap="outerHTML"
-        hx-target=".dataTable"
-        hx-trigger="revealed">
+        hx-swap="outerHTML" hx-target=".dataTable" hx-trigger="revealed">
         <td colspan="{{ len .Headings }}" class="text-on-surface-dim italic">
           Caricamento…
         </td>
@@ -35,13 +33,13 @@
 <thead>
   <tr>
     {{ range .Headings }}
-    <th class="py-1 last:pr-1 first:pl-1" 
+    <th class="py-1 last:pr-1 first:pl-1"
       hx-get="{{ $.TableURL }}?orderBy={{ .Index }}&orderDesc={{ if eq .Index $.OrderBy }}{{ not $.OrderDesc }}{{ else }}false{{ end }}"
-      hx-swap="outerHTML"
-      hx-target=".dataTable">
+      hx-swap="outerHTML" hx-target=".dataTable">
       <button class="gap-1 px-1 py-2 rounded-lg w-full min-h-10 btn">
         {{ .Name }}
-        <i class="{{ if $.OrderDesc }}fa-sort-up{{ else }}fa-sort{{ end }} fas{{ if ne $.OrderBy .Index }} opacity-0{{ end }}"></i>
+        <i
+          class="{{ if $.OrderDesc }}fa-sort-up{{ else }}fa-sort{{ end }} fas{{ if ne $.OrderBy .Index }} opacity-0{{ end }}"></i>
       </button>
     </th>
     {{ end }}

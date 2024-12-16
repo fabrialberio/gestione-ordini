@@ -1,40 +1,40 @@
 <!DOCTYPE html>
 <html>
-  {{ template "head.html" }} 
-  <body>
-    <header>
-      {{ template "backButton" }}
-    </header>
+{{ template "head.html" }}
 
-    <main>
-      <h2>
-        Modifica ordine
-      </h2>
-      <form class="card" method="post" action="{{ .OrdersURL }}"
-        hx-post="{{ .AmountInputURL }}"
-        hx-target="#amountInput"
-        hx-trigger="change, load">
-        <input type="hidden" name="order.id" value="{{ .Order.ID }}">
-        <input type="hidden" name="order.userId" value="{{ .Order.UserID }}">
-        <input type="hidden" name="isNew" value="false">
-        
-        {{ if .UsersURL }}
-        <div>
-          <label>Richiesto da</label>
-          <div class="flex items-center px-3 input">
-            {{ .Order.User.Username }}
-          </div>
-        </div>
-        {{ end }}
+<body>
+  <header>
+    {{ template "backButton" }}
+  </header>
 
-        {{ template "productInput" .ProductInput }}
-        <div id="amountInput">
-          <input type="hidden" name="order.amount" value="{{ .Order.Amount }}">
+  <main>
+    <h2>
+      Modifica ordine
+    </h2>
+    <form class="card" method="post" action="{{ .OrdersURL }}" hx-post="{{ .AmountInputURL }}"
+      hx-target="#amountInput" hx-trigger="change, load">
+      <input type="hidden" name="order.id" value="{{ .Order.ID }}">
+      <input type="hidden" name="order.userId" value="{{ .Order.UserID }}">
+      <input type="hidden" name="isNew" value="false">
+
+      {{ if .UsersURL }}
+      <div>
+        <label>Richiesto da</label>
+        <div class="flex items-center px-3 input">
+          {{ .Order.User.Username }}
         </div>
-        {{ template "dateInput" .ExpiresAtInput }}
-        
-        {{ template "formCreateSaveDeleteButtons" .IsNew }}
-      </form>
-    </main>
-  </body>
+      </div>
+      {{ end }}
+
+      {{ template "productInput" .ProductInput }}
+      <div id="amountInput">
+        <input type="hidden" name="order.amount" value="{{ .Order.Amount }}">
+      </div>
+      {{ template "dateInput" .ExpiresAtInput }}
+
+      {{ template "formCreateSaveDeleteButtons" .IsNew }}
+    </form>
+  </main>
+</body>
+
 </html>

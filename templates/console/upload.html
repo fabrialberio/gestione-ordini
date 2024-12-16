@@ -1,50 +1,51 @@
 <!DOCTYPE html>
 <html>
-  {{ template "head.html" }} 
-  <body>
-    {{ template "sidebar" .Sidebar }}
+{{ template "head.html" }}
 
-    <div class="content">
-      <header>
-        {{ template "sidebarButton" }}
-        {{ template "logoutButton" }}
-      </header>
-      
-      <main class="max-w-screen-md">
-        <h2>
-          Importa
-        </h2>
-        <form class="card" method="post" action="/console/upload/" enctype="multipart/form-data"
-          hx-post="/console/uploadPreview"
-          hx-target="#previewTable"
-          hx-trigger="change, load"
-          hx-encoding="multipart/form-data">
-          
-          {{ template "select" .TableSelect }}
-          {{ template "select" .KeepIdsSelect }}
+<body>
+  {{ template "sidebar" .Sidebar }}
 
-          <div>
-            <label>File</label>
-            <button type="button" class="justify-center w-full btn-md input"
-              onclick="document.getElementById('fileInput').click()">
-              <i class="fa-arrow-up-from-bracket fas"></i>
-              Seleziona un file CSV
-            </button>
-            <input tabindex="-1" id="fileInput" name="csvFile" type="file" class="sr-only" accept="text/csv, .csv">
-          </div>
+  <div class="content">
+    <header>
+      {{ template "sidebarButton" }}
+      {{ template "logoutButton" }}
+    </header>
 
-          <div id="previewTable">
-            {{ template "infoCard" "Nessun file selezionato" }}
-          </div>
+    <main class="max-w-screen-md">
+      <h2>
+        Importa
+      </h2>
+      <form class="card" method="post" action="/console/upload/" enctype="multipart/form-data"
+        hx-post="/console/uploadPreview" hx-target="#previewTable" hx-trigger="change, load"
+        hx-encoding="multipart/form-data">
 
-          <div class="cardFooter">
-            <button type="submit" class="ml-auto btn-md suggested">
-              <i class="fa-check fas"></i>
-              Inserisci
-            </button>
-          </div>
-        </form>
-      </main>
-    </div>
-  </body>
+        {{ template "select" .TableSelect }}
+        {{ template "select" .KeepIdsSelect }}
+
+        <div>
+          <label>File</label>
+          <button type="button" class="justify-center w-full btn-md input"
+            onclick="document.getElementById('fileInput').click()">
+            <i class="fa-arrow-up-from-bracket fas"></i>
+            Seleziona un file CSV
+          </button>
+          <input tabindex="-1" id="fileInput" name="csvFile" type="file" class="sr-only"
+            accept="text/csv, .csv">
+        </div>
+
+        <div id="previewTable">
+          {{ template "infoCard" "Nessun file selezionato" }}
+        </div>
+
+        <div class="cardFooter">
+          <button type="submit" class="ml-auto btn-md suggested">
+            <i class="fa-check fas"></i>
+            Inserisci
+          </button>
+        </div>
+      </form>
+    </main>
+  </div>
+</body>
+
 </html>

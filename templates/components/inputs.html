@@ -15,7 +15,8 @@
 {{ define "amountInput" }}
 <div>
   <label for="{{ .Name }}-input">{{ .Label }}</label>
-  <input id="{{ .Name }}-input" type="number" min="1" name="{{ .Name }}" value="{{ .DefaultValue }}" required>
+  <input id="{{ .Name }}-input" type="number" min="1" name="{{ .Name }}" value="{{ .DefaultValue }}"
+    required>
 </div>
 {{ end }}
 
@@ -24,7 +25,8 @@
   <label for="{{ .Name }}-select">{{ .Label }}</label>
   <select id="{{ .Name }}-select" name="{{ .Name }}" required>
     {{ range .Options }}
-    <option value="{{ .Value }}"{{ if eq .Value $.Selected }} selected{{ end }}>{{ .Text }}</option>
+    <option value="{{ .Value }}" {{ if eq .Value $.Selected }} selected{{ end }}>{{ .Text }}
+    </option>
     {{ end }}
   </select>
 </div>
