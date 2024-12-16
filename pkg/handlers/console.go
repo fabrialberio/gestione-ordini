@@ -73,10 +73,17 @@ func GetProducts(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	products, err := appContext.Database(r).FindAllProducts(database.OrderProductByID, false, -1)
+	if err != nil {
+		logError(r, err)
+	}
+
 	data := struct {
-		Sidebar []components.SidebarDest
+		Sidebar  []components.SidebarDest
+		Products []database.Product
 	}{
-		Sidebar: currentSidebar(sidebarIndexProducts, user.RoleID == database.RoleIDAdministrator),
+		Sidebar:  currentSidebar(sidebarIndexProducts, user.RoleID == database.RoleIDAdministrator),
+		Products: products,
 	}
 
 	appContext.ExecuteTemplate(w, r, "products.html", data)

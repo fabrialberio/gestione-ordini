@@ -22,6 +22,15 @@
         </a>
       </div>
 
+      <form method="post" action="/console/productsTableSearch">
+        <input type="search" name="q" list="productsDataList" placeholder="Cerca prodotti...">
+        <datalist id="productsDataList">
+          {{ range .Products }}
+          <option value="{{ .ID }}">{{ .Description }}</option>
+          {{ end }}
+        </datalist>
+      </form>
+
       <div hx-get="/console/productsTable" hx-trigger="load" hx-target="this">
       </div>
   </div>

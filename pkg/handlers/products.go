@@ -8,6 +8,10 @@ import (
 	"strconv"
 )
 
+func PostProductsTableSearch(w http.ResponseWriter, r *http.Request) {
+	http.Redirect(w, r, DestProducts+r.FormValue("q"), http.StatusSeeOther)
+}
+
 func GetProductsTable(w http.ResponseWriter, r *http.Request) {
 	query := components.ParseTableQuery(r, 21)
 
