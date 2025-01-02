@@ -10,17 +10,24 @@ import (
 func ExportToList(orders []database.Order) []byte {
 	builder := bytes.Buffer{}
 
-	for s, supplierOrders := range splitOrdersBySupplier(orders) {
+	for s, ordersForSupplier := range groupOrdersBySupplier(orders) {
 		builder.WriteString("Ordini per il fornitore \"" + s.Name + "\" (" + s.Email + "):\n")
 
-		for _, o := range supplierOrders {
+		for _, ordersForProductId := range groupOrdersByProductId(ordersForSupplier) {
+			product := ordersForProductId[0].Product
+			totalAmount := 0
+
+			for _, o := range ordersForProductId {
+				totalAmount += o.Amount
+			}
+
 			builder.WriteString("  • ")
-			builder.WriteString(o.Product.Description)
-			builder.WriteString(" (" + o.Product.Code + ") - ")
-			builder.WriteString(o.AmountString)
+			builder.WriteString(product.Description)
+			builder.WriteString(" (" + product.Code + ") - ")
+			builder.WriteString(strconv.Itoa(totalAmount))
+			builder.WriteString(" " + product.UnitOfMeasure.Symbol)
 			builder.WriteString("\n")
 		}
-
 		builder.WriteString("\n")
 	}
 
@@ -42,8 +49,8 @@ func ExportToCSV(orders []database.Order) []byte {
 		"Richiesto da",
 		"Richiesto il",
 	})
-	for _, supplierOrders := range splitOrdersBySupplier(orders) {
-		for _, order := range supplierOrders {
+	for _, ordersForSupplier := range groupOrdersBySupplier(orders) {
+		for _, order := range ordersForSupplier {
 			writer.Write([]string{
 				order.Product.Description,
 				order.Product.Code,
@@ -62,7 +69,43 @@ func ExportToCSV(orders []database.Order) []byte {
 	return builder.Bytes()
 }
 
-func splitOrdersBySupplier(orders []database.Order) map[database.Supplier][]database.Order {
+func ExportToCSVCollapseProducts(orders []database.Order) []byte {
+	builder := bytes.Buffer{}
+	writer := csv.NewWriter(&builder)
+	writer.Comma = ';'
+
+	writer.Write([]string{
+		"Descrizione prodotto",
+		"Codice",
+		"Quantità",
+		"Unità di misura",
+		"Fornitore",
+	})
+	for _, ordersForSupplier := range groupOrdersBySupplier(orders) {
+		for _, ordersForProductId := range groupOrdersByProductId(ordersForSupplier) {
+			product := ordersForProductId[0].Product
+			totalAmount := 0
+
+			for _, o := range ordersForProductId {
+				totalAmount += o.Amount
+			}
+
+			writer.Write([]string{
+				product.Description,
+				product.Code,
+				strconv.Itoa(totalAmount),
+				product.UnitOfMeasure.Symbol,
+				product.Supplier.Name,
+			})
+		}
+	}
+
+	writer.Flush()
+
+	return builder.Bytes()
+}
+
+func groupOrdersBySupplier(orders []database.Order) map[database.Supplier][]database.Order {
 	ordersBySupplier := map[database.Supplier][]database.Order{}
 
 	for _, o := range orders {
@@ -70,4 +113,14 @@ func splitOrdersBySupplier(orders []database.Order) map[database.Supplier][]data
 	}
 
 	return ordersBySupplier
+}
+
+func groupOrdersByProductId(orders []database.Order) map[int][]database.Order {
+	ordersByProductId := map[int][]database.Order{}
+
+	for _, o := range orders {
+		ordersByProductId[o.ProductID] = append(ordersByProductId[o.ProductID], o)
+	}
+
+	return ordersByProductId
 }
