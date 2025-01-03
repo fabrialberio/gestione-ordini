@@ -21,7 +21,7 @@ var weekdayNames = map[time.Weekday]string{
 
 func GetOwnOrdersView(w http.ResponseWriter, r *http.Request) {
 	offset, _ := strconv.Atoi(r.URL.Query().Get("offset"))
-	start := currentWeekStart().Add(time.Hour * 24 * 7 * time.Duration(offset))
+	start := currentWeekStart().AddDate(0, 0, offset*7)
 
 	user, err := appContext.AuthenticatedUser(r)
 	if err != nil {
@@ -44,7 +44,7 @@ func GetOwnOrdersView(w http.ResponseWriter, r *http.Request) {
 
 func GetAllOrdersView(w http.ResponseWriter, r *http.Request) {
 	offset, _ := strconv.Atoi(r.URL.Query().Get("offset"))
-	start := currentWeekStart().Add(time.Hour * 24 * 7 * time.Duration(offset))
+	start := currentWeekStart().AddDate(0, 0, offset*7)
 
 	orders, err := appContext.Database(r).
 		FindAllOrdersWithExpiresAtBetween(start, start.AddDate(0, 0, 6))
@@ -71,8 +71,8 @@ func calculateOrdersView(start time.Time, offset int, orders []database.Order) c
 }
 
 func currentWeekStart() time.Time {
-	daysFromMonday := time.Duration(time.Now().Weekday() - 1)
-	return time.Now().Add(time.Hour * 24 * -daysFromMonday)
+	daysFromMonday := int(time.Now().Weekday())
+	return time.Now().AddDate(0, 0, 1-daysFromMonday)
 }
 
 func makeOrdersViewDays(start time.Time, orders []database.Order) []components.OrdersViewDay {
@@ -85,12 +85,12 @@ func makeOrdersViewDays(start time.Time, orders []database.Order) []components.O
 	}
 
 	for i := 0; i < 7; i++ {
-		t := start.Add(time.Hour * 24 * time.Duration(i))
+		t := start.AddDate(0, 0, i)
 
 		days = append(days, components.OrdersViewDay{
 			Heading: weekdayNames[t.Weekday()] + " " + t.Format("2"),
 			Orders:  ordersByDay[t.Format(keyFormat)],
-			IsPast:  time.Until(t.Add(time.Hour*24)) < 0,
+			IsPast:  time.Until(t.AddDate(0, 0, 1)) < 0,
 		})
 	}
 
