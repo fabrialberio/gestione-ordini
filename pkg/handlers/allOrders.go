@@ -11,10 +11,11 @@ import (
 )
 
 type orderSelection struct {
-	Start        time.Time
-	End          time.Time
-	SupplierID   int
-	AllSuppliers bool
+	Start            time.Time
+	End              time.Time
+	SupplierID       int
+	AllSuppliers     bool
+	CollapseProducts bool
 }
 
 func GetAllOrders(w http.ResponseWriter, r *http.Request) {
@@ -42,10 +43,11 @@ func GetAllOrders(w http.ResponseWriter, r *http.Request) {
 	}
 
 	data := struct {
-		Sidebar        []components.SidebarDest
-		StartDateInput components.Input
-		EndDateInput   components.Input
-		SupplierSelect components.Select
+		Sidebar          []components.SidebarDest
+		StartDateInput   components.Input
+		EndDateInput     components.Input
+		SupplierSelect   components.Select
+		ExportModeSelect components.Select
 	}{
 		Sidebar: currentSidebar(sidebarIndexAllOrders, user.RoleID == database.RoleIDAdministrator),
 		StartDateInput: components.Input{
@@ -63,6 +65,15 @@ func GetAllOrders(w http.ResponseWriter, r *http.Request) {
 			Name:     keyOrderSelectionSupplierID,
 			Selected: 0,
 			Options:  supplierOptions,
+		},
+		ExportModeSelect: components.Select{
+			Label:    "Modalità di esportazione CSV",
+			Name:     keyOrderSelectionExportMode,
+			Selected: 0,
+			Options: []components.SelectOption{
+				{Value: 0, Text: "Esporta tutti i dati"},
+				{Value: 1, Text: "Unisci in un'unica riga i prodotti ripetuti"},
+			},
 		},
 	}
 
@@ -89,7 +100,14 @@ func PostOrderSelection(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if r.Form.Has("csv") {
-		csv := files.ExportToCSV(orders)
+		var csv []byte
+
+		if selection.CollapseProducts {
+			csv = files.ExportToCSVCollapseProducts(orders)
+		} else {
+			csv = files.ExportToCSV(orders)
+		}
+
 		downloadFile(w, filename+".csv", "text/csv", csv)
 	} else if r.Form.Has("list") {
 		list := files.ExportToList(orders)
@@ -123,6 +141,7 @@ func parseOrderSelectionForm(r *http.Request) (sel orderSelection, err error) {
 		return
 	}
 	sel.AllSuppliers = sel.SupplierID == 0
+	sel.CollapseProducts = r.FormValue(keyOrderSelectionExportMode) == "1"
 
 	return
 }

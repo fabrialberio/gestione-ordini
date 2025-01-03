@@ -30,6 +30,7 @@ const (
 	keyOrderSelectionStart      = "orderSelection.start"
 	keyOrderSelectionEnd        = "orderSelection.end"
 	keyOrderSelectionSupplierID = "orderSelection.supplier"
+	keyOrderSelectionExportMode = "orderSelection.exportMode"
 
 	// common
 	DestFirstLogin       = "/firstLogin"
