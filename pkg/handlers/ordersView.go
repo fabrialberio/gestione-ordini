@@ -21,6 +21,7 @@ var weekdayNames = map[time.Weekday]string{
 
 func GetOwnOrdersView(w http.ResponseWriter, r *http.Request) {
 	offset, _ := strconv.Atoi(r.URL.Query().Get("offset"))
+	start := currentWeekStart().Add(time.Hour * 24 * 7 * time.Duration(offset))
 
 	user, err := appContext.AuthenticatedUser(r)
 	if err != nil {
@@ -28,12 +29,13 @@ func GetOwnOrdersView(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	orders, err := appContext.Database(r).FindAllOrdersWithUserID(user.ID)
+	orders, err := appContext.Database(r).
+		FindAllOrdersWithUserIDAndExpiresAtBetween(user.ID, start, start.AddDate(0, 0, 6))
 	if err != nil {
 		logError(r, err)
 	}
 
-	data := calculateOrdersView(offset, orders)
+	data := calculateOrdersView(start, offset, orders)
 	data.OrdersViewURL = DestOwnOrdersView
 	data.OrdersURL = DestChefOrders
 
@@ -41,22 +43,23 @@ func GetOwnOrdersView(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetAllOrdersView(w http.ResponseWriter, r *http.Request) {
-	orders, err := appContext.Database(r).FindAllOrders()
+	offset, _ := strconv.Atoi(r.URL.Query().Get("offset"))
+	start := currentWeekStart().Add(time.Hour * 24 * 7 * time.Duration(offset))
+
+	orders, err := appContext.Database(r).
+		FindAllOrdersWithExpiresAtBetween(start, start.AddDate(0, 0, 6))
 	if err != nil {
 		logError(r, err)
 	}
 
-	offset, _ := strconv.Atoi(r.URL.Query().Get("offset"))
-
-	data := calculateOrdersView(offset, orders)
+	data := calculateOrdersView(start, offset, orders)
 	data.OrdersViewURL = DestAllOrdersView
 	data.OrdersURL = DestOrders
 
 	appContext.ExecuteTemplate(w, r, "ordersView", data)
 }
 
-func calculateOrdersView(offset int, orders []database.Order) components.OrdersView {
-	start := currentWeekStart().Add(time.Hour * 24 * 7 * time.Duration(offset))
+func calculateOrdersView(start time.Time, offset int, orders []database.Order) components.OrdersView {
 	days := makeOrdersViewDays(start, orders)
 
 	return components.OrdersView{

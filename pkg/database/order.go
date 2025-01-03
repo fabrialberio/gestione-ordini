@@ -48,30 +48,25 @@ func (db *GormDB) FindOrder(id int) (Order, error) {
 	return db.completeOrder(order), err
 }
 
-func (db *GormDB) FindAllOrders() ([]Order, error) {
+func (db *GormDB) FindAllOrdersWithExpiresAtBetween(startDate time.Time, endDate time.Time) ([]Order, error) {
 	var orders []Order
 
-	err := db.conn.Find(&orders).Error
+	err := db.conn.
+		Where("DATE(richiesto_il) BETWEEN DATE(?) AND DATE(?)", startDate, endDate).
+		Find(&orders).Error
 	for i, o := range orders {
 		orders[i] = db.completeOrder(o)
 	}
 	return orders, err
 }
 
-func (db *GormDB) FindAllOrdersWithUserID(userId int) ([]Order, error) {
+func (db *GormDB) FindAllOrdersWithUserIDAndExpiresAtBetween(userId int, startDate time.Time, endDate time.Time) ([]Order, error) {
 	var orders []Order
 
-	err := db.conn.Where(&Order{UserID: userId}).Find(&orders).Error
-	for i, o := range orders {
-		orders[i] = db.completeOrder(o)
-	}
-	return orders, err
-}
-
-func (db *GormDB) FindAllOrdersWithExpiresAtBetween(start, end time.Time) ([]Order, error) {
-	var orders []Order
-
-	err := db.conn.Where("richiesto_il BETWEEN ? AND ?", start, end).Find(&orders).Error
+	err := db.conn.
+		Where("DATE(richiesto_il) BETWEEN DATE(?) AND DATE(?)", startDate, endDate).
+		Where(&Order{UserID: userId}).
+		Find(&orders).Error
 	for i, o := range orders {
 		orders[i] = db.completeOrder(o)
 	}
