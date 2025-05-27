@@ -1,3 +1,7 @@
+<div align="center">
+  <img src="https://github.com/fabrialberio/gestione-ordini/blob/75d0803e0e40ad218dd403b64b22f1f49f7e3335/screenshot.png">
+</div>
+
 ## Gestione ordini
 Un'interfaccia per gestire gli ordini e organizzarli in base ai fornitori.
 
