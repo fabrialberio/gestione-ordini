@@ -13,15 +13,15 @@
     </button>
   </div>
   <div
-    class="flex flex-row max-sm:flex-col border-outline bg-surface border-t sm:divide-x max-sm:divide-y divide-outline overflow-x-auto">
+    class="flex flex-row max-sm:flex-col bg-surface border-outline border-t divide-outline sm:divide-x max-sm:divide-y overflow-x-auto">
     {{ range .Days }}
     <div class="flex max-sm:flex-row flex-col basis-1/2">
       {{ $isPast := .IsPast }}
-      <h4 class="max-sm:text-right p-2 min-w-20 text-center">
+      <h4 class="p-2 min-w-20 text-center max-sm:text-right">
         {{ .Heading }}
       </h4>
       <div class="flex flex-col gap-1 p-1 w-full sm:min-h-12">
-        <td class="align-top h-full">
+        <td class="h-full align-top">
           {{ range .Orders }}
           <a{{ if $.OrdersURL }} href="{{ $.OrdersURL }}{{ .ID }}" {{ end }}>
             <div
