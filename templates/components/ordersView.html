@@ -12,31 +12,32 @@
       <i class="fa-chevron-right fas"></i>
     </button>
   </div>
-  <div
-    class="flex flex-row max-sm:flex-col bg-surface border-outline border-t divide-outline sm:divide-x max-sm:divide-y overflow-x-auto">
-    {{ range .Days }}
-    <div class="flex max-sm:flex-row flex-col basis-1/2">
-      {{ $isPast := .IsPast }}
-      <h4 class="p-2 min-w-20 text-center max-sm:text-right">
-        {{ .Heading }}
-      </h4>
-      <div class="flex flex-col gap-1 p-1 w-full sm:min-h-12">
-        <td class="h-full align-top">
+  <div class="bg-surface border-outline border-t sm:h-80 overflow-auto">
+    <div
+      class="flex flex-row max-sm:flex-col divide-outline sm:divide-x max-sm:divide-y min-h-full">
+      {{ range .Days }}
+      <div class="flex max-sm:flex-row flex-col basis-[14.2857143%]">
+        {{ $isPast := .IsPast }}
+        <h4 class="p-2 min-w-20 text-center max-sm:text-right">
+          {{ .Heading }}
+        </h4>
+        <div class="flex flex-col gap-1 p-1 max-sm:w-full">
           {{ range .Orders }}
           <a{{ if $.OrdersURL }} href="{{ $.OrdersURL }}{{ .ID }}" {{ end }}>
             <div
-              class="{{ if $isPast }}bg-raised{{ else }}bg-secondary{{ end }} p-1 rounded-md text-sm{{ if $.OrdersURL }} clickable{{ end }}">
-              <h4 class="line-clamp-2">
+              class="{{ if $isPast }}bg-raised{{ else }}bg-secondary{{ end }} p-1 rounded-md text-sm{{ if $.OrdersURL }} clickable{{ end }}"
+              title="{{ .Product.Description }}">
+              <h4 class="break-all line-clamp-2 max-sm:line-clamp-1 hyphens-auto">
                 {{ .Product.Description }}
               </h4>
               {{ .AmountString }}
             </div>
             </a>
             {{ end }}
-        </td>
+        </div>
       </div>
+      {{ end }}
     </div>
-    {{ end }}
   </div>
 </div>
 {{ end }}
