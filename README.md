@@ -6,9 +6,33 @@
 Un'interfaccia per gestire gli ordini e organizzarli in base ai fornitori.
 
 ### Installazione
-1. [Installare Docker](https://docs.docker.com/engine/install/)
-2. Scaricare i file o clonare il repository con `git clone https://github.com/fabrialberio/gestione-ordini`
-3. Aprire un terminale nella cartella ed seguire `docker compose up --build`
+1. [Installa Docker](https://docs.docker.com/engine/install/)
+2. [scarica i file](https://github.com/fabrialberio/gestione-ordini/archive/refs/heads/main.zip) oppure clona il repository con Git:
+```
+git clone https://github.com/fabrialberio/gestione-ordini
+```
+3. crea una chiave privata:
+```
+openssl genrsa -out private.key 4096
+```
+4. crea una chiave pubblica corrispondente:
+```
+openssl rsa -in private.key -out public.key -outform PEM -pubout
+```
+5. crea un file `.env` con le credenziali necessarie per l'avvio, ad esempio:
+```env
+MYSQL_USER: gestioneordini
+MYSQL_PASSWORD: example
+MYSQL_ROOT_PASSWORD: example
+MYSQL_DATABASE: gestioneordini
+MYSQL_CONTAINER_NAME: gestione-ordini-mysql
+ADMIN_PASSWORD: example
+```
+6. avvia il server di sviluppo:
+```
+docker compose -f docker-compose.dev.yml up
+```
+7. puoi accedere al server su `http://localhost:80`, con il nome utente `amdin` e la password inserita nel file `.env`.
 
 ### Funzionalità
 Pagine del sito:
