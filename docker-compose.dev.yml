@@ -1,6 +1,6 @@
 services:
   db:
-    image: mysql:8.0
+    image: mysql:8.4.8
     container_name: ${MYSQL_CONTAINER_NAME}
     restart: always
     env_file:
@@ -12,7 +12,7 @@ services:
       - gestione-ordini-network
 
   reverse-proxy:
-    image: traefik:v3.1
+    image: traefik:v3.6.9
     command:
       - "--providers.docker=true"
       - "--providers.docker.exposedbydefault=false"
@@ -26,7 +26,7 @@ services:
       - gestione-ordini-network
 
   app:
-    image: cosmtrek/air
+    image: cosmtrek/air:v1.64.5
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.app.rule=Host(`localhost`)"
