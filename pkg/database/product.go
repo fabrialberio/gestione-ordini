@@ -31,6 +31,7 @@ type Product struct {
 	UnitOfMeasure   UnitOfMeasure `gorm:"foreignKey:UnitOfMeasureID"`
 	Description     string        `gorm:"column:descrizione"`
 	Code            string        `gorm:"column:codice"`
+	Deleted         bool          `gorm:"column:eliminato"`
 }
 
 func (Product) TableName() string { return "prodotti" }
@@ -99,6 +100,7 @@ func (db *GormDB) FindAllProducts(orderBy int, orderDesc bool, limit int) ([]Pro
 			Column: clause.Column{Name: orderByString},
 			Desc:   orderDesc,
 		}).
+		Where("eliminato = ?", false).
 		Limit(limit).
 		Find(&products).Error
 
@@ -141,5 +143,5 @@ func (db *GormDB) UpdateAllProducts(products []Product) error {
 }
 
 func (db *GormDB) DeleteProduct(id int) error {
-	return db.conn.Delete(&Product{}, id).Error
+	return db.conn.Model(&Product{}).Where(&Product{ID: id}).Update("eliminato", true).Error
 }

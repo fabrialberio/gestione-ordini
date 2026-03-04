@@ -25,7 +25,13 @@
       {{ template "select" .SupplierSelect }}
       {{ template "select" .UnitOfMeasureSelect }}
 
+      {{ if not .Product.Deleted }}
       {{ template "formCreateSaveDeleteButtons" .IsNew }}
+      {{ else }}
+      <div class="cardFooter text-on-surface-dim italic">
+        Questo prodotto è stato eliminato.
+      </div>
+      {{ end }}
     </form>
   </main>
 </body>
